@@ -3,7 +3,6 @@ if peripheral.isPresent("modem") then
   modem = peripheral.find("modem")
 end
 move.coords.y = 64
-move.d = 0
 startY = move.coords.y
 local oreList = {
   "minecraft:iron_ore",
