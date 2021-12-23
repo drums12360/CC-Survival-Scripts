@@ -156,13 +156,12 @@ function mineSquence(amount)
   end
 end
 
-if #tArgs == 1 then
-  tArgs[1] = tonumber(tArgs[1])
-  if type(tArgs[1]) ~= "number" then
-    error(("Usage: %s 10"):format(fs.getName(shell.getRunningProgram())))
-  end
-  local start = api.copyTable(api.coords)
-  mineSquence(tArgs[1])
-  api.moveTo(start.x, start.y, start.z)
-  fs.delete("/.save")
+if type(tArgs[1]) ~= "number" then
+  error(("Usage: %s 10"):format(fs.getName(shell.getRunningProgram())))
 end
+tArgs[1] = tonumber(tArgs[1])
+local start = api.copyTable(api.coords)
+mineSquence(tArgs[1])
+api.moveTo(start.x, start.y, start.z)
+fs.delete("/.save")
+
