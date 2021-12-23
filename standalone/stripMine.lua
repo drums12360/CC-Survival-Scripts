@@ -49,33 +49,15 @@ local fuelList = {
   "minecraft:lava_bucket",
 }
 
-function api.saveData(dir, path, tbl)
+function api.copyTable(tbl)
   if type(tbl) ~= "table" then
     error("The type of 'tbl' is not a table",2)
-  elseif type(path) ~= "string" or type(dir) ~= "string" then
-    error("The type of 'path' or 'dir' is not a string",2)
   end
-  if not fs.exists(dir) then
-    fs.makeDir(dir)
+  local rtbl = {}
+  for k,v in pairs(tbl) do
+    rtbl[k] = v
   end
-  local f = fs.open(dir .. path, "w")
-  f.write(textutils.serialize(tbl))
-  f.close()
-end
-
-function api.loadData(dir, path)
-  if type(path) ~= "string" or type(dir) ~= "string" then
-    error("The type of 'path' or 'dir' is not a string",2)
-  end
-  if fs.exists(dir) then
-    local tbl = {}
-    local f = fs.open(dir .. path, "r")
-    tbl = f.readAll()
-    tbl = textutils.unserialize(tbl)
-    f.close()
-    return tbl
-  end
-  return false
+  return rtbl
 end
 
 function api.findItem(name)
@@ -147,20 +129,17 @@ end
 function api.turnLeft()
   turtle.turnLeft()
   api.d = (api.d - 1) % 4
-  api.saveData("/.save", "/face", {d = api.d})
 end
 
 function api.turnRight()
   turtle.turnRight()
   api.d = (api.d + 1) % 4
-  api.saveData("/.save", "/face", {d = api.d})
 end
 
 function api.turnAround()
   turtle.turnRight()
   turtle.turnRight()
   api.d = (api.d + 2) % 4
-  api.saveData("/.save", "/face", {d = api.d})
 end
 
 function api.forward(times)
@@ -197,7 +176,6 @@ function api.forward(times)
     elseif api.d == 3 then
       api.coords.x = api.coords.x - 1
     end
-    api.saveData("/.save", "/position", api.coords)
   end
   return true
 end
@@ -222,7 +200,6 @@ function api.backward(times)
     elseif api.d == 3 then
       api.coords.x = api.coords.x + 1
     end
-    api.saveData("/.save", "/position", api.coords)
   end
 end
 
@@ -247,7 +224,6 @@ function api.up(times)
       end
     end
     api.coords.y = api.coords.y + 1
-    api.saveData("/.save", "/position", api.coords)
   end
   return true
 end
@@ -273,9 +249,40 @@ function api.down(times)
       end
     end
     api.coords.y = api.coords.y - 1
-    api.saveData("/.save", "/position", api.coords)
   end
   return true
+end
+
+function api.moveTo(x, y, z)
+  if x == "~" then
+    x = api.coords.x
+  end
+  if y == "~" then
+    y = api.coords.y
+  end
+  if z == "~" then
+    z = api.coords.z
+  end
+  if y > api.coords.y then
+    api.up(y - api.coords.y)
+  end
+  if x < api.coords.x then
+    api.face(3)
+    api.forward(api.coords.x - x)
+  elseif x > api.coords.x then
+    api.face(1)
+    api.forward(x - api.coords.x)
+  end
+  if z < api.coords.z then
+    api.face(0)
+    api.forward(api.coords.z - z)
+  elseif z > api.coords.z then
+    api.face(2)
+    api.forward(z - api.coords.z)
+  end
+  if y < api.coords.y then
+    api.down(api.coords.y - y)
+  end
 end
 
 function stackPop()
@@ -401,5 +408,7 @@ if #tArgs == 1 then
   if type(tArgs[1]) ~= "number" then
     error(("Usage: %s 10"):format(fs.getName(shell.getRunningProgram())))
   end
+  local start = api.copyTable(api.coords)
   mineSquence(tArgs[1])
+  api.moveto(start.x, start.y, start.z)
 end
