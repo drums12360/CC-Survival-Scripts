@@ -35,9 +35,9 @@ function findItem(name)
 end
 
 function refuel(skip)
-	if skip ~= true then
-		skip = false
-	end
+  if skip ~= true then
+    skip = false
+  end
   if turtle.getFuelLevel() <= 10 or skip then
     for i=1,#fuelList do
       if findItem(fuelList[i]) then
