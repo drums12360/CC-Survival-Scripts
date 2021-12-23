@@ -403,12 +403,11 @@ function mineSquence(amount)
   end
 end
 
-if #tArgs == 1 then
-  tArgs[1] = tonumber(tArgs[1])
-  if type(tArgs[1]) ~= "number" then
-    error(("Usage: %s 10"):format(fs.getName(shell.getRunningProgram())))
-  end
-  local start = api.copyTable(api.coords)
-  mineSquence(tArgs[1])
-  api.moveto(start.x, start.y, start.z)
+if type(tArgs[1]) ~= "number" then
+  error(("Usage: %s 10"):format(fs.getName(shell.getRunningProgram())))
 end
+tArgs[1] = tonumber(tArgs[1])
+local start = api.copyTable(api.coords)
+mineSquence(tArgs[1])
+api.moveto(start.x, start.y, start.z)
+
