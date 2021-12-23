@@ -1,5 +1,4 @@
-local move = require("movement")
-local modem = peripheral.find("modem")
+local move = require("customAPI")
 local start = {}
 start.x = move.coord.x
 start.y = move.coord.y
@@ -16,17 +15,6 @@ local junkList = {
   "minecraft:granite",
   "minecraft:gravel",
 }
-
-function hasWireless()
-  if modem == nil then
-    move.hasWireless = false
-  else
-    move.hasWireless = true
-    modem.open(tonumber(os.getComputerID()))
-    modem.open(rednet.CHANNEL_BROADCAST)
-    rednet.broadcast("Program Start Up")
-  end
-end
 
 function startup()
   if #arg == 3 then
