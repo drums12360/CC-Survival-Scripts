@@ -161,5 +161,8 @@ if #tArgs == 1 then
   if type(tArgs[1]) ~= "number" then
     error(("Usage: %s 10"):format(fs.getName(shell.getRunningProgram())))
   end
+  local start = api.copyTable(api.coords)
   mineSquence(tArgs[1])
+  api.moveTo(start.x, start.y, start.z)
+  fs.delete("/.save")
 end
