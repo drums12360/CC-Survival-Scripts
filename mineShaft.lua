@@ -6,6 +6,8 @@ local width = 0
 local depth = 0
 local widthMovement = 0
 local junkList = {
+  "minecraft:cobbled_deepslate",
+  "minecraft:tuff",
   "minecraft:cobblestone",
   "minecraft:dirt",
   "minecraft:andesite",
@@ -132,7 +134,6 @@ if startup() then
   if not checkFuelLevel() then
     return
   end
-  hasWireless()
   api.turnLeft()
   api.forward(widthMovement)
   api.turnRight()
