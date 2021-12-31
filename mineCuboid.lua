@@ -18,8 +18,8 @@ local junkList = {
 
 function startup()
   if #arg == 3 then
-    height = tonumber(arg[1])
-    width = tonumber(arg[2])
+    width = tonumber(arg[1])
+    height = tonumber(arg[2])
     depth = tonumber(arg[3])
     widthMovement = math.floor(width / 2)
     if width % 2 == 0 then
@@ -34,7 +34,7 @@ function startup()
 end
 
 function checkFuelLevel()
-  local requiredFuelLevel = math.ceil((height * width * depth) + (((height - 1) * 2) + (widthMovement * 2) + depth))
+  local requiredFuelLevel = math.ceil(((height * width * depth) / 3) + (height * depth) + ((widthMovement * 2) + depth + height))
   local currentFuelLevel = tonumber(turtle.getFuelLevel())
   while currentFuelLevel < requiredFuelLevel do
     if not api.refuel(true) then
@@ -89,34 +89,62 @@ function dropJunk()
 end
 
 function mineSquence()
+  local rows = math.floor(height / 3)
+  local offset = height % 3
+  local lastRowCount = 0
   for x=1,depth do
     api.forward()
-    for i=1,height do
-      if x % 2 == 0 then
-        api.turnLeft()
-      else
+    api.dig("up")
+    api.dig("down")
+    for z=1,rows do
+      if lastRowCount % 2 == 0 then
         api.turnRight()
+      else
+        api.turnLeft()
       end
       for y=1,width - 1 do
-        if x % 8 == 0 then
-          if i == 2 then
-            if y == widthMovement + 1 then
-              if api.findItem("minecraft:torch") then
-                turtle.placeDown()
-              end
-            end
+        api.forward()
+        api.dig("up")
+        api.dig("down")
+      end
+      lastRowCount = z
+      if z ~= rows then
+        if x % 2 == 0 then
+          api.down(3)
+          api.dig("down")
+        else
+          api.up(3)
+          api.dig("up")
+        end
+        if lastRowCount % 2 == 0 then
+          api.turnRight()
+        else
+          api.turnLeft()
+        end
+      elseif offset ~= 0 then
+        if x % 2 == 0 then
+          api.down(offset)
+          api.dig("down")
+          api.turnAround()
+        else
+          api.up(offset)
+          api.dig("up")
+          api.turnAround()
+        end
+        for y=1,width - 1 do
+          api.forward()
+          if x % 2 == 0 then
+            api.dig("down")
+          else
+            api.dig("up")
           end
         end
-        api.forward()
-      end
-      if i ~= height then
-        if x % 2 == 0 then
-          api.turnLeft()
-          api.up()
-        else
-          api.turnRight()
-          api.down()
+        lastRowCount = z + 1
+        if lastRowCount % 2 == 0 then
+          api.turnAround()
         end
+      elseif z == rows and z % 2 == 0 then
+        api.turnAround()
       end
     end
     if x % 2 == 0 then
@@ -137,6 +165,6 @@ if startup() then
   api.turnLeft()
   api.forward(widthMovement)
   api.turnRight()
-  api.up(height - 1)
+  api.up()
   mineSquence()
 end
