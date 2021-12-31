@@ -1,6 +1,5 @@
 local api = require("customAPI")
-local start = {}
-start = api.copyTable(api.coords)
+local start = api.copyTable(api.coords)
 local height = 0
 local width = 0
 local depth = 0
