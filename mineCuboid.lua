@@ -96,9 +96,8 @@ function mineSquence()
     api.forward()
     api.dig("up")
     api.dig("down")
-    for z=1,rows do
-      if x % 3 == 0 and lastRowCount % 2 == 1 then
-        api.turnRight()
+    if x % 3 == 0 and lastRowCount % 2 == 1 then
+      api.turnRight()
     else
       if lastRowCount % 2 == 0 then
         api.turnRight()
@@ -106,6 +105,7 @@ function mineSquence()
         api.turnLeft()
       end
     end
+    for z=1,rows do
       for y=1,width - 1 do
         api.forward()
         api.dig("up")
@@ -116,14 +116,11 @@ function mineSquence()
         if x % 2 == 0 then
           api.down(3)
           api.dig("down")
+          api.turnAround()
         else
           api.up(3)
           api.dig("up")
-        end
-        if lastRowCount % 2 == 0 then
-          api.turnRight()
-        else
-          api.turnLeft()
+          api.turnAround()
         end
       elseif offset ~= 0 then
         if x % 2 == 0 then
@@ -146,7 +143,7 @@ function mineSquence()
         lastRowCount = z + 1
       end
     end
-    if x % 2 == 0 and lastRowCount % 2 == 1 then
+    if x % 3 == 2 and lastRowCount % 2 == 1 then
       api.turnRight()
     else
       if lastRowCount % 2 == 0 then
