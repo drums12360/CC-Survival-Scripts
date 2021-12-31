@@ -67,17 +67,6 @@ function api.refuel(skip)
   end
 end
 
-function api.place(blockName, direction)
-  api.findItem(blockName)
-  if direction == nil then
-    turtle.place()
-  elseif direction == "up" then
-    turtle.placeUp()
-  elseif direction == "down" then
-    turtle.placeDown()
-  end
-end
-
 function api.dig(direction)
   if direction == nil then
     turtle.dig()
