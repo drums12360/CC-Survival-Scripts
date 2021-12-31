@@ -1,5 +1,4 @@
 local api = {
-  timeout = 5,
   maxSlots = 16,
   slot = tonumber(turtle.getSelectedSlot()),
   d = 0,
@@ -125,15 +124,7 @@ function api.forward(times)
     api.backward(-times)
   end
   for i=1,times do
-    if not api.refuel() and turtle.getFuelLevel() == 0 then
-      while not api.refuel() do
-        print("Out of Fuel")
-        if api.hasWireless then
-          rednet.broadcast("Out of Fuel at X: "..api.coords.x.." Y: "..api.coords.y.." Z: "..api.coords.z)
-        end
-        sleep(api.timeout)
-      end
-    end
+    api.refuel()
     while not turtle.forward() do
       local inspect = {turtle.inspect()}
       if inspect[1] and inspect[2].name == "minecraft:bedrock" then
@@ -163,10 +154,7 @@ function api.backward(times)
     api.forward(-times)
   end
   for i=1,times do
-    while api.refuel() == false and turtle.getFuelLevel() == 0 do
-      print("Out of Fuel")
-      sleep(api.timeout)
-    end
+    api.refuel()
     turtle.back()
     if api.d == 0 then
       api.coords.z = api.coords.z + 1
@@ -186,10 +174,7 @@ function api.up(times)
     api.down(-times)
   end
   for i=1,times do
-    while api.refuel() == false and turtle.getFuelLevel() == 0 do
-      print("Out of Fuel")
-      sleep(api.timeout)
-    end
+    api.refuel()
     while not turtle.up() do 
       local inspect = {turtle.inspectUp()}
       if inspect[1] and inspect[2].name == "minecraft:bedrock" then
@@ -211,10 +196,7 @@ function api.down(times)
     api.up(-times)
   end
   for i=1,times do
-    while api.refuel() == false and turtle.getFuelLevel() == 0 do
-      print("Out of Fuel")
-      sleep(api.timeout)
-    end
+    api.refuel()
     while not turtle.down() do 
       local inspect = {turtle.inspectDown()}
       if inspect[1] and inspect[2].name == "minecraft:bedrock" then
@@ -290,7 +272,7 @@ function startup()
     end
     return true
   else
-    print("Please enter correct arguments. The height width and depth are required (e.g. mineShaft 5 5 10)")
+    print("Please enter correct arguments. The width height and depth are required (e.g. mineShaft 5 5 10)")
     return false
   end
 end

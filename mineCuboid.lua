@@ -27,7 +27,7 @@ function startup()
     end
     return true
   else
-    print("Please enter correct arguments. The height width and depth are required (e.g. mineShaft 5 5 10)")
+    print("Please enter correct arguments. The width height and depth are required (e.g. mineShaft 5 5 10)")
     return false
   end
 end
