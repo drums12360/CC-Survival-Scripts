@@ -7,6 +7,7 @@ local api = {
   direction = {[0] = "north", "east", "south", "west"},
   coords = {x = 0, y = 0, z = 0},
 }
+
 local fuelList = {
   "minecraft:coal",
   "minecraft:coal_block",
@@ -222,7 +223,10 @@ function api.forward(times)
       if inspect[1] and inspect[2].name == "minecraft:bedrock" then
         return false
       elseif inspect[1] and inspect[2].name ~= "minecraft:bedrock" then
-        turtle.dig()
+		while turtle.detect() do
+          turtle.dig()
+		  sleep(0.4)
+		end
       else
         turtle.attack()
       end
