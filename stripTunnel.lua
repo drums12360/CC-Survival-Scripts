@@ -166,31 +166,31 @@ end
 
 function mineSquence()
 	for i=1, tArgs[1] do
-		api.forward()
+		api.forward()print("fwd")
 		checkForOre()
 		turtle.digUp()
-		api.forward()
+		api.forward()print("fwd")
 		checkForOre()
 		turtle.digUp()
-		api.forward()
+		api.forward()print("fwd")
 		checkForOre()
 		turtle.digUp()
-		api.turnLeft()
+		api.turnLeft()print("left")
 		for i=1, tArgs[2] do
-			api.forward()
+			api.forward()print("fwd")
 			checkForOre()
 			turtle.digUp()
 		end
-		api.turnAround()
-		api.forward(tArgs[2])
+		api.turnAround()print("around")
+		api.forward(tArgs[2])print("fwdfull")
 		for i=1, tArgs[2] do
-			api.forward()
+			api.forward()print("fwd")
 			checkForOre()
 			turtle.digUp()
 		end
-		api.turnAround()
-		api.forward(tArgs[2])
-		api.turnRight()
+		api.turnAround()print("around")
+		api.forward(tArgs[2])print("fwdfull")
+		api.turnRight()print("right")
 		if api.loadData("/.save", "/chest")[1] == true then
 			api.emptyInv()
 		elseif api.loadData("/.save", "/chest")[1] == false then
