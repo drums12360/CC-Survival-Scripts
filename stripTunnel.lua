@@ -174,6 +174,11 @@ function mineSquence()
 			checkForOre()
 			turtle.digUp()
 		end
+		if api.loadData("/.save", "/chest")[1] == true then
+			api.emptyInv()
+		elseif api.loadData("/.save", "/chest")[1] == false then
+			api.waitforemptyInv()
+		end
 		api.turnLeft()
 		for i=1, Shaft_Widht do
 			api.forward()
@@ -190,11 +195,6 @@ function mineSquence()
 		api.turnAround()
 		api.forward(Shaft_Widht)
 		api.turnRight()
-		if api.loadData("/.save", "/chest")[1] == true then
-			api.emptyInv()
-		elseif api.loadData("/.save", "/chest")[1] == false then
-			api.waitforemptyInv()
-		end
 	end
 	if checkOreTable({turtle.inspect()}) then
 		api.forward()
