@@ -386,8 +386,8 @@ function api.avoidChest()
 end
 
 function api.emptyInv()
-local full = false
-local start = api.loadData("/.save", "/start_pos")
+  local full = false
+  local start = api.loadData("/.save", "/start_pos")
   if turtle.getItemCount(15) > 0 then
 	full = true
   end
@@ -406,8 +406,9 @@ local start = api.loadData("/.save", "/start_pos")
 end
 
 function api.waitforemptyInv()
-local full = false
-local start = api.loadData("/.save", "/start_pos")
+  local full = false
+  local start = api.loadData("/.save", "/start_pos")
+  local mining = {}
   while turtle.getItemCount(15) > 0 do
 	full = true
   end
@@ -416,7 +417,7 @@ local start = api.loadData("/.save", "/start_pos")
       print("Out of Fuel")
       sleep(api.timeout)
 	end
-	local mining = api.copyTable(api.coords)
+	mining = api.copyTable(api.coords)
 	api.moveTo(start.x, start.y, start.z)
   end
   if turtle.getItemCount(15) == 0 then
