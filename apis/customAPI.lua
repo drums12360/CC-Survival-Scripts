@@ -395,6 +395,10 @@ function api.emptyInv()
 	local mining = api.copyTable(api.coords)
 	api.moveTo(start.x, start.y, start.z)
 	api.drop(15)
+	while api.refuel() == false and turtle.getFuelLevel() == 0 do
+      print("Out of Fuel")
+      sleep(api.timeout)
+	end
 	api.moveTo(mining.x, mining.y, mining.z)
 	turtle.select(1)
   end
