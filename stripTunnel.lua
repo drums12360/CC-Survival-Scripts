@@ -169,18 +169,12 @@ function mineSquence()
 	local Shaft_Widht = tonumber(arg[2])
 	local Shaft_Distance = tonumber(arg[3])
 	for i=1, Shaft_Amount do
-		api.forward()
-		print("fwd")
-		checkForOre()
-		turtle.digUp()
-		api.forward()
-		print("fwd")
-		checkForOre()
-		turtle.digUp()
-		api.forward()
-		print("fwd")
-		checkForOre()
-		turtle.digUp()
+		for i=1, Shaft_Distance do
+			api.forward()
+			print("fwd")
+			checkForOre()
+			turtle.digUp()
+		end
 		api.turnLeft()
 		print("left")
 		for i=1, Shaft_Widht do
@@ -218,22 +212,22 @@ function mineSquence()
 end
 
 function returnSquence()
-	local moves = tArgs[1]
+	local Shaft_Amount = tonumber(arg[1])
 	if turtle.getItemCount(16) ~= 0 then
 		if turtle.getItemDetail(16).name ~= "minecraft:torch" then
 			return false
-			elseif turtle.getItemDetail(16).name == "minecraft:torch" and tArgs[1] > 4 then
+			elseif turtle.getItemDetail(16).name == "minecraft:torch" and Shaft_Amount > 4 then
 			turtle.select(16)
 			api.up()
 			api.backward()
 			turtle.place()
-			moves = moves - 1
-			while moves > 12 and turtle.getItemCount(16) ~= 0 do
+			Shaft_Amount = Shaft_Amount - 1
+			while Shaft_Amount > 12 and turtle.getItemCount(16) ~= 0 do
 				api.turnAround()
 				api.forward(12)
 				api.turnAround()
 				turtle.place()
-				moves = moves - 12
+				Shaft_Amount = Shaft_Amount - 12
 			end
 		end
 	else
@@ -241,9 +235,7 @@ function returnSquence()
 	end
 end
 
-if type(tonumber(tArgs[1]), (tArgs[2]), (tArgs[3])) ~= "number" "number" "number" then
-	error(("Usage: %s Shaft_Amount(10) Shaft_Widht(25) Shaft_Distance(3)"):format(fs.getName(shell.getRunningProgram())))
-end
+
 
 local start = api.copyTable(api.coords)
 api.saveData("/.save", "/start_pos", start)
