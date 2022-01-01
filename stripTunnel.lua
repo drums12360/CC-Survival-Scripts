@@ -227,7 +227,7 @@ function mineSquence()
 end
 
 if type(tonumber(tArgs[1])) ~= "number" then
-	error(("Usage: %s Define a shaft amount, shaft widht and shaft distance. (Example: 10 20 3 [10 deep, 20 to each side, and every 3 blocks."):format(fs.getName(shell.getRunningProgram())))
+	error(("Usage: %s Define shaft amount, shaft width and shaft distance. (Example: '10 20 3' [10 deep, 20 to each side, and every 3 blocks]"):format(fs.getName(shell.getRunningProgram())))
 end
 
 local start = api.copyTable(api.coords)
