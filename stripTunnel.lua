@@ -164,7 +164,7 @@ function checkForOre()
 		api.turnLeft()
 end
 
-function mineSquence(tArgs[1])
+function mineSquence()
 	for i=1, tArgs[1] do
 		api.forward()
 		checkForOre()
@@ -175,14 +175,17 @@ function mineSquence(tArgs[1])
 		api.forward()
 		checkForOre()
 		turtle.digUp()
-		for i=1 tArgs[2]
-			api.left()
+		api.left()
+		checkForOre()
+		turtle.digUp()
+		for i=1, tArgs[2]-1 do
+			api.forward()
 			checkForOre()
 			turtle.digUp()
 		end
-		api.turnRight()
+		api.turnAround()
 		api.forward(tArgs[2])
-		for i=1 tArgs[2]
+		for i=1, tArgs[2] do
 			api.forward()
 			checkForOre()
 			turtle.digUp()
@@ -202,7 +205,7 @@ function mineSquence(tArgs[1])
 	end
 end
 
-function returnSquence(tArgs[1])
+function returnSquence()
 	local moves = tArgs[1]
 	if turtle.getItemCount(16) ~= 0 then
 		if turtle.getItemDetail(16).name ~= "minecraft:torch" then
@@ -233,7 +236,7 @@ end
 local start = api.copyTable(api.coords)
 api.saveData("/.save", "/start_pos", start)
 api.avoidChest()
-mineSquence()
+mineSquence(tArgs[1], tArgs[2], tArgs[3])
 returnSquence()
 api.moveTo(start.x, start.y, start.z)
 api.drop(api.maxSlots)
