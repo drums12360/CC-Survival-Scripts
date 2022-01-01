@@ -369,16 +369,19 @@ function api.drop(slots)
 end
 
 function api.avoidChest()
-  local chest = {0}
+  local chest = {}
   local inspect, data = turtle.inspect()
   if data.name == "minecraft:chest" then
 	while api.refuel() == false and turtle.getFuelLevel() == 0 do
       print("Out of Fuel")
       sleep(api.timeout)
 	end
-	chest = {1}
+	chest[1] = true
 	api.saveData("/.save", "/chest", chest)
 	api.turnAround()
+  else
+	chest[1] = false
+	api.saveData("/.save", "/chest", chest)
   end
 end
 
