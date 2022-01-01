@@ -354,7 +354,7 @@ function api.moveTo(x, y, z)
 end
 
 function api.drop(slots)
-  if api.findItem("minecraft:chest") then
+  if turtle.inspect.name == "minecraft:chest" then
 	for i=1, slots do
 	  turtle.select(i)
 	  turtle.drop()
