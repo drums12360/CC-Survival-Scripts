@@ -373,7 +373,7 @@ function api.avoidChest()
 	while api.refuel() == false and turtle.getFuelLevel() == 0 do
       print("Out of Fuel")
       sleep(api.timeout)
-    end
+	end
 	api.turnAround()
   end
 end
