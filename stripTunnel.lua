@@ -169,11 +169,13 @@ function mineSquence(amount)
     api.forward()
     checkForOre()
 	turtle.digUp()
+	api.emptyInv()
   end
   if checkOreTable({turtle.inspect()}) then
     api.forward()
     veinMine(api.forward)
   end
+
 end
 
 function returnSquence(amount)
@@ -205,6 +207,7 @@ if type(tonumber(tArgs[1])) ~= "number" then
 end
 
 local start = api.copyTable(api.coords)
+api.saveData("/.save", "/start_pos", start)
 api.avoidChest()
 mineSquence(tonumber(tArgs[1]))
 returnSquence(tonumber(tArgs[1])-1)
