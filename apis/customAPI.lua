@@ -18,23 +18,23 @@ local fuelList = {
 
 function api.copyTable(tbl)
   if type(tbl) ~= "table" then
-    error("The type of 'tbl' is not a table",2)
+	error("The type of 'tbl' is not a table",2)
   end
   local rtbl = {}
   for k,v in pairs(tbl) do
-    rtbl[k] = v
+	rtbl[k] = v
   end
   return rtbl
 end
 
 function api.saveData(dir, path, tbl)
   if type(tbl) ~= "table" then
-    error("The type of 'tbl' is not a table",2)
+	error("The type of 'tbl' is not a table",2)
   elseif type(path) ~= "string" or type(dir) ~= "string" then
-    error("The type of 'path' or 'dir' is not a string",2)
+	error("The type of 'path' or 'dir' is not a string",2)
   end
   if not fs.exists(dir) then
-    fs.makeDir(dir)
+	fs.makeDir(dir)
   end
   local f = fs.open(dir .. path, "w")
   f.write(textutils.serialize(tbl))
@@ -43,57 +43,57 @@ end
 
 function api.loadData(dir, path)
   if type(path) ~= "string" or type(dir) ~= "string" then
-    error("The type of 'path' or 'dir' is not a string",2)
+	error("The type of 'path' or 'dir' is not a string",2)
   end
   if fs.exists(dir) then
-    local tbl = {}
-    local f = fs.open(dir .. path, "r")
-    tbl = f.readAll()
-    tbl = textutils.unserialize(tbl)
-    f.close()
-    return tbl
+	local tbl = {}
+	local f = fs.open(dir .. path, "r")
+	tbl = f.readAll()
+	tbl = textutils.unserialize(tbl)
+	f.close()
+	return tbl
   end
   return false
 end
 
 function api.findItem(name)
   if type(name) ~= "string" then
-    error("The type of 'name' is not a string")
-    return false
+	error("The type of 'name' is not a string")
+	return false
   end
   local item = turtle.getItemDetail(api.slot)
   if item ~= nil then
-    if item.name == name then
-      return true
-    end
+	if item.name == name then
+	  return true
+	end
   end
-  for i=1,api.maxSlots do
-    item = turtle.getItemDetail(i)
-    if item ~= nil then
-      if item.name == name then
-        turtle.select(i)
-        api.slot = tonumber(i)
-        return true
-      end
-    end
+  for i=1, api.maxSlots do
+	item = turtle.getItemDetail(i)
+	if item ~= nil then
+	  if item.name == name then
+		turtle.select(i)
+		api.slot = tonumber(i)
+		return true
+	  end
+	end
   end
   return false
 end
 
 function api.refuel(skip)
-	if skip ~= true then
-		skip = false
-	end
-  if turtle.getFuelLevel() <= 10 or skip then
+  if skip ~= true then
+	skip = false
+  end
+  if turtle.getFuelLevel() <= 10 or skip == false then
     for i=1,#fuelList do
       if api.findItem(fuelList[i]) then
-        turtle.refuel(1)
-        return true
-      end
-    end
-    return false
+		turtle.refuel()
+		return true
+	  end
+	end
+	return false
   else
-    return false
+	return false
   end
 end
 
@@ -206,41 +206,42 @@ end
 function api.forward(times)
   times = times or 1
   if times < 0 then
-    api.backward(-times)
+	api.backward(-times)
   end
-  for i=1,times do
-    if not api.refuel() and turtle.getFuelLevel() == 0 then
-      while not api.refuel() do
-        print("Out of Fuel")
-        if api.hasWireless then
-          rednet.broadcast("Out of Fuel at X: "..api.coords.x.." Y: "..api.coords.y.." Z: "..api.coords.z)
-        end
-        sleep(api.timeout)
-      end
-    end
-    while not turtle.forward() do
-      local inspect = {turtle.inspect()}
-      if inspect[1] and inspect[2].name == "minecraft:bedrock" then
-        return false
-      elseif inspect[1] and inspect[2].name ~= "minecraft:bedrock" then
+  for i=1, times do
+	api.refuel()
+	if not api.refuel() and turtle.getFuelLevel() == 0 then
+	  while not api.refuel() do
+		print("Out of Fuel")
+		if api.hasWireless then
+		  rednet.broadcast("Out of Fuel at X: "..api.coords.x.." Y: "..api.coords.y.." Z: "..api.coords.z)
+		end
+		sleep(api.timeout)
+	  end
+	end
+	while not turtle.forward() do
+	  local inspect = {turtle.inspect()}
+	  if inspect[1] and inspect[2].name == "minecraft:bedrock" then
+		return false
+	  elseif inspect[1] and inspect[2].name ~= "minecraft:bedrock" then
 		while turtle.detect() do
-          turtle.dig()
+		  turtle.dig()
 		  sleep(0.4)
 		end
-      else
-        turtle.attack()
-      end
-    end
-    if api.d == 0 then
-      api.coords.z = api.coords.z - 1
-    elseif api.d == 1 then
-      api.coords.x = api.coords.x + 1
-    elseif api.d == 2 then
-      api.coords.z = api.coords.z + 1
-    elseif api.d == 3 then
-      api.coords.x = api.coords.x - 1
-    end
-    api.saveData("/.save", "/position", api.coords)
+	  else
+		turtle.attack()
+	  end
+	end
+	if api.d == 0 then
+	  api.coords.z = api.coords.z - 1
+	elseif api.d == 1 then
+	  api.coords.x = api.coords.x + 1
+	elseif api.d == 2 then
+	  api.coords.z = api.coords.z + 1
+	elseif api.d == 3 then
+	  api.coords.x = api.coords.x - 1
+	end
+	api.saveData("/.save", "/position", api.coords)
   end
   return true
 end
@@ -251,10 +252,16 @@ function api.backward(times)
     api.forward(-times)
   end
   for i=1,times do
-    while api.refuel() == false and turtle.getFuelLevel() == 0 do
-      print("Out of Fuel")
-      sleep(api.timeout)
-    end
+    api.refuel()
+	if not api.refuel() and turtle.getFuelLevel() == 0 then
+	  while not api.refuel() do
+		print("Out of Fuel")
+		if api.hasWireless then
+		  rednet.broadcast("Out of Fuel at X: "..api.coords.x.." Y: "..api.coords.y.." Z: "..api.coords.z)
+		end
+		sleep(api.timeout)
+	  end
+	end
     turtle.back()
     if api.d == 0 then
       api.coords.z = api.coords.z + 1
@@ -275,10 +282,16 @@ function api.up(times)
     api.down(-times)
   end
   for i=1,times do
-    while api.refuel() == false and turtle.getFuelLevel() == 0 do
-      print("Out of Fuel")
-      sleep(api.timeout)
-    end
+    api.refuel()
+	if not api.refuel() and turtle.getFuelLevel() == 0 then
+	  while not api.refuel() do
+		print("Out of Fuel")
+		if api.hasWireless then
+		  rednet.broadcast("Out of Fuel at X: "..api.coords.x.." Y: "..api.coords.y.." Z: "..api.coords.z)
+		end
+		sleep(api.timeout)
+	  end
+	end
     while not turtle.up() do 
       local inspect = {turtle.inspectUp()}
       if inspect[1] and inspect[2].name == "minecraft:bedrock" then
@@ -301,10 +314,16 @@ function api.down(times)
     api.up(-times)
   end
   for i=1,times do
-    while api.refuel() == false and turtle.getFuelLevel() == 0 do
-      print("Out of Fuel")
-      sleep(api.timeout)
-    end
+    api.refuel()
+	if not api.refuel() and turtle.getFuelLevel() == 0 then
+	  while not api.refuel() do
+		print("Out of Fuel")
+		if api.hasWireless then
+		  rednet.broadcast("Out of Fuel at X: "..api.coords.x.." Y: "..api.coords.y.." Z: "..api.coords.z)
+		end
+		sleep(api.timeout)
+	  end
+	end
     while not turtle.down() do 
       local inspect = {turtle.inspectDown()}
       if inspect[1] and inspect[2].name == "minecraft:bedrock" then
@@ -357,10 +376,6 @@ function api.drop(slots)
   local inspect, data = turtle.inspect()
   if data.name == "minecraft:chest" then
 	for i=1, slots do
-	  while api.refuel() == false and turtle.getFuelLevel() == 0 do
-		print("Out of Fuel")
-		sleep(api.timeout)
-      end
 	  turtle.select(i)
 	  turtle.drop()
 	end
@@ -388,17 +403,9 @@ end
 function api.emptyInv()
   local start = api.loadData("/.save", "/start_pos")
   if turtle.getItemCount(15) > 0 then
-	while api.refuel() == false and turtle.getFuelLevel() == 0 do
-      print("Out of Fuel")
-      sleep(api.timeout)
-	end
 	local mining = api.copyTable(api.coords)
 	api.moveTo(start.x, start.y, start.z)
 	api.drop(15)
-	while api.refuel() == false and turtle.getFuelLevel() == 0 do
-      print("Out of Fuel")
-      sleep(api.timeout)
-	end
 	api.moveTo(mining.x, mining.y, mining.z)
 	turtle.select(1)
   end
@@ -407,18 +414,10 @@ end
 function api.waitforemptyInv()
   local start = api.loadData("/.save", "/start_pos")
   if turtle.getItemCount(15) > 0 then
-	while api.refuel() == false and turtle.getFuelLevel() == 0 do
-      print("Out of Fuel")
-      sleep(api.timeout)
-	end
 	local mining = api.copyTable(api.coords)
 	api.moveTo(start.x, start.y, start.z)
 	print("Press any key after emptying.")
 	os.pullEvent("key")
-	while api.refuel() == false and turtle.getFuelLevel() == 0 do
-      print("Out of Fuel")
-      sleep(api.timeout)
-	end
 	api.moveTo(mining.x, mining.y, mining.z)
 	turtle.select(1)
   end
