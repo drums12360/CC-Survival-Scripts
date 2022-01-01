@@ -353,9 +353,9 @@ function api.moveTo(x, y, z)
   end
 end
 
-function api.drop()
+function api.drop(slots)
   if api.findItem("minecraft:chest") then
-	for i=1, 16 do
+	for i=1, slots do
 	  turtle.select(i)
 	  turtle.drop()
 	end
