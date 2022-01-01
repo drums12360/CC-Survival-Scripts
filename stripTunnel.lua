@@ -168,7 +168,7 @@ function mineSquence()
 	local Shaft_Amount = tonumber(arg[1])
 	local Shaft_Widht = tonumber(arg[2])
 	local Shaft_Distance = tonumber(arg[3])
-	for i=1, Shaft_Distance do
+	for i=1, Shaft_Amount do
 		api.forward()
 		print("fwd")
 		checkForOre()
@@ -201,7 +201,7 @@ function mineSquence()
 		end
 		api.turnAround()
 		print("around")
-		api.forward(Shaft_Amount)
+		api.forward(Shaft_Widht)
 		print("fwdfull")
 		api.turnRight()
 		print("right")
