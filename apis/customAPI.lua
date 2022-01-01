@@ -390,8 +390,6 @@ function api.emptyInv()
   local start = api.loadData("/.save", "/start_pos")
   if turtle.getItemCount(15) > 0 then
 	full = true
-  end
-  if full == true then
 	while api.refuel() == false and turtle.getFuelLevel() == 0 do
       print("Out of Fuel")
       sleep(api.timeout)
