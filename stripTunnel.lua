@@ -169,13 +169,14 @@ function mineSquence(amount)
     api.forward()
     checkForOre()
 	turtle.digUp()
-	api.emptyInv()
+	while api.loadData("/.save", "/chest") == 1 do
+	  api.emptyInv()
+	end
   end
   if checkOreTable({turtle.inspect()}) then
     api.forward()
     veinMine(api.forward)
   end
-
 end
 
 function returnSquence(amount)
