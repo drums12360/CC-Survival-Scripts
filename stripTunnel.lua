@@ -212,23 +212,20 @@ function mineSquence()
 end
 
 function returnSquence()
-	local Shaft_Amount = tonumber(arg[1])
-	if turtle.getItemCount(16) ~= 0 then
-		if turtle.getItemDetail(16).name ~= "minecraft:torch" then
-			return false
-			elseif turtle.getItemDetail(16).name == "minecraft:torch" and Shaft_Amount > 4 then
-			turtle.select(16)
-			api.up()
-			api.backward()
+	if not turtle.getItemDetail(16).name ~= "minecraft:torch" then
+		return true
+		elseif turtle.getItemDetail(16).name == "minecraft:torch" then
+		turtle.select(16)
+		api.up()
+		api.backward()
+		turtle.place()
+		move = move - 1
+		while turtle.getItemCount(16) ~= 0 do
+			api.turnAround()
+			api.forward(12)
+			api.turnAround()
 			turtle.place()
-			Shaft_Amount = Shaft_Amount - 1
-			while Shaft_Amount > 12 and turtle.getItemCount(16) ~= 0 do
-				api.turnAround()
-				api.forward(12)
-				api.turnAround()
-				turtle.place()
-				Shaft_Amount = Shaft_Amount - 12
-			end
+			move = move - 12
 		end
 	else
 		print("No torches in slot 16.")
@@ -241,7 +238,7 @@ local start = api.copyTable(api.coords)
 api.saveData("/.save", "/start_pos", start)
 api.avoidChest()
 mineSquence(tArgs[1], tArgs[2], tArgs[3])
-returnSquence()
+returnSquence(tArgs[2])
 api.moveTo(start.x, start.y, start.z)
 api.drop(api.maxSlots)
 fs.delete("/.save")
