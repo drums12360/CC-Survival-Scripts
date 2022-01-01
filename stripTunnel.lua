@@ -175,10 +175,8 @@ function mineSquence()
 		api.forward()
 		checkForOre()
 		turtle.digUp()
-		api.left()
-		checkForOre()
-		turtle.digUp()
-		for i=1, tArgs[2]-1 do
+		api.turnLeft()
+		for i=1, tArgs[2] do
 			api.forward()
 			checkForOre()
 			turtle.digUp()
@@ -229,7 +227,7 @@ function returnSquence()
 	end
 end
 
-if type(tonumber(tArgs[1])) ~= "number" then
+if type(tonumber(tArgs[1])) ~= "number", "number", "number" then
 	error(("Usage: %s Shaft_Amount(10) Shaft_Widht(25) Shaft_Distance(3)"):format(fs.getName(shell.getRunningProgram())))
 end
 
