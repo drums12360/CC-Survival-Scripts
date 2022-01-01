@@ -165,7 +165,10 @@ function checkForOre()
 end
 
 function mineSquence()
-	for i=1, tArgs[1] do
+	local Shaft_Amount = tonumber(arg[1])
+	local Shaft_Widht = tonumber(arg[2])
+	local Shaft_Distance = tonumber(arg[3])
+	for i=1, Shaft_Distance do
 		api.forward()
 		print("fwd")
 		checkForOre()
@@ -180,7 +183,7 @@ function mineSquence()
 		turtle.digUp()
 		api.turnLeft()
 		print("left")
-		for i=1, tArgs[2] do
+		for i=1, Shaft_Widht do
 			api.forward()
 			print("fwd")
 			checkForOre()
@@ -188,9 +191,9 @@ function mineSquence()
 		end
 		api.turnAround()
 		print("around")
-		api.forward(tArgs[2])
+		api.forward(Shaft_Widht)
 		print("fwdfull")
-		for i=1, tArgs[2] do
+		for i=1, Shaft_Widht do
 			api.forward()
 			print("fwd")
 			checkForOre()
@@ -198,7 +201,7 @@ function mineSquence()
 		end
 		api.turnAround()
 		print("around")
-		api.forward(tArgs[2])
+		api.forward(Shaft_Amount)
 		print("fwdfull")
 		api.turnRight()
 		print("right")
@@ -238,7 +241,7 @@ function returnSquence()
 	end
 end
 
-if type(tonumber(tArgs[1])) ~= "number", "number", "number" then
+if type(tonumber(tArgs[1]), (tArgs[2]), (tArgs[3])) ~= "number" "number" "number" then
 	error(("Usage: %s Shaft_Amount(10) Shaft_Widht(25) Shaft_Distance(3)"):format(fs.getName(shell.getRunningProgram())))
 end
 
