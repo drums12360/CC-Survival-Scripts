@@ -168,10 +168,11 @@ function mineSquence()
 	local Shaft_Amount = tonumber(arg[1])
 	local Shaft_Widht = tonumber(arg[2])
 	local Shaft_Distance = tonumber(arg[3])
-	local movedistance, movewidthleft, movewidthright = 0
+	local movedistance = 0
+	local movewidthleft = 0
+	local movewidthright = 0
 	for i=1, Shaft_Amount do
 		for i=1, Shaft_Distance do
-		
 			api.forward()
 			checkForOre()
 			turtle.digUp()
