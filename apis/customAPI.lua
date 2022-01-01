@@ -80,11 +80,8 @@ function api.findItem(name)
 	return false
 end
 
-function api.refuel(skip)
-	if skip ~= true then
-		skip = false
-	end
-	if turtle.getFuelLevel() <= 10 or skip == false then
+function api.refuel()
+	if turtle.getFuelLevel() <= 10 then
 		for i=1,#fuelList do
 			if api.findItem(fuelList[i]) then
 			turtle.refuel()
@@ -400,8 +397,8 @@ function api.emptyInv()
 		local mining = api.copyTable(api.coords)
 		api.moveTo(start.x, start.y, start.z)
 		api.drop(15)
-		api.moveTo(mining.x, mining.y, mining.z)
 		turtle.select(1)
+		api.moveTo(mining.x, mining.y, mining.z)
 	end
 end
 
@@ -410,10 +407,10 @@ function api.waitforemptyInv()
 	if turtle.getItemCount(15) > 0 then
 		local mining = api.copyTable(api.coords)
 		api.moveTo(start.x, start.y, start.z)
+		turtle.select(1)
 		print("Press any key after emptying.")
 		os.pullEvent("key")
 		api.moveTo(mining.x, mining.y, mining.z)
-		turtle.select(1)
 	end
 end
 
