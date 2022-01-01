@@ -357,9 +357,24 @@ function api.drop(slots)
 local inspect, data = turtle.inspect()
   if data.name == "minecraft:chest" then
 	for i=1, slots do
+	  while api.refuel() == false and turtle.getFuelLevel() == 0 do
+		print("Out of Fuel")
+		sleep(api.timeout)
+      end
 	  turtle.select(i)
 	  turtle.drop()
 	end
+  end
+end
+
+function api.avoidChest()
+  local inspect, data = turtle.inspect()
+  if data.name == "minecraft:chest" then
+	while api.refuel() == false and turtle.getFuelLevel() == 0 do
+      print("Out of Fuel")
+      sleep(api.timeout)
+    end
+	api.turnAround()
   end
 end
 
