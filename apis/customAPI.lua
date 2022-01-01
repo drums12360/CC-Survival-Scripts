@@ -408,7 +408,6 @@ end
 function api.waitforemptyInv()
   local full = false
   local start = api.loadData("/.save", "/start_pos")
-  local mining = {}
   while turtle.getItemCount(15) > 0 do
 	full = true
   end
@@ -417,10 +416,10 @@ function api.waitforemptyInv()
       print("Out of Fuel")
       sleep(api.timeout)
 	end
-	mining = api.copyTable(api.coords)
+	local mining = api.copyTable(api.coords)
 	api.moveTo(start.x, start.y, start.z)
   end
-  if turtle.getItemCount(15) == 0 then
+  if turtle.getItemCount(15) == 0 and full == true then
 	api.moveTo(mining.x, mining.y, mining.z)
 	turtle.select(1)
 	full = false
