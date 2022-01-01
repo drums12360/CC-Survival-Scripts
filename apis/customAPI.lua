@@ -408,7 +408,7 @@ end
 function api.waitforemptyInv()
   local full = false
   local start = api.loadData("/.save", "/start_pos")
-  while turtle.getItemCount(15) > 0 do
+  if turtle.getItemCount(15) > 0 then
 	full = true
   end
   if full == true then
