@@ -169,8 +169,11 @@ function mineSquence(amount)
     api.forward()
     checkForOre()
 	turtle.digUp()
-	if api.loadData("/.save", "/chest")[1] == true then
+	while api.loadData("/.save", "/chest")[1] == true do
 	  api.emptyInv()
+	end
+	while api.loadData("/.save", "/chest")[1] == false do
+	  api.waitforemptyInv()
 	end
   end
   if checkOreTable({turtle.inspect()}) then
