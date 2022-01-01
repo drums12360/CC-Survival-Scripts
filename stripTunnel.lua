@@ -190,6 +190,13 @@ function mineSquence()
 			print("fwd")
 			checkForOre()
 			turtle.digUp()
+			move = move + 1
+			if turtle.getItemDetail(16).name == "minecraft:torch" and move == 10 then
+				turtle.select(16)
+				turtle.placeUp()
+				turtle.select(1)
+				move = 0
+			end
 		end
 		api.turnAround()
 		print("around")
@@ -200,6 +207,13 @@ function mineSquence()
 			print("fwd")
 			checkForOre()
 			turtle.digUp()
+			move = move + 1
+			if turtle.getItemDetail(16).name == "minecraft:torch" and move == 10 then
+				turtle.select(16)
+				turtle.placeUp()
+				turtle.select(1)
+				move = 0
+			end
 		end
 		api.turnAround()
 		print("around")
