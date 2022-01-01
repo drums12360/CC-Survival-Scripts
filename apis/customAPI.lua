@@ -81,16 +81,10 @@ function api.findItem(name)
 end
 
 function api.refuel()
-	if turtle.getFuelLevel() <= 10 then
-		for i=1,#fuelList do
-			if api.findItem(fuelList[i]) then
-			turtle.refuel()
-			return true
-			end
+	for i=1,#fuelList do
+		if api.findItem(fuelList[i]) then
+		turtle.refuel()
 		end
-		return false
-	else
-		return false
 	end
 end
 
@@ -204,7 +198,6 @@ function api.forward(times)
 		api.backward(-times)
 	end
 	for i=1, times do
-		api.refuel()
 		if not api.refuel() and turtle.getFuelLevel() == 0 then
 			while not api.refuel() do
 				print("Out of Fuel")
@@ -213,6 +206,8 @@ function api.forward(times)
 				end
 				sleep(api.timeout)
 			end
+		elseif turtle.getFuelLevel() <= 10 then
+			api.refuel()
 		end
 		while not turtle.forward() do
 			local inspect = {turtle.inspect()}
@@ -247,7 +242,6 @@ function api.backward(times)
 		api.forward(-times)
 	end
 	for i=1, times do
-		api.refuel()
 		if not api.refuel() and turtle.getFuelLevel() == 0 then
 			while not api.refuel() do
 				print("Out of Fuel")
@@ -256,6 +250,8 @@ function api.backward(times)
 				end
 				sleep(api.timeout)
 			end
+		elseif turtle.getFuelLevel() <= 10 then
+			api.refuel()
 		end
 		turtle.back()
 		if api.d == 0 then
@@ -286,6 +282,8 @@ function api.up(times)
 				end
 				sleep(api.timeout)
 			end
+		elseif turtle.getFuelLevel() <= 10 then
+			api.refuel()
 		end
 		while not turtle.up() do 
 			local inspect = {turtle.inspectUp()}
@@ -318,6 +316,8 @@ function api.down(times)
 				end
 				sleep(api.timeout)
 			end
+		elseif turtle.getFuelLevel() <= 10 then
+			api.refuel()
 		end
 		while not turtle.down() do 
 			local inspect = {turtle.inspectDown()}
