@@ -168,59 +168,51 @@ function mineSquence()
 	local Shaft_Amount = tonumber(arg[1])
 	local Shaft_Widht = tonumber(arg[2])
 	local Shaft_Distance = tonumber(arg[3])
-	local move = 0
+	local movedistance, movewidthleft, movewidthright = 0
 	for i=1, Shaft_Amount do
 		for i=1, Shaft_Distance do
+		
 			api.forward()
-			print("fwd")
 			checkForOre()
 			turtle.digUp()
-			move = move + 1
-			if turtle.getItemDetail(16).name == "minecraft:torch" and move == 10 then
+			movedistance = movedistance + 1
+			if turtle.getItemDetail(16).name == "minecraft:torch" and move == 11 then
 				turtle.select(16)
 				turtle.placeUp()
 				turtle.select(1)
-				move = 0
+				movedistance = 0
 			end
 		end
 		api.turnLeft()
-		print("left")
 		for i=1, Shaft_Widht do
 			api.forward()
-			print("fwd")
 			checkForOre()
 			turtle.digUp()
-			move = move + 1
-			if turtle.getItemDetail(16).name == "minecraft:torch" and move == 10 then
+			movewidthleft = movewidthleft + 1
+			if turtle.getItemDetail(16).name == "minecraft:torch" and move == 11 then
 				turtle.select(16)
 				turtle.placeUp()
 				turtle.select(1)
-				move = 0
+				movewidthleft = 0
 			end
 		end
 		api.turnAround()
-		print("around")
 		api.forward(Shaft_Widht)
-		print("fwdfull")
 		for i=1, Shaft_Widht do
 			api.forward()
-			print("fwd")
 			checkForOre()
 			turtle.digUp()
-			move = move + 1
-			if turtle.getItemDetail(16).name == "minecraft:torch" and move == 10 then
+			movewidthright = movewidthright + 1
+			if turtle.getItemDetail(16).name == "minecraft:torch" and move == 11 then
 				turtle.select(16)
 				turtle.placeUp()
 				turtle.select(1)
-				move = 0
+				movewidthright = 0
 			end
 		end
 		api.turnAround()
-		print("around")
 		api.forward(Shaft_Widht)
-		print("fwdfull")
 		api.turnRight()
-		print("right")
 		if api.loadData("/.save", "/chest")[1] == true then
 			api.emptyInv()
 		elseif api.loadData("/.save", "/chest")[1] == false then
@@ -231,6 +223,10 @@ function mineSquence()
 		api.forward()
 		veinMine(api.forward)
 	end
+end
+
+if type(tonumber(tArgs[1])) ~= "number" then
+	error(("Usage: %s Define a shaft amount, shaft widht and shaft distance. (Example: 10 20 3 [10 deep, 20 to each side, and every 3 blocks."):format(fs.getName(shell.getRunningProgram())))
 end
 
 local start = api.copyTable(api.coords)
