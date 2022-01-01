@@ -168,12 +168,20 @@ function mineSquence()
 	local Shaft_Amount = tonumber(arg[1])
 	local Shaft_Widht = tonumber(arg[2])
 	local Shaft_Distance = tonumber(arg[3])
+	local move = 0
 	for i=1, Shaft_Amount do
 		for i=1, Shaft_Distance do
 			api.forward()
 			print("fwd")
 			checkForOre()
 			turtle.digUp()
+			move = move + 1
+			if turtle.getItemDetail(16).name == "minecraft:torch" and move == 10 then
+				turtle.select(16)
+				turtle.placeUp()
+				turtle.select(1)
+				move = 0
+			end
 		end
 		api.turnLeft()
 		print("left")
@@ -210,29 +218,6 @@ function mineSquence()
 		veinMine(api.forward)
 	end
 end
-
-function returnSquence()
-	if not turtle.getItemDetail(16).name ~= "minecraft:torch" then
-		return true
-		elseif turtle.getItemDetail(16).name == "minecraft:torch" then
-		turtle.select(16)
-		api.up()
-		api.backward()
-		turtle.place()
-		move = move - 1
-		while turtle.getItemCount(16) ~= 0 do
-			api.turnAround()
-			api.forward(12)
-			api.turnAround()
-			turtle.place()
-			move = move - 12
-		end
-	else
-		print("No torches in slot 16.")
-	end
-end
-
-
 
 local start = api.copyTable(api.coords)
 api.saveData("/.save", "/start_pos", start)
