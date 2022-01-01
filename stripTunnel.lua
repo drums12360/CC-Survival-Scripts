@@ -200,11 +200,19 @@ function returnSquence(amount)
   end
 end
 
+function avoidChest()
+  local inspect, data = turtle.inspect()
+  if data.name == "minecraft:chest" then
+	api.turnAround
+  end
+end
+
 if type(tonumber(tArgs[1])) ~= "number" then
   error(("Usage: %s 10"):format(fs.getName(shell.getRunningProgram())))
 end
 
 local start = api.copyTable(api.coords)
+avoidChest()
 mineSquence(tonumber(tArgs[1]))
 returnSquence(tonumber(tArgs[1])-1)
 api.moveTo(start.x, start.y, start.z)
