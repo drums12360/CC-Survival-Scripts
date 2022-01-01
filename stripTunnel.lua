@@ -177,7 +177,7 @@ function mineSquence()
 			checkForOre()
 			turtle.digUp()
 			movedistance = movedistance + 1
-			if turtle.getItemDetail(16).name == "minecraft:torch" and move == 11 then
+			if turtle.getItemDetail(16).name == "minecraft:torch" and movedistance == 11 then
 				turtle.select(16)
 				turtle.placeUp()
 				turtle.select(1)
@@ -190,7 +190,7 @@ function mineSquence()
 			checkForOre()
 			turtle.digUp()
 			movewidthleft = movewidthleft + 1
-			if turtle.getItemDetail(16).name == "minecraft:torch" and move == 11 then
+			if turtle.getItemDetail(16).name == "minecraft:torch" and movewidthleft == 11 then
 				turtle.select(16)
 				turtle.placeUp()
 				turtle.select(1)
@@ -204,7 +204,7 @@ function mineSquence()
 			checkForOre()
 			turtle.digUp()
 			movewidthright = movewidthright + 1
-			if turtle.getItemDetail(16).name == "minecraft:torch" and move == 11 then
+			if turtle.getItemDetail(16).name == "minecraft:torch" and movewidthright == 11 then
 				turtle.select(16)
 				turtle.placeUp()
 				turtle.select(1)
