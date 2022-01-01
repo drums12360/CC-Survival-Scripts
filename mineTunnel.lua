@@ -164,32 +164,11 @@ function checkForOre()
 		api.turnLeft()
 end
 
-function mineSquence(tArgs[1])
-	for i=1, tArgs[1] do
+function mineSquence(amount)
+	for i=1, amount do
 		api.forward()
 		checkForOre()
 		turtle.digUp()
-		api.forward()
-		checkForOre()
-		turtle.digUp()
-		api.forward()
-		checkForOre()
-		turtle.digUp()
-		for i=1 tArgs[2]
-			api.left()
-			checkForOre()
-			turtle.digUp()
-		end
-		api.turnRight()
-		api.forward(tArgs[2])
-		for i=1 tArgs[2]
-			api.forward()
-			checkForOre()
-			turtle.digUp()
-		end
-		api.turnAround()
-		api.forward(tArgs[2])
-		api.turnRight()
 		if api.loadData("/.save", "/chest")[1] == true then
 			api.emptyInv()
 		elseif api.loadData("/.save", "/chest")[1] == false then
@@ -202,12 +181,12 @@ function mineSquence(tArgs[1])
 	end
 end
 
-function returnSquence(tArgs[1])
-	local moves = tArgs[1]
+function returnSquence(amount)
+	local moves = amount
 	if turtle.getItemCount(16) ~= 0 then
 		if turtle.getItemDetail(16).name ~= "minecraft:torch" then
 			return false
-			elseif turtle.getItemDetail(16).name == "minecraft:torch" and tArgs[1] > 4 then
+			elseif turtle.getItemDetail(16).name == "minecraft:torch" and amount > 4 then
 			turtle.select(16)
 			api.up()
 			api.backward()
@@ -227,14 +206,14 @@ function returnSquence(tArgs[1])
 end
 
 if type(tonumber(tArgs[1])) ~= "number" then
-	error(("Usage: %s Shaft_Amount(10) Shaft_Widht(25) Shaft_Distance(3)"):format(fs.getName(shell.getRunningProgram())))
+	error(("Usage: %s 10"):format(fs.getName(shell.getRunningProgram())))
 end
 
 local start = api.copyTable(api.coords)
 api.saveData("/.save", "/start_pos", start)
 api.avoidChest()
-mineSquence()
-returnSquence()
+mineSquence(tonumber(tArgs[1]))
+returnSquence(tonumber(tArgs[1])-1)
 api.moveTo(start.x, start.y, start.z)
 api.drop(api.maxSlots)
 fs.delete("/.save")
