@@ -168,34 +168,17 @@ function mineSquence()
 	local Shaft_Amount = tonumber(arg[1])
 	local Shaft_Widht = tonumber(arg[2])
 	local Shaft_Distance = tonumber(arg[3])
-	local movedistance = 0
-	local movewidthleft = 0
-	local movewidthright = 0
 	for i=1, Shaft_Amount do
 		for i=1, Shaft_Distance do
 			api.forward()
 			checkForOre()
 			turtle.digUp()
-			movedistance = movedistance + 1
-			if turtle.getItemDetail(16).name == "minecraft:torch" and movedistance == 11 then
-				turtle.select(16)
-				turtle.placeUp()
-				turtle.select(1)
-				movedistance = 0
-			end
 		end
 		api.turnLeft()
 		for i=1, Shaft_Widht do
 			api.forward()
 			checkForOre()
 			turtle.digUp()
-			movewidthleft = movewidthleft + 1
-			if turtle.getItemDetail(16).name == "minecraft:torch" and movewidthleft == 11 then
-				turtle.select(16)
-				turtle.placeUp()
-				turtle.select(1)
-				movewidthleft = 0
-			end
 		end
 		api.turnAround()
 		api.forward(Shaft_Widht)
@@ -203,13 +186,6 @@ function mineSquence()
 			api.forward()
 			checkForOre()
 			turtle.digUp()
-			movewidthright = movewidthright + 1
-			if turtle.getItemDetail(16).name == "minecraft:torch" and movewidthright == 11 then
-				turtle.select(16)
-				turtle.placeUp()
-				turtle.select(1)
-				movewidthright = 0
-			end
 		end
 		api.turnAround()
 		api.forward(Shaft_Widht)
