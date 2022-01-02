@@ -64,7 +64,7 @@ function move.forward(times)
 				if data.hasWireless == true then
 					rednet.broadcast("Out of Fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
 				end
-				sleep(data.timeout)
+				os.sleep(data.timeout)
 			end
 		elseif turtle.getFuelLevel() <= 10 then
 			tools.refuel()
@@ -76,7 +76,7 @@ function move.forward(times)
 			elseif inspect[1] and inspect[2].name ~= "minecraft:bedrock" then
 				while turtle.detect() do
 					turtle.dig()
-					sleep(0.4)
+					os.sleep(0.4)
 				end
 			else
 				turtle.attack()
@@ -122,7 +122,7 @@ function move.backward(times)
 				if data.hasWireless == true then
 					rednet.broadcast("Out of Fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
 				end
-				sleep(data.timeout)
+				os.sleep(data.timeout)
 			end
 		elseif turtle.getFuelLevel() <= 10 then
 			tools.refuel()
@@ -155,7 +155,7 @@ function move.up(times)
 				if data.hasWireless == true then
 					rednet.broadcast("Out of Fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
 				end
-				sleep(data.timeout)
+				os.sleep(data.timeout)
 			end
 		elseif turtle.getFuelLevel() <= 10 then
 			tools.refuel()
@@ -190,7 +190,7 @@ function move.down(times)
 				if data.hasWireless == true then
 					rednet.broadcast("Out of Fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
 				end
-				sleep(data.timeout)
+				os.sleep(data.timeout)
 			end
 		elseif turtle.getFuelLevel() <= 10 then
 			tools.refuel()
