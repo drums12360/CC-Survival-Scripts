@@ -2,13 +2,14 @@ local data = require("dataAPI")
 local move = require("moveAPI")
 local storage = require("storageAPI")
 local dig = require("digAPI")
+local tools = require("toolsAPI")
 local tArgs = {...}
 
 function mineSquence(amount)
 	for i=1, amount do
 		move.forward()
 		dig.checkForOre()
-		turtle.digUp()
+		tools.dig("up")
 		if data.loadData("/.save", "/chest")[1] == true then
 			storage.emptyInv()
 		elseif data.loadData("/.save", "/chest")[1] == false then
