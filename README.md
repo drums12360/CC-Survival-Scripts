@@ -14,7 +14,7 @@ wget https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/dow
 
 dataAPI = No essentials
 
-toolsAPI = storageAPI
+toolsAPI = No essentials
 
 moveAPI = dataAPI and toolsAPI
 
