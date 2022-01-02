@@ -8,17 +8,11 @@ function checkFuelLevel(width, height, depth)
 	local requiredFuelLevel = math.ceil(((height * width * depth) / 3) + (height * depth) + ((width * 2) + depth + height))
 	local currentFuelLevel = tonumber(turtle.getFuelLevel())
 	if currentFuelLevel < requiredFuelLevel then
-		while currentFuelLevel < requiredFuelLevel do
+		while not move.refuel() and currentFuelLevel < requiredFuelLevel do
 			term.clear()
 			term.setCursorPos(1,1)
 			print("Not enough Fuel! "..currentFuelLevel.."/"..requiredFuelLevel)
-			print("Place fuel in inventory within 10 seconds or program will abort!")
-			os.sleep(10)
-			if not move.refuel() then
-				term.clear()
-				term.setCursorPos(1,1)
-				error("No fuel found, program aborted!")
-			end
+			print("Place fuel into inventory!")
 		end
 	else
 		return true
