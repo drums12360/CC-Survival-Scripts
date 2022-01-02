@@ -239,7 +239,7 @@ function move.moveTo(x, y, z)
 		move.forward(z - data.coords.z)
 	end
 	if y < data.coords.y then
-		data.down(data.coords.y - y)
+		move.down(data.coords.y - y)
 	end
 end
 

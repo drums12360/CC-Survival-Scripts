@@ -23,13 +23,13 @@ function returnSquence(amount)
 	if turtle.getItemCount(16) ~= 0 then
 		if turtle.getItemDetail(16).name ~= "minecraft:torch" then
 			return false
-			elseif turtle.getItemDetail(16).name == "minecraft:torch" and amount > 4 then
+			elseif turtle.getItemDetail(16).name == "minecraft:torch" and amount >= 4 then
 			turtle.select(16)
 			move.up()
 			move.backward()
 			turtle.place()
 			moves = moves - 1
-			while moves > 12 and turtle.getItemCount(16) ~= 0 do
+			while moves >= 12 and turtle.getItemCount(16) ~= 0 do
 				move.turnAround()
 				move.forward(12)
 				move.turnAround()
@@ -51,7 +51,6 @@ data.saveData("/.save", "/start_pos", start)
 storage.avoidChest()
 mineSquence(tonumber(tArgs[1]))
 returnSquence(tonumber(tArgs[1])-1)
-mineSquence(tArgs[1])
 move.moveTo(start.x, start.y, start.z)
 storage.drop(data.coords)
 fs.delete("/.save")

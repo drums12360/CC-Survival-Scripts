@@ -2,13 +2,13 @@ local data = require("dataAPI")
 local move = require("moveAPI")
 
 local storage = {
-	
+	maxSlots = 16,
 }
 
 function storage.drop(slots)
 	local inspect, datai = turtle.inspect()
 	if datai.name == "minecraft:chest" then
-		for i=1, slots do
+		for i=1, storage.maxSlots do
 			turtle.select(i)
 			turtle.drop()
 		end

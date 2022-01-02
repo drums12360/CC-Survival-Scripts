@@ -45,7 +45,7 @@ local oreList = {
 	"minecraft:nether_quartz_ore",
 }
 
-function dig.stackPop()
+function dig.dig.stackPop()
 	local func = inverter[stack[#stack]]
 	table.remove(stack)
 	return func()
@@ -78,10 +78,10 @@ function dig.veinMine(lastFunc)
 		end
 		if dig.checkOreTable({turtle.inspectUp()}) then
 			move.up()
-			return veinMine(move.up)
+			return dig.veinMine(move.up)
 		elseif dig.checkOreTable({turtle.inspectDown()}) then
 			move.down()
-			return veinMine(move.down)
+			return dig.veinMine(move.down)
 		end
 		for i=1, 4 do
 			if dig.checkOreTable({turtle.inspect()}) then
@@ -101,15 +101,15 @@ function dig.veinMine(lastFunc)
 		end
 		if stack[#stack] == "turnLeft" then
 			if stack[#stack] == stack[#stack-1] then
-				stackPop()
-				stackPop()
+				dig.stackPop()
+				dig.stackPop()
 				lastFunc = stack[#stack]
 				if #stack > 0 then
 					return dig.veinMine(lastFunc)
 				end
 				return
 			else
-				stackPop()
+				dig.stackPop()
 				lastFunc = stack[#stack]
 				if #stack > 0 then
 					return dig.veinMine(lastFunc)
@@ -117,7 +117,7 @@ function dig.veinMine(lastFunc)
 				return
 			end
 		else
-			stackPop()
+			dig.stackPop()
 			lastFunc = stack[#stack]
 			if #stack > 0 then
 				return dig.veinMine(lastFunc)
