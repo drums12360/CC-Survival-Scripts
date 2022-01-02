@@ -9,7 +9,7 @@ function download(url)
 		file = fs.open(filename, "wb")
 		file.write(content)
 		file.close()
-		if filename == Alldownloader.lua then
+		if filename == "Alldownloader.lua" then
 			fs.delete("startup/autoupdate.lua")
 			fs.move(filename, "startup/autoupdate.lua"
 			print("
