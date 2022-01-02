@@ -43,7 +43,9 @@ function returnSquence(amount)
 end
 
 if type(tonumber(tArgs[1])) ~= "number" then
-	error(("Usage: %s 10"):format(fs.getName(shell.getRunningProgram())))
+	term.clear()
+	term.setCursorPos(1,1)
+	error("Define tunnel lenght! (Example: '10') [10 block long]")
 end
 
 local start = data.copyTable(data.coords)
