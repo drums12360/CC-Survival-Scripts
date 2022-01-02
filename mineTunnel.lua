@@ -22,7 +22,7 @@ function returnSquence(amount)
 	if turtle.getItemCount(16) ~= 0 then
 		if turtle.getItemDetail(16).name ~= "minecraft:torch" then
 			return false
-			elseif turtle.getItemDetail(16).name == "minecraft:torch" and amount >= 4 then
+		elseif turtle.getItemDetail(16).name == "minecraft:torch" and amount >= 4 then
 			turtle.select(16)
 			move.up()
 			move.backward()
