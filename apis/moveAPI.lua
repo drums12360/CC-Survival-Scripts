@@ -15,7 +15,7 @@ local fuelList = {
 
 function move.refuel()
 	for i=1, #fuelList do
-		if move.findItem(fuelList[i]) then
+		if tools.findItem(fuelList[i]) then
 			turtle.refuel()
 			return true
 		else

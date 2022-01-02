@@ -4,7 +4,7 @@ local storage = require("storageAPI")
 local tools = require("toolsAPI")
 local tArgs = {...}
 
-function checkFuelLevel()
+function checkFuelLevel(width, height, depth)
 	local requiredFuelLevel = math.ceil(((height * width * depth) / 3) + (height * depth) + ((width * 2) + depth + height))
 	local currentFuelLevel = tonumber(turtle.getFuelLevel())
 	if currentFuelLevel < requiredFuelLevel then
@@ -26,7 +26,7 @@ function mineSquence(width, height, depth)
 	local lastRowCount = 0
 	if width % 2 == 0 then
 		error("Width needs to be an odd #!")
-	elseif not checkFuelLevel() then
+	elseif not checkFuelLevel(width, height, depth) then
 		return
 	end
 	move.turnLeft()
