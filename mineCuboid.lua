@@ -46,18 +46,43 @@ function checkFuelLevel()
 end
 
 function inventorySort()
+  local inv = {}
   for i=1,api.maxSlots do
-    local item = turtle.getItemDetail(i)
-    if item ~= nil then
-      if item.count ~= 64 then
-        turtle.select(i)
-        api.slot = tonumber(i)
-        for j=i,api.maxSlots do
-          if turtle.compareTo(j) then
-            turtle.select(j)
-            turtle.transferTo(i)
-            turtle.select(i)
+    inv[i] = turtle.getItemDetail(i)
+  end
+  for i=1,api.maxSlots do
+    if inv[i] and inv[i].count < 64 then
+      for j=(i+1),api.maxSlots do
+        if inv[j] and inv[i].name == inv[j].name then
+          if turtle.getItemSpace(i) == 0 then
+            break
           end
+          turtle.select(j)
+          api.slot = j
+          local count = turtle.getItemSpace(i)
+          if count > inv[j].count then
+            count = inv[j].count
+          end
+          turtle.transferTo(i, count)
+          inv[i].count = inv[i].count + count
+          inv[j].count = inv[j].count - count
+          if inv[j].count <= 0 then
+            inv[j] = nil
+          end
+        end
+      end
+    end
+  end
+  for i=1,api.maxSlots do
+    if not inv[i] then
+      for j=(i+1),api.maxSlots do
+        if inv[j] then
+          turtle.select(j)
+          api.slot = j
+          turtle.transferTo(i)
+          inv[i] = api.copyTable(inv[j])
+          inv[j] = nil
+          break
         end
       end
     end
