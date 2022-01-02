@@ -29,7 +29,7 @@ function download(url)
 			fs.delete("startup/autoupdate.lua")
 			fs.move(filename, "startup/autoupdate.lua")
 			print("Installed autoupdate on every turtle startup!")
-			os.sleep(2)
+			os.sleep(1)
 		else
 		print("Download finished!")
 		end
@@ -39,7 +39,7 @@ end
 function start()
 	for index, value in ipairs(urls) do
 		download(value)
-		os.sleep(1)
+		os.sleep(0.5)
 	end
 end
 	
@@ -51,6 +51,6 @@ start()
 term.clear()
 term.setCursorPos(1,1)
 print("API and program download finished.")
-os.sleep(2)
+os.sleep(1)
 term.clear()
 term.setCursorPos(1,1)
