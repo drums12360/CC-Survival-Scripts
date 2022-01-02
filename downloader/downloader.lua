@@ -6,6 +6,7 @@ local urls = {
 	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/digAPI.lua",
 	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/stripTunnel.lua",
 	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/mineTunnel.lua",
+	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/standalone/refuel.lua",
 	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/downloader/downloader.lua",
 }
 
