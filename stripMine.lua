@@ -1,21 +1,21 @@
-local api = require("moveAPI")
+local api = require("apis")
 local tArgs = {...}
 local stack = {}
 local inverter = {
-  ["forward"] = api.backward,
-  ["back"] = api.forward,
-  ["turnLeft"] = api.turnRight,
-  ["turnRight"] = api.turnLeft,
-  ["up"] = api.down,
-  ["down"] = api.up,
+  ["forward"] = api.move.backward,
+  ["back"] = api.move.forward,
+  ["turnLeft"] = api.move.turnRight,
+  ["turnRight"] = api.move.turnLeft,
+  ["up"] = api.move.down,
+  ["down"] = api.move.up,
 }
 local converter = {
-  ["forward"] = api.forward,
-  ["back"] = api.backward,
-  ["turnLeft"] = api.turnLeft,
-  ["turnRight"] = api.turnRight,
-  ["up"] = api.up,
-  ["down"] = api.down,
+  ["forward"] = api.move.forward,
+  ["back"] = api.move.backward,
+  ["turnLeft"] = api.move.turnLeft,
+  ["turnRight"] = api.move.turnRight,
+  ["up"] = api.move.up,
+  ["down"] = api.move.down,
 }
 local oreList = {
   "minecraft:iron_ore",
@@ -71,24 +71,24 @@ function veinMine(lastFunc)
       end
     end
     if checkOreTable({turtle.inspectUp()}) then
-      api.up()
-      return veinMine(api.up)
+      api.move.up()
+      return veinMine(api.move.up)
     elseif checkOreTable({turtle.inspectDown()}) then
-      api.down()
-      return veinMine(api.down)
+      api.move.down()
+      return veinMine(api.move.down)
     end
     for i=1,4 do
       if checkOreTable({turtle.inspect()}) then
         if i == 1 then
-          api.forward()
-          return veinMine(api.forward)
+          api.move.forward()
+          return veinMine(api.move.forward)
         elseif i == 2 then
-          return veinMine(api.turnLeft)
+          return veinMine(api.move.turnLeft)
         elseif i == 3 then
           table.insert(stack, "turnLeft")
-          return veinMine(api.turnLeft)
+          return veinMine(api.move.turnLeft)
         elseif i == 4 then
-          return veinMine(api.turnRight)
+          return veinMine(api.move.turnRight)
         end
       end
       api.turnLeft()
@@ -125,34 +125,34 @@ end
 
 function checkForOre()
   if checkOreTable({turtle.inspectUp()}) then
-    api.up()
-    veinMine(api.up)
+    api.move.up()
+    veinMine(api.move.up)
   end
   if checkOreTable({turtle.inspectDown()}) then
-    api.down()
-    veinMine(api.down)
+    api.move.down()
+    veinMine(api.move.down)
   end
   api.turnLeft()
   if checkOreTable({turtle.inspect()}) then
-    api.forward()
-    veinMine(api.forward)
+    api.move.forward()
+    veinMine(api.move.forward)
   end
   api.turnAround()
   if checkOreTable({turtle.inspect()}) then
-    api.forward()
-    veinMine(api.forward)
+    api.move.forward()
+    veinMine(api.move.forward)
   end
-  api.turnLeft()
+  api.move.turnLeft()
 end
 
 function mineSquence(amount)
   for i=1, amount do
-    api.forward()
+    api.move.forward()
     checkForOre()
   end
   if checkOreTable({turtle.inspect()}) then
-    api.forward()
-    veinMine(api.forward)
+    api.move.forward()
+    veinMine(api.move.forward)
   end
 end
 
@@ -160,7 +160,7 @@ if type(tArgs[1]) ~= "number" then
   error(("Usage: %s 10"):format(fs.getName(shell.getRunningProgram())))
 end
 tArgs[1] = tonumber(tArgs[1])
-local start = api.copyTable(api.coords)
+local start = api.data.copyTable(api.coords)
 mineSquence(tArgs[1])
-api.moveTo(start.x, start.y, start.z)
+api.move.moveTo(start.x, start.y, start.z)
 fs.delete("/.save")

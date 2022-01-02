@@ -1,35 +1,35 @@
 local tArgs = {...}
-local api = require ("customAPI")
+local api = require("apis")
 for i=1,#tArgs do
   tArgs[i] = tonumber(tArgs[i])
 end
 
 function mineSquence(width,length)
-  api.forward()
-  api.dig("down")
-  api.forward()
-  api.turnLeft()
-  api.forward(math.floor(width / 2))
-  api.turnRight()
+  api.move.forward()
+  api.tools.dig("down")
+  api.move.forward()
+  api.move.turnLeft()
+  api.move.forward(math.floor(width / 2))
+  api.move.turnRight()
   for x=1,width do
     for y=1,(length - 1) do
-      api.forward()
-      api.dig("up")
-      api.dig("down")
+      api.move.forward()
+      api.tools.dig("up")
+      api.tools.dig("down")
     end
     if x ~= width then
       if x % 2 == 0 then
-        api.turnLeft()
-        api.forward()
-        api.dig("up")
-        api.dig("down")
-        api.turnLeft()
+        api.move.turnLeft()
+        api.move.forward()
+        api.tools.dig("up")
+        api.tools.dig("down")
+        api.move.turnLeft()
       else
-        api.turnRight()
-        api.forward()
-        api.dig("up")
-        api.dig("down")
-        api.turnRight()
+        api.move.turnRight()
+        api.move.forward()
+        api.tools.dig("up")
+        api.tools.dig("down")
+        api.move.turnRight()
       end
     end
   end
