@@ -30,27 +30,27 @@ function stackPop()
 	return func()
 end
 
-function mineSquence(Shaft_Amount, Shaft_Widht, Shaft_Distance)
+function mineSquence(Shaft_Amount, Shaft_Width, Shaft_Distance)
 	for i=1, Shaft_Amount do
 		for i=1, Shaft_Distance do
 			move.forward()
 			dig.checkForOre()
 			turtle.digUp()
 		move.turnLeft()
-		for i=1, Shaft_Widht do
+		for i=1, Shaft_Width do
 			move.forward()
 			dig.checkForOre()
 			turtle.digUp()
 		end
 		move.turnAround()
-		move.forward(Shaft_Widht)
-		for i=1, Shaft_Widht do
+		move.forward(Shaft_Width)
+		for i=1, Shaft_Width do
 			move.forward()
 			dig.checkForOre()
 			turtle.digUp()
 		end
 		move.turnAround()
-		move.forward(Shaft_Widht)
+		move.forward(Shaft_Width)
 		move.turnRight()
 		end
 		if data.loadData("/.save", "/chest")[1] == true then
