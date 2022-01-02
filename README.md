@@ -32,13 +32,13 @@ mineTunnel = dataAPI, moveAPI, storageAPI, digAPI, (toolsAPI)
 
 stripMine = dataAPI, moveAPI, storageAPI, digAPI, (toolsAPI)
 
+mineCuboid = dataAPI, moveAPI, storageAPI, toolsAPI
+
 ----
 
 [[ Functional but not reviewed ]]
 
 digRoom
-
-mineCuboid
 
 mineVert
 
