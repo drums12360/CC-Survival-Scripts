@@ -4,9 +4,17 @@ local storage = require("storageAPI")
 local tools = require("toolsAPI")
 local tArgs = {...}
 
-function checkFuelLevel(width, height, depth)
+function mineSquence(width, height, depth)
 	local requiredFuelLevel = math.ceil(((height * width * depth) / 3) + (height * depth) + ((width * 2) + depth + height))
 	local currentFuelLevel = tonumber(turtle.getFuelLevel())
+	local rows = math.floor(height / 3)
+	local offset = height % 3
+	local lastRowCount = 0
+	if width % 2 == 0 then
+		term.clear()
+		term.setCursorPos(1,1)
+		error("Width needs to be an odd #!")
+	end
 	if not move.refuel() and currentFuelLevel < requiredFuelLevel then
 		while not move.refuel() do
 			term.clear()
@@ -15,21 +23,6 @@ function checkFuelLevel(width, height, depth)
 			print("Place fuel into inventory!")
 			os.sleep(data.timeout)
 		end
-	else
-	return true
-	end
-end
-
-function mineSquence(width, height, depth)
-	local rows = math.floor(height / 3)
-	local offset = height % 3
-	local lastRowCount = 0
-	if width % 2 == 0 then
-		term.clear()
-		term.setCursorPos(1,1)
-		error("Width needs to be an odd #!")
-	elseif not checkFuelLevel(width, height, depth) then
-		return
 	end
 	move.turnLeft()
 	move.forward(width)
