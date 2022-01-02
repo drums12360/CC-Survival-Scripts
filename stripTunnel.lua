@@ -4,22 +4,6 @@ local move = require("moveAPI")
 local storage = require("storageAPI")
 local dig = require("digAPI")
 local tArgs = {...}
-local stack = {}
-
-local inverter = {
-	["forward"] = move.backward,
-	["back"] = move.forward,
-	["turnLeft"] = move.turnRight,
-	["turnRight"] = move.turnLeft,
-	["up"] = move.down,
-	["down"] = move.up,
-}
-
-function stackPop()
-	local func = inverter[stack[#stack]]
-	table.remove(stack)
-	return func()
-end
 
 function mineSquence(Shaft_Amount, Shaft_Width, Shaft_Distance)
 	for i=1, Shaft_Amount do
@@ -44,7 +28,6 @@ function mineSquence(Shaft_Amount, Shaft_Width, Shaft_Distance)
 		move.turnAround()
 		move.forward(Shaft_Width)
 		move.turnRight()
-		end
 		if data.loadData("/.save", "/chest")[1] == true then
 			storage.emptyInv()
 		elseif data.loadData("/.save", "/chest")[1] == false then

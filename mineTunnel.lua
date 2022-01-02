@@ -4,22 +4,6 @@ local move = require("moveAPI")
 local storage = require("storageAPI")
 local dig = require("digAPI")
 local tArgs = {...}
-local stack = {}
-
-local inverter = {
-	["forward"] = move.backward,
-	["back"] = move.forward,
-	["turnLeft"] = move.turnRight,
-	["turnRight"] = move.turnLeft,
-	["up"] = move.down,
-	["down"] = move.up,
-}
-
-function stackPop()
-	local func = inverter[stack[#stack]]
-	table.remove(stack)
-	return func()
-end
 
 function mineSquence(amount)
 	for i=1, amount do

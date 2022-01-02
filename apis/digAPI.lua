@@ -1,7 +1,18 @@
-local move = require("moveAPI")
+local move = require("moveAPI")´
 
 local dig = {
 
+}
+
+local stack = {}
+
+local inverter = {
+	["forward"] = move.backward,
+	["back"] = move.forward,
+	["turnLeft"] = move.turnRight,
+	["turnRight"] = move.turnLeft,
+	["up"] = move.down,
+	["down"] = move.up,
 }
 
 local converter = {
@@ -34,6 +45,12 @@ local oreList = {
 	"minecraft:nether_quartz_ore",
 }
 
+function dig.stackPop()
+	local func = inverter[stack[#stack]]
+	table.remove(stack)
+	return func()
+end
+
 function dig.checkOreTable(tbl)
 	if type(tbl) ~= "table" then
 		error("'tbl' is not of type table", 2)
@@ -59,15 +76,15 @@ function dig.veinMine(lastFunc)
 				end
 			end
 		end
-		if checkOreTable({turtle.inspectUp()}) then
+		if dig.checkOreTable({turtle.inspectUp()}) then
 			move.up()
 			return veinMine(move.up)
-		elseif checkOreTable({turtle.inspectDown()}) then
+		elseif dig.checkOreTable({turtle.inspectDown()}) then
 			move.down()
 			return veinMine(move.down)
 		end
 		for i=1, 4 do
-			if checkOreTable({turtle.inspect()}) then
+			if dig.checkOreTable({turtle.inspect()}) then
 				if i == 1 then
 					move.forward()
 					return veinMine(move.forward)
@@ -88,14 +105,14 @@ function dig.veinMine(lastFunc)
 				stackPop()
 				lastFunc = stack[#stack]
 				if #stack > 0 then
-					return veinMine(lastFunc)
+					return dig.veinMine(lastFunc)
 				end
 				return
 			else
 				stackPop()
 				lastFunc = stack[#stack]
 				if #stack > 0 then
-					return veinMine(lastFunc)
+					return dig.veinMine(lastFunc)
 				end
 				return
 			end
@@ -103,7 +120,7 @@ function dig.veinMine(lastFunc)
 			stackPop()
 			lastFunc = stack[#stack]
 			if #stack > 0 then
-				return veinMine(lastFunc)
+				return dig.veinMine(lastFunc)
 			end
 			return
 		end
@@ -113,26 +130,26 @@ function dig.veinMine(lastFunc)
 end
 
 function dig.checkForOre()
-	if checkOreTable({turtle.inspectUp()}) then
+	if dig.checkOreTable({turtle.inspectUp()}) then
 		move.up()
 		dig.veinMine(move.up)
 	end
-	if checkOreTable({turtle.inspectDown()}) then
+	if dig.checkOreTable({turtle.inspectDown()}) then
 		move.down()
 		dig.veinMine(move.down)
 	end
 	move.turnLeft()
-	if checkOreTable({turtle.inspect()}) then
+	if dig.checkOreTable({turtle.inspect()}) then
 		move.forward()
 		dig.veinMine(move.forward)
 	end
 	move.turnAround()
-	if checkOreTable({turtle.inspect()}) then
+	if dig.checkOreTable({turtle.inspect()}) then
 		move.forward()
 		dig.veinMine(move.forward)
 	end
 	move.turnLeft()
-	if checkOreTable({turtle.inspect()}) then
+	if dig.checkOreTable({turtle.inspect()}) then
 		move.forward()
 		dig.veinMine(move.forward)
 	end
