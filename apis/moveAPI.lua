@@ -88,8 +88,6 @@ function move.forward(times)
 				end
 				os.sleep(data.timeout)
 			end
-		elseif turtle.getFuelLevel() <= 10 then
-			move.refuel()
 		end
 		while not turtle.forward() do
 			local inspect = {turtle.inspect()}
@@ -148,8 +146,6 @@ function move.backward(times)
 				end
 				os.sleep(data.timeout)
 			end
-		elseif turtle.getFuelLevel() <= 10 then
-			move.refuel()
 		end
 		turtle.back()
 		if data.d == 0 then
@@ -183,8 +179,6 @@ function move.up(times)
 				end
 				os.sleep(data.timeout)
 			end
-		elseif turtle.getFuelLevel() <= 10 then
-			move.refuel()
 		end
 		while not turtle.up() do 
 			local inspect = {turtle.inspectUp()}
@@ -220,8 +214,6 @@ function move.down(times)
 				end
 				os.sleep(data.timeout)
 			end
-		elseif turtle.getFuelLevel() <= 10 then
-			move.refuel()
 		end
 		while not turtle.down() do 
 			local inspect = {turtle.inspectDown()}
