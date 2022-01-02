@@ -24,11 +24,13 @@ digAPI = moveAPI
 
 ----
 
-[[ Prog Name = Essentials? ]]
+[[ Prog Name = Essential APIs? (Essential for another API] ]]
 
-stripTunnel = dataAPI, toolsAPI, moveAPI, storageAPI, digAPI
+stripTunnel = dataAPI, moveAPI, storageAPI, digAPI, (toolsAPI)
 
-mineTunnel = dataAPI, toolsAPI, moveAPI, storageAPI, digAPI
+mineTunnel = dataAPI, moveAPI, storageAPI, digAPI, (toolsAPI)
+
+stripMine = dataAPI, moveAPI, storageAPI, digAPI, (toolsAPI)
 
 ----
 
@@ -44,4 +46,4 @@ straicaseDown
 
 staircaseUp
 
-stripMine
+
