@@ -170,7 +170,7 @@ function move.up(times)
 	return true
 end
 
-function data.down(times)
+function move.down(times)
 	times = times or 1
 	if times < 0 then
 		move.up(-times)
