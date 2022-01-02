@@ -30,7 +30,7 @@ function download(url)
 			print("Installed autoupdate on every turtle startup!")
 			os.sleep(3)
 		else
-		print("Downloaded and saved ", filename)
+		print("Saved to ", filename)
 		os.sleep(1)
 		end
 	end
