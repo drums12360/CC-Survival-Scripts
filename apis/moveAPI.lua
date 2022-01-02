@@ -60,6 +60,7 @@ function move.forward(times)
 	for i=1, times do
 		if not tools.refuel() and turtle.getFuelLevel() == 0 then
 			while not tools.refuel() do
+				term.clear()
 				print("Out of Fuel")
 				if data.hasWireless == true then
 					rednet.broadcast("Out of Fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
@@ -118,6 +119,7 @@ function move.backward(times)
 	for i=1, times do
 		if not tools.refuel() and turtle.getFuelLevel() == 0 then
 			while not tools.refuel() do
+				term.clear()
 				print("Out of Fuel")
 				if data.hasWireless == true then
 					rednet.broadcast("Out of Fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
@@ -151,6 +153,7 @@ function move.up(times)
 	for i=1, times do
 		if not tools.refuel() and turtle.getFuelLevel() == 0 then
 			while not tools.refuel() do
+				term.clear()
 				print("Out of Fuel")
 				if data.hasWireless == true then
 					rednet.broadcast("Out of Fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
@@ -186,6 +189,7 @@ function move.down(times)
 	for i=1, times do
 		if not tools.refuel() and turtle.getFuelLevel() == 0 then
 			while not tools.refuel() do
+				term.clear()
 				print("Out of Fuel")
 				if data.hasWireless == true then
 					rednet.broadcast("Out of Fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
