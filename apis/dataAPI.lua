@@ -67,10 +67,10 @@ function data.gpsStart(side)
 				data.d = 2
 			end
 		end
-		data.coords.x = Start2.x
-		data.coords.y = Start2.y
-		data.coords.z = Start2.z
-		data.backward()
+		data.coords.x = Start1.x
+		data.coords.y = Start1.y
+		data.coords.z = Start1.z
+		turtle.back()
 	end
 end
 
