@@ -45,7 +45,7 @@ local oreList = {
 	"minecraft:nether_quartz_ore",
 }
 
-function dig.dig.stackPop()
+function dig.stackPop()
 	local func = inverter[stack[#stack]]
 	table.remove(stack)
 	return func()

@@ -7,20 +7,20 @@ local tArgs = {...}
 
 function mineSquence(Shaft_Amount, Shaft_Width, Shaft_Distance)
 	for i=1, Shaft_Amount do
-		for i=1, Shaft_Distance do
+		for j=1, Shaft_Distance do
 			move.forward()
 			dig.checkForOre()
 			turtle.digUp()
 		end
 		move.turnLeft()
-		for i=1, Shaft_Width do
+		for j=1, Shaft_Width do
 			move.forward()
 			dig.checkForOre()
 			turtle.digUp()
 		end
 		move.turnAround()
 		move.forward(Shaft_Width)
-		for i=1, Shaft_Width do
+		for j=1, Shaft_Width do
 			move.forward()
 			dig.checkForOre()
 			turtle.digUp()
