@@ -2,13 +2,13 @@ function download(url)
 	local content = http.get(url).readAll()
 	local filename = url:match( "([^/]+)$" )
 	if not content then
-		error("Could not connect to website " url)
+		error("Could not connect to website ", url)
 	else
-		print("Download finished from " url)
+		print("Download finished from ", url)
 		file = fs.open(filename, "wb")
 		file.write(content)
 		file.close()
-		print("Downloaded and saved " filename)
+		print("Downloaded and saved ", filename)
 	end
 end
 
