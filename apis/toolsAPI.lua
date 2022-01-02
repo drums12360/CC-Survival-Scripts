@@ -20,15 +20,16 @@ function tools.findItem(name)
 		return false
 	end
 	for i=1, tools.maxSlots do
-		if turtle.getItemDetail(i).name ~= name then
+		if turtle.getItemCount(i) ~= 0 then
+			if turtle.getItemDetail(i).name ~= name then
+				return false
+			elseif turtle.getItemDetail(i).name == name then
+				turtle.select(i)
+				tools.slot = tonumber(i)
+				return true
+			end
 			return false
-		elseif turtle.getItemDetail(i).name == name then
-			turtle.select(i)
-			tools.slot = tonumber(i)
-			return true
 		end
-		return false
-	end
 	return false
 end
 
