@@ -20,10 +20,9 @@ function move.refuel()
 				turtle.refuel()
 			end
 			return true
-		else
-			return false
 		end
 	end
+	return false
 end
 
 function move.turnLeft()
