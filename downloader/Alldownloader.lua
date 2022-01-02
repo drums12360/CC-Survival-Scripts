@@ -11,8 +11,9 @@ function download(url)
 		file.close()
 		if filename == "Alldownloader.lua" then
 			fs.delete("startup/autoupdate.lua")
-			fs.move(filename, "startup/autoupdate.lua"
-			print("
+			fs.move(filename, "startup/autoupdate.lua")
+			print("Installed autoupdate on every turtle startup!")
+			os.sleep(1)
 		end
 		print("Downloaded and saved ", filename)
 	end
