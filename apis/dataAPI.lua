@@ -1,4 +1,4 @@
-data = {
+local data = {
 	timeout = 5,
 	d = 0,
 	hasWireless = false,

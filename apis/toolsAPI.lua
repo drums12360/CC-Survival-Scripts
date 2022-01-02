@@ -1,4 +1,4 @@
-tools = {
+local tools = {
 	maxSlots = 16,
 	slot = tonumber(turtle.getSelectedSlot()),
 }
