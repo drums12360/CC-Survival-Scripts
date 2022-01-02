@@ -28,9 +28,15 @@ function mineSquence(width, height, depth)
 	end
 	move.forward()
 	move.turnRight()
-	move.forward(width % 1.5)
-	move.turnAround()
-	move.forward(width)
+	if width % 3 == 0
+		move.forward(width % 2)
+		move.turnAround()
+		move.forward(width - 1)
+	else
+		move.forward(width % 2)
+		move.turnAround()
+		move.forward(width)
+	end
 	move.turnRight()
 	move.up()
 	for x=1,depth do
