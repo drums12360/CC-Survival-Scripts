@@ -19,16 +19,15 @@ function tools.findItem(name)
 		error("The type of 'name' is not a string")
 		return false
 	end
-	local item = turtle.getItemDetail(tools.slot)
 	for i=1, tools.maxSlots do
-		item = turtle.getItemDetail(i)
-		if item ~= nil then
-			if item.name == name then
-				turtle.select(i)
-				tools.slot = tonumber(i)
-				return true
-			end
+		if turtle.getItemDetail(i).name ~= name then
+			return false
+		elseif turtle.getItemDetail(i).name == name then
+			turtle.select(i)
+			tools.slot = tonumber(i)
+			return true
 		end
+		return false
 	end
 	return false
 end
