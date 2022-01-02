@@ -12,11 +12,11 @@ function checkFuelLevel(width, height, depth)
 			term.clear()
 			term.setCursorPos(1,1)
 			print("Not enough Fuel! "..currentFuelLevel.."/"..requiredFuelLevel)
-			os.sleep(data.timeout)
 			print("Place fuel in inventory within 10 seconds or program will abort!")
 			os.sleep(10)
-			move.refuel()
 			if not move.refuel() then
+				term.clear()
+				term.setCursorPos(1,1)
 				error("No fuel found, program aborted!")
 			end
 		end
@@ -30,6 +30,8 @@ function mineSquence(width, height, depth)
 	local offset = height % 3
 	local lastRowCount = 0
 	if width % 2 == 0 then
+		term.clear()
+		term.setCursorPos(1,1)
 		error("Width needs to be an odd #!")
 	elseif not checkFuelLevel(width, height, depth) then
 		return
