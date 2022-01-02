@@ -74,7 +74,9 @@ function data.gpsStart(side)
 	end
 end
 
-local start = data.copyTable(data.coords)
-data.saveData("/.save", "/start_pos", start)
+function data.saveCoords(coords)
+	local coords = data.copyTable(data.coords)
+	data.saveData("/.save", "/start_pos", coords)
+end
 
-return move
+return data

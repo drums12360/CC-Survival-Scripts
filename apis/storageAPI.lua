@@ -21,11 +21,11 @@ function storage.avoidChest()
 	local inspect, datai = turtle.inspect()
 	if datai.name == "minecraft:chest" then
 		chest[1] = true
-		data.saveData("/.save", "/chest", chest)
+		data.saveCoords(chest)
 		move.turnAround()
 	else
 		chest[1] = false
-		data.saveData("/.save", "/chest", chest)
+		data.saveCoords(chest)
 	end
 end
 

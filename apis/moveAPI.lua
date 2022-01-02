@@ -89,7 +89,7 @@ function move.forward(times)
 		elseif data.d == 3 then
 			data.coords.x = data.coords.x - 1
 		end
-		data.saveData("/.save", "/position", data.coords)
+		data.saveCoords(data.coords)
 	end
 	return true
 end
@@ -133,7 +133,7 @@ function move.backward(times)
 		elseif data.d == 3 then
 			data.coords.x = data.coords.x + 1
 		end
-		data.saveData("/.save", "/position", data.coords)
+		data.saveCoords(data.coords)
 	end
 end
 
@@ -165,7 +165,7 @@ function move.up(times)
 			end
 		end
 		data.coords.y = data.coords.y + 1
-		data.saveData("/.save", "/position", data.coords)
+		data.saveCoords(data.coords)
 	end
 	return true
 end
@@ -198,7 +198,7 @@ function move.down(times)
 			end
 		end
 		data.coords.y = data.coords.y - 1
-		data.saveData("/.save", "/position", data.coords)
+		data.saveCoords(data.coords)
 	end
 	return true
 end
