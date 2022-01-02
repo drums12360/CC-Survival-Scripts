@@ -1,3 +1,5 @@
+local data = require("dataAPI")
+
 local tools = {
 	maxSlots = 16,
 	slot = 1,
