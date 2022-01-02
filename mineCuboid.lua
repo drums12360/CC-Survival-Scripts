@@ -1,194 +1,113 @@
 local api = require("customAPI")
 local start = api.copyTable(api.coords)
-local height = 0
-local width = 0
-local depth = 0
+local tArgs = {...}
 local widthMovement = 0
-local junkList = {
-  "minecraft:cobbled_deepslate",
-  "minecraft:tuff",
-  "minecraft:cobblestone",
-  "minecraft:dirt",
-  "minecraft:andesite",
-  "minecraft:diorite",
-  "minecraft:granite",
-  "minecraft:gravel",
-}
-
-function startup()
-  if #arg == 3 then
-    width = tonumber(arg[1])
-    height = tonumber(arg[2])
-    depth = tonumber(arg[3])
-    widthMovement = math.floor(width / 2)
-    if width % 2 == 0 then
-      print("Width needs to be an odd #")
-      return false
-    end
-    return true
-  else
-    print("Please enter correct arguments. The width height and depth are required (e.g. mineShaft 5 5 10)")
-    return false
-  end
-end
 
 function checkFuelLevel()
-  local requiredFuelLevel = math.ceil(((height * width * depth) / 3) + (height * depth) + ((widthMovement * 2) + depth + height))
-  local currentFuelLevel = tonumber(turtle.getFuelLevel())
-  while currentFuelLevel < requiredFuelLevel do
-    if not api.refuel(true) then
-      print("Not enough Fuel. "..currentFuelLevel.."/"..requiredFuelLevel)
-      return false
-    end
-    currentFuelLevel = tonumber(turtle.getFuelLevel())
-  end
-  return true
+	local requiredFuelLevel = math.ceil(((height * width * depth) / 3) + (height * depth) + ((widthMovement * 2) + depth + height))
+	local currentFuelLevel = tonumber(turtle.getFuelLevel())
+	while currentFuelLevel < requiredFuelLevel do
+		if not tools.refuel(true) then
+			print("Not enough Fuel! "..currentFuelLevel.."/"..requiredFuelLevel)
+			return false
+		end
+		currentFuelLevel = tonumber(turtle.getFuelLevel())
+	end
+	return true
 end
 
-function inventorySort()
-  local inv = {}
-  for i=1,api.maxSlots do
-    inv[i] = turtle.getItemDetail(i)
-  end
-  for i=1,api.maxSlots do
-    if inv[i] and inv[i].count < 64 then
-      for j=(i+1),api.maxSlots do
-        if inv[j] and inv[i].name == inv[j].name then
-          if turtle.getItemSpace(i) == 0 then
-            break
-          end
-          turtle.select(j)
-          api.slot = j
-          local count = turtle.getItemSpace(i)
-          if count > inv[j].count then
-            count = inv[j].count
-          end
-          turtle.transferTo(i, count)
-          inv[i].count = inv[i].count + count
-          inv[j].count = inv[j].count - count
-          if inv[j].count <= 0 then
-            inv[j] = nil
-          end
-        end
-      end
-    end
-  end
-  for i=1,api.maxSlots do
-    if not inv[i] then
-      for j=(i+1),api.maxSlots do
-        if inv[j] then
-          turtle.select(j)
-          api.slot = j
-          turtle.transferTo(i)
-          inv[i] = api.copyTable(inv[j])
-          inv[j] = nil
-          break
-        end
-      end
-    end
-  end
-  turtle.select(1)
-  api.slot = 1
+function mineSquence(width, height, depth)
+	local rows = math.floor(height / 3)
+	local offset = height % 3
+	local lastRowCount = 0
+	move.turnLeft()
+	move.forward(widthMovement)
+	move.turnRight()
+	move.up()
+	for x=1,depth do
+		move.forward()
+		tools.dig("up")
+		tools.dig("down")
+		if x % 3 == 0 and lastRowCount % 2 == 1 then
+		move.turnRight()
+		else
+		if lastRowCount % 2 == 0 then
+			move.turnRight()
+		else
+			move.turnLeft()
+		end
+		end
+		for z=1,rows do
+			for y=1,width - 1 do
+				move.forward()
+				tools.dig("up")
+				tools.dig("down")
+			end
+			lastRowCount = z
+			if z ~= rows then
+				if x % 2 == 0 then
+					move.down(3)
+					tools.dig("down")
+					tools.turnAround()
+				else
+					move.up(3)
+					tools.dig("up")
+					move.turnAround()
+				end
+			elseif offset ~= 0 then
+				if x % 2 == 0 then
+					move.down(offset)
+					tools.dig("down")
+					move.turnAround()
+			else
+				move.up(offset)
+				tools.dig("up")
+				move.turnAround()
+			end
+			for y=1,width - 1 do
+				move.forward()
+				if x % 2 == 0 then
+					tools.dig("down")
+				else
+					tools.dig("up")
+				end
+			end
+			lastRowCount = z + 1
+		end
+	end
+	if x % 3 == 2 and lastRowCount % 2 == 1 then
+		move.turnRight()
+	else
+		if lastRowCount % 2 == 0 then
+			move.turnRight()
+		else
+			move.turnLeft()
+		end
+	end
+	tools.dropJunk()
+	end
+	move.moveTo("~",start.y + 1,"~")
 end
 
-function dropJunk()
-  for i=1,api.maxSlots do
-    local item = turtle.getItemDetail(i)
-    if item ~= nil then
-      local isJunk = false
-      for j=1,#junkList do
-        if item.name == junkList[j] then
-          isJunk = true
-          break
-        end
-      end
-      if isJunk then
-        turtle.select(i)
-        api.slot = tonumber(i)
-        turtle.dropUp()
-      end
-    end
-  end
-  inventorySort()
+function startup()
+	if width % 2 == 0 then
+		error("Width needs to be an odd #!")
+	elseif not checkFuelLevel() then
+		return
+	else
+		mineSquence()
+	end
 end
 
-function mineSquence()
-  local rows = math.floor(height / 3)
-  local offset = height % 3
-  local lastRowCount = 0
-  for x=1,depth do
-    api.forward()
-    api.dig("up")
-    api.dig("down")
-    if x % 3 == 0 and lastRowCount % 2 == 1 then
-      api.turnRight()
-    else
-      if lastRowCount % 2 == 0 then
-        api.turnRight()
-      else
-        api.turnLeft()
-      end
-    end
-    for z=1,rows do
-      for y=1,width - 1 do
-        api.forward()
-        api.dig("up")
-        api.dig("down")
-      end
-      lastRowCount = z
-      if z ~= rows then
-        if x % 2 == 0 then
-          api.down(3)
-          api.dig("down")
-          api.turnAround()
-        else
-          api.up(3)
-          api.dig("up")
-          api.turnAround()
-        end
-      elseif offset ~= 0 then
-        if x % 2 == 0 then
-          api.down(offset)
-          api.dig("down")
-          api.turnAround()
-        else
-          api.up(offset)
-          api.dig("up")
-          api.turnAround()
-        end
-        for y=1,width - 1 do
-          api.forward()
-          if x % 2 == 0 then
-            api.dig("down")
-          else
-            api.dig("up")
-          end
-        end
-        lastRowCount = z + 1
-      end
-    end
-    if x % 3 == 2 and lastRowCount % 2 == 1 then
-      api.turnRight()
-    else
-      if lastRowCount % 2 == 0 then
-        api.turnRight()
-      else
-        api.turnLeft()
-      end
-    end
-    dropJunk()
-  end
-  api.moveTo("~",start.y + 1,"~")
-  api.moveTo(start.x, start.y, start.z)
+if type(tonumber(tArgs[1])) and type(tonumber(tArgs[2])) and type(tonumber(tArgs[3])) ~= "number" then
+	term.clear()
+	term.setCursorPos(1,1)
+	error("Width, height and depth are required (Example: '5 5 10') [5 blocks wide, 5 block heigh and 10 blocks deep]")
 end
 
-if startup() then
-  if not checkFuelLevel() then
-    return
-  end
-  api.turnLeft()
-  api.forward(widthMovement)
-  api.turnRight()
-  api.up()
-  mineSquence()
-end
+local start = data.copyTable(data.coords)
+data.saveData("/.save", "/start_pos", start)
+startup(tonumber(tArgs[1]), tonumber(tArgs[2]), tonumber(tArgs[3]))
+move.moveTo(start.x, start.y, start.z)
+storage.drop(tools.maxSlots)
+fs.delete("/.save")

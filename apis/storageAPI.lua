@@ -3,7 +3,7 @@ local move = require("moveAPI")
 
 local storage = {
 	maxSlots = 16,
-	slot = 1
+	slot = 1,
 }
 
 function storage.drop(slots)
@@ -14,6 +14,8 @@ function storage.drop(slots)
 			turtle.drop()
 		end
 		turtle.select(1)
+	else
+		return false
 	end
 end
 
