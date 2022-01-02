@@ -6,5 +6,5 @@ Stuff I've made for the [CC:Tweaked](https://www.curseforge.com/minecraft/mc-mod
 
 | File Name | Description |
 | ----------- | ----------- |
-| customAPI.lua | the movement api but with more useful functions used in most of my scripts |
+| customAPI.lua | The movement api but with more useful functions used in most of my scripts |
 | movement.lua | Basic movement helper funtions |
