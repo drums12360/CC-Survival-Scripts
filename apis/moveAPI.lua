@@ -5,6 +5,25 @@ local move = {
 	
 }
 
+local fuelList = {
+	"minecraft:coal",
+	"minecraft:coal_block",
+	"minecraft:charcoal",
+	"mekanism:block_charcoal",
+	"minecraft:lava_bucket",
+}
+
+function move.refuel()
+	for i=1, #fuelList do
+		if move.findItem(fuelList[i]) then
+			turtle.refuel()
+			return true
+		else
+			return false
+		end
+	end
+end
+
 function move.turnLeft()
 	turtle.turnLeft()
 	data.d = (data.d - 1) % 4
