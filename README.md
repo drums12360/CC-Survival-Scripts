@@ -32,7 +32,7 @@ mineTunnel = dataAPI, toolsAPI, moveAPI, storageAPI, digAPI
 
 ----
 
-[[ Non functional ]]
+[[ Functional but not reviewed ]]
 
 digRoom
 
