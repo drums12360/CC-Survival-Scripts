@@ -1,4 +1,4 @@
-local api = require("customAPI")
+local api = require("apis")
 local start = api.copyTable(api.coords)
 local height = 0
 local width = 0
@@ -36,7 +36,7 @@ function checkFuelLevel()
   local requiredFuelLevel = math.ceil(((height * width * depth) / 3) + (height * depth) + ((widthMovement * 2) + depth + height))
   local currentFuelLevel = tonumber(turtle.getFuelLevel())
   while currentFuelLevel < requiredFuelLevel do
-    if not api.refuel(true) then
+    if not api.tools.refuel() then
       print("Not enough Fuel. "..currentFuelLevel.."/"..requiredFuelLevel)
       return false
     end
@@ -117,78 +117,78 @@ function mineSquence()
   local offset = height % 3
   local lastRowCount = 0
   for x=1,depth do
-    api.forward()
-    api.dig("up")
-    api.dig("down")
+    api.move.forward()
+    api.tools.dig("up")
+    api.tools.dig("down")
     if x % 3 == 0 and lastRowCount % 2 == 1 then
-      api.turnRight()
+      api.move.turnRight()
     else
       if lastRowCount % 2 == 0 then
-        api.turnRight()
+        api.move.turnRight()
       else
-        api.turnLeft()
+        api.move.turnLeft()
       end
     end
     for z=1,rows do
       for y=1,width - 1 do
-        api.forward()
-        api.dig("up")
-        api.dig("down")
+        api.move.forward()
+        api.tools.dig("up")
+        api.tools.dig("down")
       end
       lastRowCount = z
       if z ~= rows then
         if x % 2 == 0 then
-          api.down(3)
-          api.dig("down")
-          api.turnAround()
+          api.move.down(3)
+          api.tools.dig("down")
+          api.move.turnAround()
         else
-          api.up(3)
-          api.dig("up")
-          api.turnAround()
+          api.move.up(3)
+          api.tools.dig("up")
+          api.move.turnAround()
         end
       elseif offset ~= 0 then
         if x % 2 == 0 then
-          api.down(offset)
-          api.dig("down")
-          api.turnAround()
+          api.move.down(offset)
+          api.tools.dig("down")
+          api.move.turnAround()
         else
-          api.up(offset)
-          api.dig("up")
-          api.turnAround()
+          api.move.up(offset)
+          api.tools.dig("up")
+          api.move.turnAround()
         end
         for y=1,width - 1 do
-          api.forward()
+          api.move.forward()
           if x % 2 == 0 then
-            api.dig("down")
+            api.tools.dig("down")
           else
-            api.dig("up")
+            api.tools.dig("up")
           end
         end
         lastRowCount = z + 1
       end
     end
     if x % 3 == 2 and lastRowCount % 2 == 1 then
-      api.turnRight()
+      api.move.turnRight()
     else
       if lastRowCount % 2 == 0 then
-        api.turnRight()
+        api.move.turnRight()
       else
-        api.turnLeft()
+        api.move.turnLeft()
       end
     end
     dropJunk()
   end
-  api.moveTo("~",start.y + 1,"~")
-  api.moveTo(start.x, start.y, start.z)
+  api.move.moveTo("~",start.y + 1,"~")
+  api.move.moveTo(start.x, start.y, start.z)
 end
 
 if startup() then
   if not checkFuelLevel() then
     return
   end
-  api.turnLeft()
-  api.forward(widthMovement)
-  api.turnRight()
-  api.up()
+  api.move.turnLeft()
+  api.move.forward(widthMovement)
+  api.move.turnRight()
+  api.move.up()
   mineSquence()
 end
