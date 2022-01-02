@@ -164,10 +164,7 @@ function checkForOre()
 		api.turnLeft()
 end
 
-function mineSquence()
-	local Shaft_Amount = tonumber(arg[1])
-	local Shaft_Widht = tonumber(arg[2])
-	local Shaft_Distance = tonumber(arg[3])
+function mineSquence(Shaft_Amount, Shaft_Widht, Shaft_Distance)
 	for i=1, Shaft_Amount do
 		for i=1, Shaft_Distance do
 			api.forward()
@@ -209,7 +206,7 @@ end
 local start = api.copyTable(api.coords)
 api.saveData("/.save", "/start_pos", start)
 api.avoidChest()
-mineSquence(tArgs[1], tArgs[2], tArgs[3])
+mineSquence(tonumber(tArgs[1]), tonumber(tArgs[2]), tonumber(tArgs[3]))
 api.moveTo(start.x, start.y, start.z)
 api.drop(api.maxSlots)
 fs.delete("/.save")
