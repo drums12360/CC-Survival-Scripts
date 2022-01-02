@@ -87,14 +87,14 @@ function dig.veinMine(lastFunc)
 			if dig.checkOreTable({turtle.inspect()}) then
 				if i == 1 then
 					move.forward()
-					return veinMine(move.forward)
+					return dig.veinMine(move.forward)
 				elseif i == 2 then
-					return veinMine(move.turnLeft)
+					return dig.veinMine(move.turnLeft)
 				elseif i == 3 then
 					table.insert(stack, "turnLeft")
-					return veinMine(move.turnLeft)
+					return dig.veinMine(move.turnLeft)
 				elseif i == 4 then
-					return veinMine(move.turnRight)
+					return dig.veinMine(move.turnRight)
 				end
 			end
 			move.turnLeft()

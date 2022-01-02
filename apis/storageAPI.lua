@@ -32,7 +32,7 @@ end
 function storage.emptyInv()
 	local start = data.loadData("/.save", "/start_pos")
 	if turtle.getItemCount(15) > 0 then
-		local mining = data.copyTable(storage.coords)
+		local mining = data.copyTable(data.coords)
 		move.moveTo(start.x, start.y, start.z)
 		storage.drop(15)
 		turtle.select(1)
@@ -43,7 +43,7 @@ end
 function storage.waitforemptyInv()
 	local start = data.loadData("/.save", "/start_pos")
 	if turtle.getItemCount(15) > 0 then
-		local mining = data.copyTable(storage.coords)
+		local mining = data.copyTable(data.coords)
 		move.moveTo(start.x, start.y, start.z)
 		turtle.select(1)
 		print("Press any key after emptying.")
