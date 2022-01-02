@@ -1,4 +1,4 @@
-local move = require("movment")
+local move = require("moveAPI")
 if peripheral.isPresent("modem") then
   modem = peripheral.find("modem")
 end
