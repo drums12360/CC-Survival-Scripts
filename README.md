@@ -17,6 +17,6 @@ Files in the folder **standalone**
 
 | File Name | Description | Usage |
 | ----------- | ----------- | ----------- |
-| mineCuboid.lua | Mines a Cuboid of minimum `3 x 3` and the width needs to be an odd # | mineCuboid <w> <h> <d>|
+| mineCuboid.lua | Mines a Cuboid of minimum `3 x 3` and the width needs to be an odd # | mineCuboid w h d |
 | stripMine.lua |  |  |
 | tunnel.lua |  |  |
