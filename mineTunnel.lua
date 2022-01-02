@@ -1,23 +1,26 @@
-local api = require("customAPI")
+local data = require("dataAPI")
+local tools = require("toolsAPI")
+local move = require("moveAPI")
+local storage = require("storageAPI")
 local tArgs = {...}
 local stack = {}
 
 local inverter = {
-	["forward"] = api.backward,
-	["back"] = api.forward,
-	["turnLeft"] = api.turnRight,
-	["turnRight"] = api.turnLeft,
-	["up"] = api.down,
-	["down"] = api.up,
+	["forward"] = move.backward,
+	["back"] = move.forward,
+	["turnLeft"] = move.turnRight,
+	["turnRight"] = move.turnLeft,
+	["up"] = move.down,
+	["down"] = move.up,
 }
 
 local converter = {
-	["forward"] = api.forward,
-	["back"] = api.backward,
-	["turnLeft"] = api.turnLeft,
-	["turnRight"] = api.turnRight,
-	["up"] = api.up,
-	["down"] = api.down,
+	["forward"] = move.forward,
+	["back"] = move.backward,
+	["turnLeft"] = move.turnLeft,
+	["turnRight"] = move.turnRight,
+	["up"] = move.up,
+	["down"] = move.down,
 }
 
 local oreList = {
@@ -90,27 +93,27 @@ function veinMine(lastFunc)
 			end
 		end
 		if checkOreTable({turtle.inspectUp()}) then
-			api.up()
-			return veinMine(api.up)
+			move.up()
+			return veinMine(move.up)
 		elseif checkOreTable({turtle.inspectDown()}) then
-			api.down()
-			return veinMine(api.down)
+			move.down()
+			return veinMine(move.down)
 		end
 		for i=1, 4 do
 			if checkOreTable({turtle.inspect()}) then
 				if i == 1 then
-					api.forward()
-					return veinMine(api.forward)
+					move.forward()
+					return veinMine(move.forward)
 				elseif i == 2 then
-					return veinMine(api.turnLeft)
+					return veinMine(move.turnLeft)
 				elseif i == 3 then
 					table.insert(stack, "turnLeft")
-					return veinMine(api.turnLeft)
+					return veinMine(move.turnLeft)
 				elseif i == 4 then
-					return veinMine(api.turnRight)
+					return veinMine(move.turnRight)
 				end
 			end
-			api.turnLeft()
+			move.turnLeft()
 		end
 		if stack[#stack] == "turnLeft" then
 			if stack[#stack] == stack[#stack-1] then
@@ -144,40 +147,40 @@ end
 
 function checkForOre()
 	if checkOreTable({turtle.inspectUp()}) then
-		api.up()
-		veinMine(api.up)
+		move.up()
+		veinMine(move.up)
 	end
 	if checkOreTable({turtle.inspectDown()}) then
-		api.down()
-		veinMine(api.down)
+		move.down()
+		veinMine(move.down)
 	end
-	api.turnLeft()
+	move.turnLeft()
 	if checkOreTable({turtle.inspect()}) then
-		api.forward()
-		veinMine(api.forward)
+		move.forward()
+		veinMine(move.forward)
 	end
-	api.turnAround()
+	move.turnAround()
 	if checkOreTable({turtle.inspect()}) then
-		api.forward()
-		veinMine(api.forward)
+		move.forward()
+		veinMine(move.forward)
 	end
-	api.turnLeft()
+		move.turnLeft()
 end
 
 function mineSquence(amount)
 	for i=1, amount do
-		api.forward()
+		move.forward()
 		checkForOre()
 		turtle.digUp()
-		if api.loadData("/.save", "/chest")[1] == true then
-			api.emptyInv()
-		elseif api.loadData("/.save", "/chest")[1] == false then
-			api.waitforemptyInv()
+		if data.loadData("/.save", "/chest")[1] == true then
+			storage.emptyInv()
+		elseif data.loadData("/.save", "/chest")[1] == false then
+			storage.waitforemptyInv()
 		end
 	end
 	if checkOreTable({turtle.inspect()}) then
-		api.forward()
-		veinMine(api.forward)
+		move.forward()
+		veinMine(move.forward)
 	end
 end
 
@@ -188,14 +191,14 @@ function returnSquence(amount)
 			return false
 			elseif turtle.getItemDetail(16).name == "minecraft:torch" and amount > 4 then
 			turtle.select(16)
-			api.up()
-			api.backward()
+			move.up()
+			move.backward()
 			turtle.place()
 			moves = moves - 1
 			while moves > 12 and turtle.getItemCount(16) ~= 0 do
-				api.turnAround()
-				api.forward(12)
-				api.turnAround()
+				move.turnAround()
+				move.forward(12)
+				move.turnAround()
 				turtle.place()
 				moves = moves - 12
 			end
@@ -209,14 +212,13 @@ if type(tonumber(tArgs[1])) ~= "number" then
 	error(("Usage: %s 10"):format(fs.getName(shell.getRunningProgram())))
 end
 
-tArgs[1] = tonumber(tArgs[1])
-local start = api.copyTable(api.coords)
-api.saveData("/.save", "/start_pos", start)
-api.avoidChest()
+local start = data.copyTable(data.coords)
+data.saveData("/.save", "/start_pos", start)
+storage.avoidChest()
 mineSquence(tonumber(tArgs[1]))
 returnSquence(tonumber(tArgs[1])-1)
 mineSquence(tArgs[1])
-api.moveTo(start.x, start.y, start.z)
-api.drop(api.maxSlots)
-fs.delete("/.save") 
-fs.delete("/.save") 
+move.moveTo(start.x, start.y, start.z)
+storage.drop(data.coords)
+fs.delete("/.save")
+					

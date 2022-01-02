@@ -208,7 +208,7 @@ end
 
 local start = data.copyTable(data.coords)
 data.saveData("/.save", "/start_pos", start)
-storagei.avoidChest()
+storage.avoidChest()
 mineSquence(tonumber(tArgs[1]), tonumber(tArgs[2]), tonumber(tArgs[3]))
 move.moveTo(start.x, start.y, start.z)
 storage.drop(data.coords)

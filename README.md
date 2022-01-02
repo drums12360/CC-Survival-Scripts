@@ -20,6 +20,8 @@ storageAPI = dataAPI and moveAPI
 
 stripTunnel = dataAPI, toolsAPI, moveAPI, storageAPI
 
+mineTunnel = dataAPI, toolsAPI, moveAPI, storageAPI
+
 ---------------
 
 [[Non functional ]]
@@ -27,8 +29,6 @@ stripTunnel = dataAPI, toolsAPI, moveAPI, storageAPI
 digRoom
 
 mineCuboid
-
-mineTunnel
 
 mineVert
 
