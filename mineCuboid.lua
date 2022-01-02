@@ -8,7 +8,7 @@ function checkFuelLevel()
 	local requiredFuelLevel = math.ceil(((height * width * depth) / 3) + (height * depth) + ((width * 2) + depth + height))
 	local currentFuelLevel = tonumber(turtle.getFuelLevel())
 	if currentFuelLevel < requiredFuelLevel then
-		while urrentFuelLevel < requiredFuelLevel do
+		while currentFuelLevel < requiredFuelLevel do
 			term.clear()
 			term.setCursorPos(1,1)
 			print("Not enough Fuel! "..currentFuelLevel.."/"..requiredFuelLevel)
