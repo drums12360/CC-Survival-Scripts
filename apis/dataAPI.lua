@@ -1,6 +1,6 @@
 local data = {
-	timeout = tonumber(5),
-	d = tonumber(0),
+	timeout = 5,
+	d = 0,
 	hasWireless = false,
 	direction = {[0] = "north", [1] = "east", [2] = "south", [3] = "west"},
 	coords = {x = 0, y = 0,z = 0}
