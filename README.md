@@ -2,6 +2,17 @@
 
 Stuff I've made for the [CC:Tweaked](https://www.curseforge.com/minecraft/mc-mods/cc-tweaked) mod
 
+## Scripts With Dependencies 
+
+| File Name | Dependency |
+| ----------- | ----------- |
+| digRoom.lua | customAPI.lua |
+| mineCuboid.lua | customAPI.lua |
+| mineVert.lua | movement.lua |
+| staircaseDown.lua | movement.lua |
+| staircaseUp.lua | movement.lua |
+| stripMine.lua | customAPI.lua |
+
 ## Apis
 
 Files in the folder **apis**
