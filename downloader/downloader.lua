@@ -19,7 +19,7 @@ function download(url)
 	else
 		term.clear()
 		term.setCursorPos(1,1)
-		print("Downloading ", filename)
+		print("Downloaded ", filename)
 		fs.delete(filename)
 		file = fs.open(filename, "wb")
 		file.write(content)
@@ -28,10 +28,9 @@ function download(url)
 			fs.delete("startup/autoupdate.lua")
 			fs.move(filename, "startup/autoupdate.lua")
 			print("Installed autoupdate on every turtle startup!")
-			os.sleep(3)
+			os.sleep(2)
 		else
 		print("Download finished!")
-		os.sleep(1)
 		end
 	end
 end
@@ -46,7 +45,7 @@ end
 term.clear()
 term.setCursorPos(1,1)
 print("Downloading / Updating APIs and programs!")
-os.sleep(1)
+os.sleep(0.5)
 start()
 term.clear()
 term.setCursorPos(1,1)
