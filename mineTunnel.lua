@@ -84,4 +84,3 @@ mineSquence(tArgs[1])
 move.moveTo(start.x, start.y, start.z)
 storage.drop(data.coords)
 fs.delete("/.save")
-					
