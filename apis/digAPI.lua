@@ -132,6 +132,9 @@ function checkForOre()
 		veinMine(move.forward)
 	end
 	move.turnLeft()
+	if checkOreTable == false then
+		return false
+	end
 end
 
 return dig
