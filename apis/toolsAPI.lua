@@ -1,5 +1,3 @@
-local storage = require("storageAPI")
-
 local tools = {
 	maxSlots = 16,
 	slot = 1,
