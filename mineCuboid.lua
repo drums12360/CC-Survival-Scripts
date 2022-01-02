@@ -23,6 +23,8 @@ function mineSquence(width, height, depth)
 			print("Place fuel into inventory!")
 			os.sleep(data.timeout)
 		end
+		term.clear()
+		term.setCursorPos(1,1)
 	end
 	move.turnLeft()
 	move.forward(width)
