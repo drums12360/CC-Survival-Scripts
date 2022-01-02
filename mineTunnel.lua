@@ -32,10 +32,6 @@ function mineSquence(amount)
 			storage.waitforemptyInv()
 		end
 	end
-	if dig.checkOreTable({turtle.inspect()}) then
-		move.forward()
-		dig.veinMine(move.forward)
-	end
 end
 
 function returnSquence(amount)

@@ -27,6 +27,7 @@ function mineSquence(Shaft_Amount, Shaft_Width, Shaft_Distance)
 			move.forward()
 			dig.checkForOre()
 			turtle.digUp()
+		end
 		move.turnLeft()
 		for i=1, Shaft_Width do
 			move.forward()
@@ -49,10 +50,6 @@ function mineSquence(Shaft_Amount, Shaft_Width, Shaft_Distance)
 		elseif data.loadData("/.save", "/chest")[1] == false then
 			storage.waitforemptyInv()
 		end
-	end
-	if dig.checkOreTable({turtle.inspect()}) then
-		move.forward()
-		dig.veinMine(move.forward)
 	end
 end
 

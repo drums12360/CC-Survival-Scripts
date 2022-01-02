@@ -34,7 +34,7 @@ local oreList = {
 	"minecraft:nether_quartz_ore",
 }
 
-function checkOreTable(tbl)
+function dig.checkOreTable(tbl)
 	if type(tbl) ~= "table" then
 		error("'tbl' is not of type table", 2)
 	end
@@ -49,7 +49,7 @@ function checkOreTable(tbl)
 	end
 end
 
-function veinMine(lastFunc)
+function dig.veinMine(lastFunc)
 	if type(lastFunc) == "function" or "string" then
 		if type(lastFunc) == "function" then
 			for k,v in pairs(converter) do
@@ -112,29 +112,31 @@ function veinMine(lastFunc)
 	end
 end
 
-function checkForOre()
+function dig.checkForOre()
 	if checkOreTable({turtle.inspectUp()}) then
 		move.up()
-		veinMine(move.up)
+		dig.veinMine(move.up)
 	end
 	if checkOreTable({turtle.inspectDown()}) then
 		move.down()
-		veinMine(move.down)
+		dig.veinMine(move.down)
 	end
 	move.turnLeft()
 	if checkOreTable({turtle.inspect()}) then
 		move.forward()
-		veinMine(move.forward)
+		dig.veinMine(move.forward)
 	end
 	move.turnAround()
 	if checkOreTable({turtle.inspect()}) then
 		move.forward()
-		veinMine(move.forward)
+		dig.veinMine(move.forward)
 	end
 	move.turnLeft()
-	if checkOreTable == false then
-		return false
+	if checkOreTable({turtle.inspect()}) then
+		move.forward()
+		dig.veinMine(move.forward)
 	end
+	return true
 end
 
 return dig
