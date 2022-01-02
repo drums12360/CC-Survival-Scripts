@@ -14,7 +14,7 @@ end
 if type(tArgs[1]) ~= "number" then
 	term.clear()
 	term.setCursorPos(1,1)
-	error("Define mine lenght! (Example: '10') [10 block long]")
+	error("Define mine lenght! (Example: '10') [10 blocks long]")
 end
 
 local start = data.copyTable(data.coords)
