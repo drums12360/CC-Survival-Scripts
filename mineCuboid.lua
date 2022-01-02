@@ -7,14 +7,17 @@ local tArgs = {...}
 function checkFuelLevel(width, height, depth)
 	local requiredFuelLevel = math.ceil(((height * width * depth) / 3) + (height * depth) + ((width * 2) + depth + height))
 	local currentFuelLevel = tonumber(turtle.getFuelLevel())
-	while not move.refuel() and currentFuelLevel < requiredFuelLevel do
-		term.clear()
-		term.setCursorPos(1,1)
-		print("Not enough Fuel! "..currentFuelLevel.."/"..requiredFuelLevel)
-		print("Place fuel into inventory!")
-		os.sleep(data.timeout)
-	end
+	if not move.refuel() and currentFuelLevel < requiredFuelLevel then
+		while not move.refuel() do
+			term.clear()
+			term.setCursorPos(1,1)
+			print("Not enough Fuel! "..currentFuelLevel.."/"..requiredFuelLevel)
+			print("Place fuel into inventory!")
+			os.sleep(data.timeout)
+		end
+	else
 	return true
+	end
 end
 
 function mineSquence(width, height, depth)
