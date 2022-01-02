@@ -14,13 +14,15 @@ move API = dataAPI and toolsAPI
 
 storageAPI = dataAPI and moveAPI
 
+digAPI = moveAPI
+
 ---------------
 
 [[Prog Name = Essentials?  ]]
 
-stripTunnel = dataAPI, toolsAPI, moveAPI, storageAPI
+stripTunnel = dataAPI, toolsAPI, moveAPI, storageAPI, digAPI
 
-mineTunnel = dataAPI, toolsAPI, moveAPI, storageAPI
+mineTunnel = dataAPI, toolsAPI, moveAPI, storageAPI, digAPI
 
 ---------------
 
