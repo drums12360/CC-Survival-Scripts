@@ -30,6 +30,7 @@ function tools.findItem(name)
 			end
 			return false
 		end
+	end
 	return false
 end
 
