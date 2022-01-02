@@ -6,12 +6,14 @@ Stuff made for the [CC:Tweaked](https://www.curseforge.com/minecraft/mc-mods/cc-
 
 | File Name | Dependencies |
 | ----------- | ----------- |
-| digRoom.lua | customAPI.lua |
-| mineCuboid.lua | customAPI.lua |
-| mineVert.lua | movement.lua |
-| staircaseDown.lua | movement.lua |
-| staircaseUp.lua | movement.lua |
-| stripMine.lua | customAPI.lua |
+| digRoom.lua | apis |
+| mineCuboid.lua | apis |
+| mineVert.lua | moveAPI.lua |
+| mineTunnel.lua | moveAPI.lua, dataAPI.lua, storageAPI.lua, toolsAPI.lua |
+| staircaseDown.lua | moveAPI.lua |
+| staircaseUp.lua | moveAPI.lua |
+| stripMine.lua | apis |
+| stripTunnel.lua | apis |
 
 ## Apis
 
@@ -19,8 +21,12 @@ Files in the folder **apis**
 
 | File Name | Description |
 | ----------- | ----------- |
-|  |  |
-| move.lua | Basic movement helper funtions |
+| dataAPI.lua | Data manipulation |
+| toolsAPI.lua | Dig, place and item manipulation |
+| storageAPI.lua | External storage stuff|
+| digAPI.lua | stack and vein mine |
+| moveAPI.lua | Basic movement helper funtions |
+| init.lua = apis | Uses all the files in apis folder |
 
 ## Standalone Scripts
 
