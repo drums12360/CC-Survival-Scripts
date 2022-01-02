@@ -13,3 +13,14 @@ storageAPI = dataAPI and moveAPI
 Prog Name = Essentials?
 
 stripTunnel = dataAPI, toolsAPI, moveAPI, storageAPI
+
+
+Non functional
+
+digRoom
+mineCuboid
+mineTunnel
+mineVert
+straicaseDown
+staircaseUp
+stripMine
