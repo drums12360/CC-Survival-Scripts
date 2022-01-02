@@ -1,11 +1,17 @@
 local urls = {
 	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/apis/dataAPI.lua",
-	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/apis/toolsAPI.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/apis/digAPI.lua",
 	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/apis/moveAPI.lua",
 	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/apis/storageAPI.lua",
-	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/apis/digAPI.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/apis/toolsAPI.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/digRoom.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/mineCuboid.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/mineTunnel.lua"
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/mineVert.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/staircaseDown.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/staircaseUp.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/stripMine.lua",
 	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/stripTunnel.lua",
-	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/mineTunnel.lua",
 	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/downloader/downloader.lua",
 }
 
@@ -14,10 +20,12 @@ function download(url)
 	local filename = url:match( "([^/]+)$" )
 	if not content then
 		term.clear()
+		term.setCursorPos(1,1)
 		error("Could not connect to website ", url)
 	else
 		term.clear()
-		print("Download finished from ", url)
+		term.setCursorPos(1,1)
+		print("Downloaded ", filename)
 		fs.delete(filename)
 		file = fs.open(filename, "wb")
 		file.write(content)
@@ -25,27 +33,29 @@ function download(url)
 		if filename == "downloader.lua" then
 			fs.delete("startup/autoupdate.lua")
 			fs.move(filename, "startup/autoupdate.lua")
-			term.clear()  
 			print("Installed autoupdate on every turtle startup!")
-			os.sleep(5)
+			os.sleep(1)
+		else
+		print("Download finished!")
 		end
-		term.clear()  
-		print("Downloaded and saved ", filename)
-		os.sleep(3)
 	end
 end
 
 function start()
 	for index, value in ipairs(urls) do
 		download(value)
+		os.sleep(0.5)
 	end
 end
 	
 term.clear()
-print("Downloading APIs and programs!")
-os.sleep(3)
+term.setCursorPos(1,1)
+print("Downloading / Updating APIs and programs!")
+os.sleep(0.5)
 start()
-term.clear()  
+term.clear()
+term.setCursorPos(1,1)
 print("API and program download finished.")
-os.sleep(3)
-term.clear() 
+os.sleep(1)
+term.clear()
+term.setCursorPos(1,1)
