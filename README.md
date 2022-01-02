@@ -6,7 +6,7 @@ Stuff for the [CC:Tweaked](https://www.curseforge.com/minecraft/mc-mods/cc-tweak
 
 [[ Download and update functioning APIs and programms automatically with the downloader ]]
 
-wget https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/downloader/Alldownloader.lua
+wget https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/downloader/downloader.lua
 
 ----
 
