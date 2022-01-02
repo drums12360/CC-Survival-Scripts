@@ -1,5 +1,5 @@
-local dataAPI = require("dataAPI")
-local toolsAPI = require("toolsAPI")
+local data = require("dataAPI")
+local tools = require("toolsAPI")
 
 local move = {
 	
@@ -51,7 +51,9 @@ function move.face(direction)
 end
 
 function move.forward(times)
-	times = times or 1
+	if times == nil then
+		times = 1
+	end
 	if times < 0 then
 		move.backward(-times)
 	end
@@ -107,7 +109,9 @@ function move.right(times)
 end
 
 function move.backward(times)
-	times = times or 1
+	if times == nil then
+		times = 1
+	end
 	if times < 0 then
 		move.forward(-times)
 	end
@@ -138,7 +142,9 @@ function move.backward(times)
 end
 
 function move.up(times)
-	times = times or 1
+	if times == nil then
+		times = 1
+	end
 	if times < 0 then
 		data.down(-times)
 	end
@@ -171,7 +177,9 @@ function move.up(times)
 end
 
 function move.down(times)
-	times = times or 1
+	if times == nil then
+		times = 1
+	end
 	if times < 0 then
 		move.up(-times)
 	end
