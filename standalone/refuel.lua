@@ -1,7 +1,7 @@
 local tArgs = {...}
 
 function refuel(secs)
-	if mins == nil then
+	if secs == nil then
 		secs = 120
 	end
 	print("Max fuel level: ", turtle.getFuelLimit())
@@ -11,7 +11,7 @@ function refuel(secs)
 		term.setCursorPos(1,1)
 		print("Turtle is fully refuled!")
 	else
-		print("Turtle will now loop refuel for ", secs, "seconds!")
+		print("Turtle will now loop refuel for", secs, "seconds!")
 		for i=1, secs do
 			turtle.refuel()
 			sleep(.5)
@@ -27,6 +27,6 @@ function refuel(secs)
 end
 
 refuel(tonumber(tArgs[1]))
-os.sleep(2)
+os.sleep(5)
 term.clear()
 term.setCursorPos(1,1)
