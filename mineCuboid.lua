@@ -73,6 +73,20 @@ function inventorySort()
       end
     end
   end
+  for i=1,api.maxSlots do
+    if not inv[i] then
+      for j=(i+1),api.maxSlots do
+        if inv[j] then
+          turtle.select(j)
+          api.slot = j
+          turtle.transferTo(i)
+          inv[i] = api.copyTable(inv[j])
+          inv[j] = nil
+          break
+        end
+      end
+    end
+  end
   turtle.select(1)
   api.slot = 1
 end
