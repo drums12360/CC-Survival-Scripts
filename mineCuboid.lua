@@ -26,19 +26,6 @@ function mineSquence(width, height, depth)
 		term.clear()
 		term.setCursorPos(1,1)
 	end
-	move.forward()
-	move.turnRight()
-	if width % 3 <= 1 then
-		move.forward(width % 2)
-		move.turnAround()
-		move.forward(width - 1)
-	else
-		move.forward(width % 2)
-		move.turnAround()
-		move.forward(width)
-	end
-	move.turnRight()
-	move.up()
 	for x=1,depth do
 		move.forward()
 		tools.dig("up")
@@ -101,7 +88,6 @@ function mineSquence(width, height, depth)
 	end
 	tools.dropJunk()
 	end
-	move.moveTo("~",start.y + 1,"~")
 end
 
 if type(tonumber(tArgs[1])) and type(tonumber(tArgs[2])) and type(tonumber(tArgs[3])) ~= "number" then
@@ -113,6 +99,7 @@ end
 local start = data.copyTable(data.coords)
 data.saveData("/.save", "/start_pos", start)
 mineSquence(tonumber(tArgs[1]), tonumber(tArgs[2]), tonumber(tArgs[3]))
+move.moveTo("~",start.y + 1,"~")
 move.moveTo(start.x, start.y, start.z)
 storage.drop(tools.maxSlots)
 fs.delete("/.save")
