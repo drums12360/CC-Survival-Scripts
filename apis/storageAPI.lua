@@ -2,13 +2,13 @@ local data = require("dataAPI")
 local move = require("moveAPI")
 
 local storage = {
-	maxSlots = 16,
+
 }
 
 function storage.drop(slots)
 	local inspect, datai = turtle.inspect()
 	if datai.name == "minecraft:chest" then
-		for i=1, storage.maxSlots do
+		for i=1, slots do
 			turtle.select(i)
 			turtle.drop()
 		end
@@ -47,6 +47,7 @@ function storage.waitforemptyInv()
 		move.moveTo(start.x, start.y, start.z)
 		turtle.select(1)
 		term.clear()
+		term.setCursorPos(1,1)
 		print("Press any key after emptying.")
 		os.pullEvent("key")
 		move.moveTo(mining.x, mining.y, mining.z)
