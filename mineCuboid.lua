@@ -24,6 +24,11 @@ function mineSquence(width, height, depth)
 	local rows = math.floor(height / 3)
 	local offset = height % 3
 	local lastRowCount = 0
+	if width % 2 == 0 then
+		error("Width needs to be an odd #!")
+	elseif not checkFuelLevel() then
+		return
+	end
 	move.turnLeft()
 	move.forward(width)
 	move.turnRight()
@@ -93,16 +98,6 @@ function mineSquence(width, height, depth)
 	move.moveTo("~",start.y + 1,"~")
 end
 
-function startup()
-	if width % 2 == 0 then
-		error("Width needs to be an odd #!")
-	elseif not checkFuelLevel() then
-		return
-	else
-		mineSquence()
-	end
-end
-
 if type(tonumber(tArgs[1])) and type(tonumber(tArgs[2])) and type(tonumber(tArgs[3])) ~= "number" then
 	term.clear()
 	term.setCursorPos(1,1)
@@ -111,7 +106,7 @@ end
 
 local start = data.copyTable(data.coords)
 data.saveData("/.save", "/start_pos", start)
-startup(tonumber(tArgs[1]), tonumber(tArgs[2]), tonumber(tArgs[3]))
+mineSquence(tonumber(tArgs[1]), tonumber(tArgs[2]), tonumber(tArgs[3]))
 move.moveTo(start.x, start.y, start.z)
 storage.drop(tools.maxSlots)
 fs.delete("/.save")
