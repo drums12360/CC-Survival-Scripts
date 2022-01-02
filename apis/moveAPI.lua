@@ -15,7 +15,7 @@ local fuelList = {
 
 function move.refuel()
 	for index, value in ipairs(fuelList) do
-		if tools.findItem(fuelList[i]) then
+		if tools.findItem(tostring(value)) then
 			while turtle.getItemCount(tools.slot) >= 1 and turtle.getFuelLevel() < turtle.getFuelLimit() do
 				turtle.refuel()
 			end
