@@ -13,7 +13,12 @@ function checkFuelLevel(width, height, depth)
 			term.setCursorPos(1,1)
 			print("Not enough Fuel! "..currentFuelLevel.."/"..requiredFuelLevel)
 			os.sleep(data.timeout)
+			print("Place fuel in inventory within 10 seconds or program will abort!")
+			os.sleep(10)
 			move.refuel()
+			if not move.refuel() then
+				error("No fuel found, program aborted!")
+			end
 		end
 	else
 		return true
