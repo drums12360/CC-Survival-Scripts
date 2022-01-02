@@ -185,11 +185,13 @@ end
 function api.left(times)
 	api.turnLeft()
 	api.forward(times)
+	api.turnRight()
 end
 
 function api.right(times)
 	api.turnRight()
 	api.forward(times)
+	api.turnLeft()
 end
 
 function api.forward(times)
