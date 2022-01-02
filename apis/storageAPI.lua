@@ -1,7 +1,7 @@
 local data = require("dataAPI")
 local move = require("moveAPI")
 
-local storage = {
+storage = {
 	
 }
 
@@ -21,11 +21,11 @@ function storage.avoidChest()
 	local inspect, datai = turtle.inspect()
 	if datai.name == "minecraft:chest" then
 		chest[1] = true
-		data.saveCoords(chest)
+		data.saveData("/.save", "/chest", chest)
 		move.turnAround()
 	else
 		chest[1] = false
-		data.saveCoords(chest)
+		data.saveData("/.save", "/chest", chest)
 	end
 end
 

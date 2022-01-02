@@ -1,5 +1,9 @@
 local move = require("moveAPI")
 
+dig = {
+
+}
+
 local oreList = {
 	"minecraft:iron_ore",
 	"minecraft:coal_ore",

@@ -1,4 +1,4 @@
-local data = {
+data = {
 	timeout = 5,
 	d = 0,
 	hasWireless = false,
@@ -74,9 +74,9 @@ function data.gpsStart(side)
 	end
 end
 
-function data.saveCoords(coords)
-	local coords = data.copyTable(data.coords)
-	data.saveData("/.save", "/start_pos", coords)
+function data.saveCoords(cord_data)
+	local cord_data = data.copyTable(data.coords)
+	data.saveData("/.save", "/start_pos", cord_data)
 end
 
 return data

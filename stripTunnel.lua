@@ -69,7 +69,8 @@ if type(tonumber(tArgs[1])) ~= "number" then
 	error(("Usage: %s Define shaft amount, shaft width and shaft distance. (Example: '10 20 3' [10 deep, 20 to each side, and every 3 blocks]"):format(fs.getName(shell.getRunningProgram())))
 end
 
-data.saveCoords(start)
+local start = data.copyTable(data.coords)
+data.saveData("/.save", "/start_pos", start)
 storage.avoidChest()
 mineSquence(tonumber(tArgs[1]), tonumber(tArgs[2]), tonumber(tArgs[3]))
 move.moveTo(start.x, start.y, start.z)
