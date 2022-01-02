@@ -21,14 +21,12 @@ function tools.findItem(name)
 	end
 	for i=1, tools.maxSlots do
 		if turtle.getItemCount(i) ~= 0 then
-			if turtle.getItemDetail(i).name ~= name then
-				return false
-			elseif turtle.getItemDetail(i).name == name then
+		local item = turtle.getItemDetail(i).name
+			if item == name then
 				turtle.select(i)
 				tools.slot = tonumber(i)
 				return true
 			end
-			return false
 		end
 	end
 	return false
