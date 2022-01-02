@@ -1,6 +1,10 @@
 local data = require("dataAPI")
 local tools = require("toolsAPI")
 
+local move = {
+	
+}
+
 function move.turnLeft()
 	turtle.turnLeft()
 	data.d = (data.d - 1) % 4

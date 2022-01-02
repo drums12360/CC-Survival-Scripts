@@ -1,6 +1,10 @@
 local data = require("dataAPI")
 local move = require("moveAPI")
 
+local storage = {
+	
+}
+
 function storage.drop(slots)
 	local inspect, datai = turtle.inspect()
 	if datai.name == "minecraft:chest" then
