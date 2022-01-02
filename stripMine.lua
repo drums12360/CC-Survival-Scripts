@@ -164,4 +164,3 @@ local start = api.copyTable(api.coords)
 mineSquence(tArgs[1])
 api.moveTo(start.x, start.y, start.z)
 fs.delete("/.save")
-
