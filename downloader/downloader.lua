@@ -1,3 +1,14 @@
+local urls = {
+	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/dataAPI.lua"
+	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/toolsAPI.lua"
+	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/moveAPI.lua"
+	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/storageAPI.lua"
+	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/digAPI.lua"
+	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/stripTunnel.lua"
+	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/mineTunnel.lua"
+	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/downloader/downloader.lua"
+}
+
 function download(url)
 	local content = http.get(url).readAll()
 	local filename = url:match( "([^/]+)$" )
@@ -16,22 +27,25 @@ function download(url)
 			fs.move(filename, "startup/autoupdate.lua")
 			term.clear()  
 			print("Installed autoupdate on every turtle startup!")
-			os.sleep(3)
+			os.sleep(5)
 		end
 		term.clear()  
 		print("Downloaded and saved ", filename)
+		os.sleep(3)
 	end
 end
 
+function start()
+	for index, value in ipairs(urls) do
+		download(value)
+	end
+end
+	
 term.clear()
 print("Downloading APIs and programs!")
-download("https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/dataAPI.lua")
-download("https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/toolsAPI.lua")
-download("https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/moveAPI.lua")
-download("https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/storageAPI.lua")
-download("https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/digAPI.lua")
-download("https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/stripTunnel.lua")
-download("https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/mineTunnel.lua")
-download("https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/downloader/downloader.lua")
+os.sleep(3)
+start()
 term.clear()  
 print("API and program download finished.")
+os.sleep(3)
+term.clear() 
