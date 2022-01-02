@@ -1,34 +1,18 @@
 local data = require("dataAPI")
 local move = require("moveAPI")
 
-local storage = {
-<<<<<<< HEAD
-  maxSlots = 16,
-}
+local storage = {}
 
 function storage.drop(slots)
-  local inspect, datai = turtle.inspect()
-  if datai.name == "minecraft:chest" then
-    for i=1, storage.maxSlots do
-      turtle.select(i)
-      turtle.drop()
-    end
-    turtle.select(1)
-  end
-=======
-
-}
-
-function storage.drop(slots)
+	local slot = turtle.getSelectedSlot()
 	local inspect, datai = turtle.inspect()
 	if datai.name == "minecraft:chest" then
 		for i=1, slots do
 			turtle.select(i)
 			turtle.drop()
 		end
-		turtle.select(1)
+		turtle.select(slot)
 	end
->>>>>>> bfd0d3893cf12f78e04a29989dcfb7ba4ab9d3e9
 end
 
 function storage.avoidChest()
@@ -56,18 +40,6 @@ function storage.emptyInv()
 end
 
 function storage.waitforemptyInv()
-<<<<<<< HEAD
-  local start = data.loadData("/.save", "/start_pos")
-  if turtle.getItemCount(15) > 0 then
-    local mining = data.copyTable(data.coords)
-    move.moveTo(start.x, start.y, start.z)
-    turtle.select(1)
-    term.clear()
-    print("Press any key after emptying.")
-    os.pullEvent("key")
-    move.moveTo(mining.x, mining.y, mining.z)
-  end
-=======
 	local start = data.loadData("/.save", "/start_pos")
 	if turtle.getItemCount(15) > 0 then
 		local mining = data.copyTable(data.coords)
@@ -79,7 +51,6 @@ function storage.waitforemptyInv()
 		os.pullEvent("key")
 		move.moveTo(mining.x, mining.y, mining.z)
 	end
->>>>>>> bfd0d3893cf12f78e04a29989dcfb7ba4ab9d3e9
 end
 
 return storage

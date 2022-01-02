@@ -42,6 +42,7 @@ function tools.refuel(slot)
       return true
       end
   end
+  return false
 end
 
 function tools.place(blockName, direction)
