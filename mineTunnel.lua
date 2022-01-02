@@ -15,15 +15,6 @@ local inverter = {
 	["down"] = move.up,
 }
 
-local converter = {
-	["forward"] = move.forward,
-	["back"] = move.backward,
-	["turnLeft"] = move.turnLeft,
-	["turnRight"] = move.turnRight,
-	["up"] = move.up,
-	["down"] = move.down,
-}
-
 function stackPop()
 	local func = inverter[stack[#stack]]
 	table.remove(stack)

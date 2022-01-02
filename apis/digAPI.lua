@@ -4,6 +4,15 @@ local dig = {
 
 }
 
+local converter = {
+	["forward"] = move.forward,
+	["back"] = move.backward,
+	["turnLeft"] = move.turnLeft,
+	["turnRight"] = move.turnRight,
+	["up"] = move.up,
+	["down"] = move.down,
+}
+
 local oreList = {
 	"minecraft:iron_ore",
 	"minecraft:coal_ore",
@@ -27,7 +36,7 @@ local oreList = {
 
 function checkOreTable(tbl)
 	if type(tbl) ~= "table" then
-		error("'tbl' is not of type table",2)
+		error("'tbl' is not of type table", 2)
 	end
 	if tbl[1] == true then
 		for k,v in pairs(oreList) do
@@ -35,7 +44,6 @@ function checkOreTable(tbl)
 				return true
 			end
 		end
-		return false
 	else
 		return false
 	end
@@ -123,7 +131,7 @@ function checkForOre()
 		move.forward()
 		veinMine(move.forward)
 	end
-		move.turnLeft()
+	move.turnLeft()
 end
 
 return dig
