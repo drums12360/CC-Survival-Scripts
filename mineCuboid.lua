@@ -13,7 +13,7 @@ function checkFuelLevel()
 			term.setCursorPos(1,1)
 			print("Not enough Fuel! "..currentFuelLevel.."/"..requiredFuelLevel)
 			os.sleep(data.timeout)
-			tools.refuel()
+			move.refuel()
 		end
 	else
 		return true

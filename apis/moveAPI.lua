@@ -77,8 +77,8 @@ function move.forward(times)
 		move.backward(-times)
 	end
 	for i=1, times do
-		if not tools.refuel() and turtle.getFuelLevel() == 0 then
-			while not tools.refuel() do
+		if not move.refuel() and turtle.getFuelLevel() == 0 then
+			while not move.refuel() do
 				term.clear()
 				term.setCursorPos(1,1)
 				print("Out of fuel!")
@@ -88,7 +88,7 @@ function move.forward(times)
 				os.sleep(data.timeout)
 			end
 		elseif turtle.getFuelLevel() <= 10 then
-			tools.refuel()
+			move.refuel()
 		end
 		while not turtle.forward() do
 			local inspect = {turtle.inspect()}
@@ -137,8 +137,8 @@ function move.backward(times)
 		move.forward(-times)
 	end
 	for i=1, times do
-		if not tools.refuel() and turtle.getFuelLevel() == 0 then
-			while not tools.refuel() do
+		if not move.refuel() and turtle.getFuelLevel() == 0 then
+			while not move.refuel() do
 				term.clear()
 				term.setCursorPos(1,1)
 				print("Out of fuel!")
@@ -148,7 +148,7 @@ function move.backward(times)
 				os.sleep(data.timeout)
 			end
 		elseif turtle.getFuelLevel() <= 10 then
-			tools.refuel()
+			move.refuel()
 		end
 		turtle.back()
 		if data.d == 0 then
@@ -172,8 +172,8 @@ function move.up(times)
 		data.down(-times)
 	end
 	for i=1, times do
-		if not tools.refuel() and turtle.getFuelLevel() == 0 then
-			while not tools.refuel() do
+		if not move.refuel() and turtle.getFuelLevel() == 0 then
+			while not move.refuel() do
 				term.clear()
 				term.setCursorPos(1,1)
 				print("Out of fuel")
@@ -183,7 +183,7 @@ function move.up(times)
 				os.sleep(data.timeout)
 			end
 		elseif turtle.getFuelLevel() <= 10 then
-			tools.refuel()
+			move.refuel()
 		end
 		while not turtle.up() do 
 			local inspect = {turtle.inspectUp()}
@@ -209,8 +209,8 @@ function move.down(times)
 		move.up(-times)
 	end
 	for i=1, times do
-		if not tools.refuel() and turtle.getFuelLevel() == 0 then
-			while not tools.refuel() do
+		if not move.refuel() and turtle.getFuelLevel() == 0 then
+			while not move.refuel() do
 				term.clear()
 				term.setCursorPos(1,1)
 				print("Out of fuel")
@@ -220,7 +220,7 @@ function move.down(times)
 				os.sleep(data.timeout)
 			end
 		elseif turtle.getFuelLevel() <= 10 then
-			tools.refuel()
+			move.refuel()
 		end
 		while not turtle.down() do 
 			local inspect = {turtle.inspectDown()}
