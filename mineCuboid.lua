@@ -4,7 +4,7 @@ local storage = require("storageAPI")
 local tools = require("toolsAPI")
 local tArgs = {...}
 
-function mineSquence(width, height, depth)
+function mineSquence(width, height, depth, side)
 	local requiredFuelLevel = math.ceil(((height * width * depth) / 3) + (height * depth) + ((width * 2) + depth + height))
 	local currentFuelLevel = tonumber(turtle.getFuelLevel())
 	local rows = math.floor(height / 3)
@@ -25,6 +25,14 @@ function mineSquence(width, height, depth)
 		end
 		term.clear()
 		term.setCursorPos(1,1)
+	end
+	if side == left or nil then
+		move.turnLeft()
+		move.forward(width)
+		move.turnRight()
+		move.up()
+	elseif side == right then
+		move.up()
 	end
 	for x=1,depth do
 		move.forward()
@@ -90,15 +98,15 @@ function mineSquence(width, height, depth)
 	end
 end
 
-if type(tonumber(tArgs[1])) and type(tonumber(tArgs[2])) and type(tonumber(tArgs[3])) ~= "number" then
+if type(tonumber(tArgs[1])) and type(tonumber(tArgs[2])) and type(tonumber(tArgs[3])) ~= "number" and type(tostring(tArgs[4])) ~= "string" or type(tostring(tArgs[4])) ~= nil then
 	term.clear()
 	term.setCursorPos(1,1)
-	error("Width, height and depth are required (Example: '5 5 10') [5 blocks wide, 5 block heigh and 10 blocks deep]")
+	error("Width, height and depth are required! (Example: '5 5 10 right') [5 blocks wide, 5 block heigh, 10 blocks deep and turtle placed on right of cuboid]")
 end
 
 local start = data.copyTable(data.coords)
 data.saveData("/.save", "/start_pos", start)
-mineSquence(tonumber(tArgs[1]), tonumber(tArgs[2]), tonumber(tArgs[3]))
+mineSquence(tonumber(tArgs[1]), tonumber(tArgs[2]), tonumber(tArgs[3]), (tostring(tArgs[3])))
 move.moveTo("~",start.y + 1,"~")
 move.moveTo(start.x, start.y, start.z)
 storage.drop(tools.maxSlots)
