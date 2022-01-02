@@ -2,7 +2,7 @@
 
 Stuff I've made for the [CC:Tweaked](https://www.curseforge.com/minecraft/mc-mods/cc-tweaked) mod
 
-## APIS
+## Apis
 
 | File Name | Description |
 | ----------- | ----------- |
