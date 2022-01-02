@@ -1,12 +1,12 @@
 local urls = {
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/dataAPI.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/toolsAPI.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/moveAPI.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/storageAPI.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/digAPI.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/stripTunnel.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/mineTunnel.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/downloader/downloader.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/apis/dataAPI.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/apis/toolsAPI.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/apis/moveAPI.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/apis/storageAPI.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/apis/digAPI.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/stripTunnel.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/mineTunnel.lua",
+	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/downloader/downloader.lua",
 }
 
 function download(url)
