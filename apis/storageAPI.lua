@@ -49,7 +49,7 @@ function storage.waitforemptyInv()
 		turtle.select(1)
 		term.clear()
 		term.setCursorPos(1,1)
-		print("Press any key after emptying.")
+		print("Press any key after emptying!")
 		os.pullEvent("key")
 		move.moveTo(mining.x, mining.y, mining.z)
 	end

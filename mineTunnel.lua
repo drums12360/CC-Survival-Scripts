@@ -38,7 +38,7 @@ function returnSquence(amount)
 		end
 	else
 		term.clear()
-		print("No torches in slot 16.")
+		print("No torches in slot 16!")
 	end
 end
 
