@@ -12,7 +12,6 @@ local urls = {
 	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/staircaseUp.lua",
 	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/stripMine.lua"
 	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/stripTunnel.lua"
-	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/standalone/refuel.lua",
 	"https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/downloader/downloader.lua",
 }
 
