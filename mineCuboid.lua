@@ -3,19 +3,21 @@ local move = require("moveAPI")
 local storage = require("storageAPI")
 local tools = require("toolsAPI")
 local tArgs = {...}
-local widthMovement = 0
 
 function checkFuelLevel()
-	local requiredFuelLevel = math.ceil(((height * width * depth) / 3) + (height * depth) + ((widthMovement * 2) + depth + height))
+	local requiredFuelLevel = math.ceil(((height * width * depth) / 3) + (height * depth) + ((width * 2) + depth + height))
 	local currentFuelLevel = tonumber(turtle.getFuelLevel())
-	while currentFuelLevel < requiredFuelLevel do
-		if not tools.refuel(true) then
+	if currentFuelLevel < requiredFuelLevel then
+		while urrentFuelLevel < requiredFuelLevel do
+			term.clear()
+			term.setCursorPos(1,1)
 			print("Not enough Fuel! "..currentFuelLevel.."/"..requiredFuelLevel)
-			return false
+			os.sleep(data.timeout)
+			tools.refuel()
 		end
-		currentFuelLevel = tonumber(turtle.getFuelLevel())
+	else
+		return true
 	end
-	return true
 end
 
 function mineSquence(width, height, depth)
@@ -23,7 +25,7 @@ function mineSquence(width, height, depth)
 	local offset = height % 3
 	local lastRowCount = 0
 	move.turnLeft()
-	move.forward(widthMovement)
+	move.forward(width)
 	move.turnRight()
 	move.up()
 	for x=1,depth do
