@@ -6,14 +6,14 @@ local tArgs = {...}
 
 function mineSquence(height, start)
 	while move.down() do
-		if start.y - 2 == data.coords.y then
+		if height - 2 == data.coords.y then
 			if tools.findItem("minecraft:cobblestone") then
 				turtle.placeUp()
 			elseif tools.findItem("minecraft:dirt") then
 				turtle.placeUp()
 			end
 		end
-		dig.checkForOre(tostring("back"))
+	dig.checkForOre(tostring("back_true"))
 	end
 	term.clear()
 	term.setCursorPos(1,1)
@@ -23,12 +23,15 @@ function mineSquence(height, start)
 		rednet.broadcast("Found Bedrock at Y: "..data.coords.y-1)
 		rednet.broadcast("Returning to the Surface")
 	end
-	local y = start.y - data.coords.y
-	for i=1,y do
+	local y = height - data.coords.y
+	for i=1, y do
 		move.up()
 		if i == y then
-			tools.findItem("minecraft:cobblestone")
-			turtle.placeDown()
+			if tools.findItem("minecraft:cobblestone") then
+				turtle.placeDown()
+			elseif tools.findItem("minecraft:dirt") then
+				turtle.placeDown()
+			end
 		end
 	end
 end
