@@ -2,6 +2,8 @@
 
 Stuff made for the [CC:Tweaked](https://www.curseforge.com/minecraft/mc-mods/cc-tweaked) mod
 
+Downloader CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/downloader/downloader.lua`
+
 ## Apis
 
 Files in the folder **apis**
