@@ -5,11 +5,10 @@ local tools = require("toolsAPI")
 local tArgs = {...}
 
 function mineSquence(depth, start)
-	while move.down(depth) do
+	for i=1, depth do
+		move.down()
 		if start - 2 == data.coords.y then
-			if tools.findItem("minecraft:cobblestone") then
-				turtle.placeUp()
-			elseif tools.findItem("minecraft:dirt") then
+			if tools.findJunk() then
 				turtle.placeUp()
 			end
 		end
@@ -25,12 +24,19 @@ function mineSquence(depth, start)
 				rednet.broadcast("Returning to the Surface")
 			end
 			local y = start - data.coords.y
-			for i=1, y do
+			for j=1, y do
 				move.up()
-				if i == y then
-					if tools.findItem("minecraft:cobblestone") then
+				if j == y then
+					if tools.findJunk() then
 						turtle.placeDown()
-					elseif tools.findItem("minecraft:dirt") then
+					end
+				end
+			end
+		elseif start - depth == data.coords.y then
+			for j=1, y do
+				move.up()
+				if j == y then
+					if tools.findJunk() then
 						turtle.placeDown()
 					end
 				end

@@ -104,11 +104,11 @@ end
 
 function tools.dropJunk()
 	for i=1, tools.maxSlots do
-		local item = turtle.getItemDetail(i)
+		local item = turtle.getItemDetail(i).name
 		if item ~= nil then
 			local isJunk = false
 			for j=1,#junkList do
-				if item.name == junkList[j] then
+				if item == junkList[j] then
 				isJunk = true
 				break
 				end
@@ -121,6 +121,20 @@ function tools.dropJunk()
 		end
 	end
 	tools.inventorySort()
+end
+
+function tools.findJunk()
+	for i=1, tools.maxSlots do
+		if turtle.getItemCount(i) ~= 0 then
+		local item = turtle.getItemDetail(i).name
+			if item == junkList[j] then
+				turtle.select(i)
+				tools.slot = tonumber(i)
+				return true
+			end
+		end
+	end
+	return false
 end
 
 return tools
