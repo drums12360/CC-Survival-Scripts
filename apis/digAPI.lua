@@ -43,6 +43,7 @@ local oreList = {
 	"minecraft:deepslate_redstone_ore",
 	"minecraft:nether_gold_ore",
 	"minecraft:nether_quartz_ore",
+	"minecraft:obsidian",
 }
 
 function dig.stackPop()
