@@ -2,6 +2,7 @@ local data = require("dataAPI")
 local move = require("moveAPI")
 local storage = require("storageAPI")
 local dig = require("digAPI")
+local tools = require("toolsAPI")
 local tArgs = {...}
 
 function mineSquence(Shaft_Amount, Shaft_Width, Shaft_Distance)
@@ -9,20 +10,20 @@ function mineSquence(Shaft_Amount, Shaft_Width, Shaft_Distance)
 		for j=1, Shaft_Distance do
 			move.forward()
 			dig.checkForOre()
-			turtle.digUp()
+			tools.dig("up")
 		end
 		move.turnLeft()
 		for j=1, Shaft_Width do
 			move.forward()
 			dig.checkForOre()
-			turtle.digUp()
+			tools.dig("up")
 		end
 		move.turnAround()
 		move.forward(Shaft_Width)
 		for j=1, Shaft_Width do
 			move.forward()
 			dig.checkForOre()
-			turtle.digUp()
+			tools.dig("up")
 		end
 		move.turnAround()
 		move.forward(Shaft_Width)
