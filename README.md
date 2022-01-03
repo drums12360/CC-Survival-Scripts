@@ -34,6 +34,8 @@ stripMine = dataAPI, moveAPI, storageAPI, digAPI, toolsAPI
 
 mineCuboid = dataAPI, moveAPI, storageAPI, toolsAPI
 
+mineVert = dataAPI, moveAPI, digAPI, toolsAPI
+
 ----
 
 [[ Functional but not reviewed ]]
