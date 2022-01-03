@@ -20,7 +20,7 @@ function mineSquence(depth, start)
 			print("Found bedrock at", data.coords.y-1, "blocks deep!")
 			print("Returning to the surface!")
 			if data.hasWireless then
-				rednet.broadcast("Found bedrock at "..data.coords.y-1.." blocks deep!")
+				rednet.broadcast("Found bedrock at "..data.coords.y - 1 .." blocks deep!")
 				rednet.broadcast("Returning to the surface!")
 			end
 			local y = start - data.coords.y
