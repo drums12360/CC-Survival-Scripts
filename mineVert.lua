@@ -8,7 +8,7 @@ function mineSquence(depth, start)
 	for i=1, depth do
 		move.down()
 		if start - 2 == data.coords.y then
-			while tools.findJunk() do
+			if tools.findJunk("minecraft:gravel") then
 				turtle.placeUp(tools.slot)
 				break
 			end
@@ -26,7 +26,7 @@ function mineSquence(depth, start)
 			end
 			local y = start - data.coords.y
 			move.up(y)
-			while tools.findJunk() do
+			if tools.findJunk("minecraft:gravel") then
 				turtle.placeDown(tools.slot)
 				break
 			end
@@ -34,7 +34,7 @@ function mineSquence(depth, start)
 		elseif start - depth == data.coords.y then
 			local y = start - data.coords.y
 			move.up(y)
-			while tools.findJunk() do
+			if tools.findJunk("minecraft:gravel") then
 				turtle.placeDown(tools.slot)
 				break
 			end

@@ -6,24 +6,20 @@ local tools = {
 }
 
 local junkList = {
+	"minecraft:dirt",
+	"minecraft:gravel",
+	"minecraft:cobblestone",
 	"minecraft:cobbled_deepslate",
 	"minecraft:tuff",
-	"minecraft:cobblestone",
-	"minecraft:dirt",
 	"minecraft:andesite",
 	"minecraft:diorite",
 	"minecraft:granite",
-	"minecraft:gravel",
 }
 
 function tools.findItem(name)
-	if type(name) ~= "string" then
-		error("The type of 'name' is not a string")
-		return false
-	end
 	for i=1, tools.maxSlots do
 		if turtle.getItemCount(i) ~= 0 then
-		local item = turtle.getItemDetail(i).name
+			local item = turtle.getItemDetail(i).name
 			if item == name then
 				turtle.select(i)
 				tools.slot = tonumber(i)
@@ -104,13 +100,13 @@ end
 
 function tools.dropJunk()
 	for i=1, tools.maxSlots do
-		local item = turtle.getItemDetail(i).name
-		if item ~= nil then
+		if turtle.getItemCount(i) ~= 0 then
+			local item = turtle.getItemDetail(i).name
 			local isJunk = false
-			for j=1,#junkList do
-				if item == junkList[j] then
-				isJunk = true
-				break
+			for index, value in ipairs(junkList) do
+				if item == value then
+					isJunk = true
+					break
 				end
 			end
 			if isJunk then
@@ -123,11 +119,21 @@ function tools.dropJunk()
 	tools.inventorySort()
 end
 
-function tools.findJunk()
+function tools.findJunk(exclude)
+	if exclude == nil then
+		exclude = "nothing"
+	end
 	for i=1, tools.maxSlots do
 		if turtle.getItemCount(i) ~= 0 then
-		local item = turtle.getItemDetail(i).name
-			if item == junkList[j] then
+			local item = turtle.getItemDetail(i).name
+			local isJunk = false
+			for index, value in ipairs(junkList) do
+				if item == value and item ~= exclude then
+					isJunk = true
+					break
+				end
+			end
+			if isJunk then
 				turtle.select(i)
 				tools.slot = tonumber(i)
 				return true
