@@ -84,7 +84,7 @@ function move.forward(times)
 				term.setCursorPos(1,1)
 				print("Out of fuel!")
 				if data.hasWireless == true then
-					rednet.broadcast("Out of Fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
+					rednet.broadcast("Out of fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
 				end
 				os.sleep(data.timeout)
 			end
@@ -142,7 +142,7 @@ function move.backward(times)
 				term.setCursorPos(1,1)
 				print("Out of fuel!")
 				if data.hasWireless == true then
-					rednet.broadcast("Out of Fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
+					rednet.broadcast("Out of fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
 				end
 				os.sleep(data.timeout)
 			end
@@ -175,7 +175,7 @@ function move.up(times)
 				term.setCursorPos(1,1)
 				print("Out of fuel")
 				if data.hasWireless == true then
-					rednet.broadcast("Out of Fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
+					rednet.broadcast("Out of fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
 				end
 				os.sleep(data.timeout)
 			end
@@ -210,7 +210,7 @@ function move.down(times)
 				term.setCursorPos(1,1)
 				print("Out of fuel")
 				if data.hasWireless == true then
-					rednet.broadcast("Out of Fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
+					rednet.broadcast("Out of fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
 				end
 				os.sleep(data.timeout)
 			end
