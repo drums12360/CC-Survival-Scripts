@@ -26,7 +26,7 @@ function mineSquence(width, height, depth, side)
 		term.clear()
 		term.setCursorPos(1,1)
 	end
-	if side == "left" or side == tostring(nil) then
+	if side == "right" then
 		move.up()
 		for x=1, depth do
 			move.forward()
@@ -90,7 +90,7 @@ function mineSquence(width, height, depth, side)
 		end
 		tools.dropJunk()
 		end
-	elseif side == "right" then
+	elseif side == "left" or side == tostring(nil) then
 		move.up()
 		for x=1, depth do
 			move.forward()
@@ -154,8 +154,10 @@ function mineSquence(width, height, depth, side)
 		end
 		tools.dropJunk()
 		end
-	elseif side ~= "left" or side ~= "left" or side ~= tostring(nil) then
-		error(side, "is not a valid direction!")
+	elseif side ~= "left" or side ~= "right" or side ~= tostring(nil) then
+		term.clear()
+		term.setCursorPos(1,1)
+		error("That is not a valid direction! (Possible directions are 'left', 'right' or none to use left as default)")
 	end
 end
 
