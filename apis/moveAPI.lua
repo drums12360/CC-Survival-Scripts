@@ -2,7 +2,7 @@ local data = require("dataAPI")
 local tools = require("toolsAPI")
 
 local move = {
-	
+
 }
 
 local fuelList = {
@@ -180,7 +180,7 @@ function move.up(times)
 				os.sleep(data.timeout)
 			end
 		end
-		while not turtle.up() do 
+		while not turtle.up() do
 			local inspect = {turtle.inspectUp()}
 			if inspect[1] and inspect[2].name == "minecraft:bedrock" then
 				return false
@@ -215,7 +215,7 @@ function move.down(times)
 				os.sleep(data.timeout)
 			end
 		end
-		while not turtle.down() do 
+		while not turtle.down() do
 			local inspect = {turtle.inspectDown()}
 			if inspect[1] and inspect[2].name == "minecraft:bedrock" then
 				return false

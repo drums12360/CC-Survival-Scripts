@@ -44,7 +44,7 @@ function start()
 		os.sleep(0.5)
 	end
 end
-	
+
 term.clear()
 term.setCursorPos(1,1)
 print("Downloading / Updating APIs and programs!")

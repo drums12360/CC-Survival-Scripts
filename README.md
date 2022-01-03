@@ -45,5 +45,3 @@ mineVert
 straicaseDown
 
 staircaseUp
-
-
