@@ -10,7 +10,6 @@ function mineSquence(depth, start)
 		if start - 2 == data.coords.y then
 			if tools.findJunk("minecraft:gravel") then
 				turtle.placeUp(tools.slot)
-				break
 			end
 		end
 		dig.checkForOre(tostring("back_true"))
@@ -28,7 +27,6 @@ function mineSquence(depth, start)
 			move.up(y)
 			if tools.findJunk("minecraft:gravel") then
 				turtle.placeDown(tools.slot)
-				break
 			end
 			do return end
 		elseif start - depth == data.coords.y then
@@ -36,7 +34,6 @@ function mineSquence(depth, start)
 			move.up(y)
 			if tools.findJunk("minecraft:gravel") then
 				turtle.placeDown(tools.slot)
-				break
 			end
 			do return end
 		end
