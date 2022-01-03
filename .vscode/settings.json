@@ -40,7 +40,7 @@
         "_CC_DEFAULT_SETTINGS",
         "_HOST",
         "_VERSION",
-        "_"
+        "_",
     ],
     "Lua.runtime.version": "Lua 5.1",
 }

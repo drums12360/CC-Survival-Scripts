@@ -8,6 +8,7 @@ local urls = {
 	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/mineTunnel.lua",
 	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/stripMine.lua",
 	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/mineCuboid.lua",
+	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/mineVert.lua",
 	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/standalone/refuel.lua",
 	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/downloader/downloader.lua",
 }
