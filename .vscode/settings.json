@@ -43,4 +43,5 @@
 		"_",
 	],
 	"Lua.runtime.version": "Lua 5.1",
+	"discord.enabled": true,
 }
