@@ -1,7 +1,7 @@
 {
-    "recommendations": [
-        "jackmacwindows.vscode-computercraft",
-        "lemmmy.computercraft-extension-pack",
-        "yinfei.luahelper",
-    ]
+	"recommendations": [
+		"jackmacwindows.vscode-computercraft",
+		"lemmmy.computercraft-extension-pack",
+		"yinfei.luahelper",
+	]
 }
