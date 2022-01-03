@@ -130,7 +130,7 @@ function dig.veinMine(lastFunc)
 	end
 end
 
-function dig.checkForOre()
+function dig.checkForOre(back)
 	if dig.checkOreTable({turtle.inspectUp()}) then
 		move.up()
 		dig.veinMine(move.up)
@@ -148,6 +148,14 @@ function dig.checkForOre()
 	if dig.checkOreTable({turtle.inspect()}) then
 		move.forward()
 		dig.veinMine(move.forward)
+	end
+	if back == "true" then
+		move.turnRight()
+		if dig.checkOreTable({turtle.inspect()}) then
+			move.forward()
+			dig.veinMine(move.forward)
+		end
+		move.turnLeft()
 	end
 	move.turnLeft()
 	if dig.checkOreTable({turtle.inspect()}) then

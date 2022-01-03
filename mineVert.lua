@@ -6,20 +6,24 @@ local tArgs = {...}
 
 function mineSquence(height, start)
   while move.down() do
-    if start.y - 2 == data.coord.y then
-      if tools.findItem("minecraft:cobblestone") then
+    if start.y - 2 == data.coords.y then
+    	if tools.findItem("minecraft:cobblestone") then
         turtle.placeUp()
       elseif tools.findItem("minecraft:dirt") then
         turtle.placeUp()
       end
     end
-    dig.checkForOre()
+    dig.checkForOre(tostring("back"))
   end
+  term.clear()
+	term.setCursorPos(1,1)
+	print("Found Bedrock at Y: "..data.coords.y-1)
+  print("Returning to the Surface")
   if data.hasWireless then
-    rednet.broadcast("Found Bedrock at Y: "..data.coord.y-1)
+    rednet.broadcast("Found Bedrock at Y: "..data.coords.y-1)
     rednet.broadcast("Returning to the Surface")
   end
-  local y = start.y - data.coord.y
+  local y = start.y - data.coords.y
   for i=1,y do
     move.up()
     if i == y then
@@ -29,7 +33,7 @@ function mineSquence(height, start)
   end
 end
 
-if type(tArgs[1]) ~= "number" then
+if type(tonumber(tArgs[1])) ~= "number" then
 	term.clear()
 	term.setCursorPos(1,1)
 	error("Define height! (Example: '10') [10 blocks]")
