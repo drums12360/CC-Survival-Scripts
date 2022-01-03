@@ -6,39 +6,44 @@ local tArgs = {...}
 
 function mineSquence(depth, start)
 	for i=1, depth do
-		move.down()
-		if start - 2 == data.coords.y then
-			if tools.findJunk("minecraft:gravel") then
-				turtle.placeUp(tools.slot)
+		local run = true
+		if run then
+			move.down()
+			if start - 2 == data.coords.y then
+				if tools.findJunk("minecraft:gravel") then
+					turtle.placeUp(tools.slot)
+				end
 			end
-		end
-		dig.checkForOre(tostring("back_true"))
-		local tbl = {turtle.inspectDown()}
-		if tbl[2].name == "minecraft:bedrock" then
-			term.clear()
-			term.setCursorPos(1,1)
-			print("Found bedrock at", data.coords.y-1, "blocks deep,")
-			print("returning to the surface!")
-			if data.hasWireless then
-				rednet.broadcast("Found bedrock at "..data.coords.y - 1 .." blocks deep,")
-				rednet.broadcast("returning to the surface!")
+			dig.checkForOre(tostring("back_true"))
+			local tbl = {turtle.inspectDown()}
+			if tbl[2].name == "minecraft:bedrock" then
+				term.clear()
+				term.setCursorPos(1,1)
+				print("Found bedrock at", data.coords.y-1, "blocks deep,")
+				print("returning to the surface!")
+				if data.hasWireless then
+					rednet.broadcast("Found bedrock at "..data.coords.y - 1 .." blocks deep,")
+					rednet.broadcast("returning to the surface!")
+				end
+				local y = start - data.coords.y
+				move.up(y)
+				if tools.findJunk("minecraft:gravel") then
+					turtle.placeDown(tools.slot)
+				end
+				run = false
+			elseif start - depth == data.coords.y then
+				local y = start - data.coords.y
+				move.up(y)
+				if tools.findJunk("minecraft:gravel") then
+					turtle.placeDown(tools.slot)
+				end
+				run = false
 			end
-			local y = start - data.coords.y
-			move.up(y)
-			if tools.findJunk("minecraft:gravel") then
-				turtle.placeDown(tools.slot)
+			if turtle.getItemCount(16) >= 1 then
+				tools.dropJunk()
 			end
+		else
 			do return end
-		elseif start - depth == data.coords.y then
-			local y = start - data.coords.y
-			move.up(y)
-			if tools.findJunk("minecraft:gravel") then
-				turtle.placeDown(tools.slot)
-			end
-			do return end
-		end
-		if turtle.getItemCount(16) >= 1 then
-			tools.dropJunk()
 		end
 	end
 end
