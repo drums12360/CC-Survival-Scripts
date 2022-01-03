@@ -8,8 +8,9 @@ function mineSquence(depth, start)
 	for i=1, depth do
 		move.down()
 		if start - 2 == data.coords.y then
-			if tools.findJunk() == true then
+			while tools.findJunk() do
 				turtle.placeUp(tools.slot)
+				break
 			end
 		end
 		dig.checkForOre(tostring("back_true"))
@@ -17,23 +18,27 @@ function mineSquence(depth, start)
 		if tbl[2].name == "minecraft:bedrock" then
 			term.clear()
 			term.setCursorPos(1,1)
-			print("Found bedrock at", data.coords.y-1, "blocks deep!")
-			print("Returning to the surface!")
+			print("Found bedrock at", data.coords.y-1, "blocks deep,")
+			print("returning to the surface!")
 			if data.hasWireless then
-				rednet.broadcast("Found bedrock at "..data.coords.y - 1 .." blocks deep!")
-				rednet.broadcast("Returning to the surface!")
+				rednet.broadcast("Found bedrock at "..data.coords.y - 1 .." blocks deep,")
+				rednet.broadcast("returning to the surface!")
 			end
 			local y = start - data.coords.y
 			move.up(y)
-			if tools.findJunk() == true then
+			while tools.findJunk() do
 				turtle.placeDown(tools.slot)
+				break
 			end
+			do return end
 		elseif start - depth == data.coords.y then
 			local y = start - data.coords.y
 			move.up(y)
-			if tools.findJunk() then
+			while tools.findJunk() do
 				turtle.placeDown(tools.slot)
+				break
 			end
+			do return end
 		end
 		if turtle.getItemCount(16) >= 1 then
 			tools.dropJunk()
