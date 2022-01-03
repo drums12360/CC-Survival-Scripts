@@ -4,14 +4,14 @@ function refuel(secs)
 	if secs == nil then
 		secs = 120
 	end
-	print("Max fuel level: ", turtle.getFuelLimit())
-	print("Old fuel level: ", turtle.getFuelLevel())
+	print("Max fuel level: " .. turtle.getFuelLimit())
+	print("Old fuel level: " .. turtle.getFuelLevel())
 	if turtle.getFuelLevel() == turtle.getFuelLimit() then
 		term.clear()
 		term.setCursorPos(1,1)
 		print("Turtle is fully refuled!")
 	else
-		print("Turtle will now loop refuel for", secs, "seconds!")
+		print("Turtle will now loop refuel for " .. secs .. " seconds!")
 		for i=1, secs do
 			turtle.refuel()
 			sleep(.5)
@@ -22,7 +22,7 @@ function refuel(secs)
 				break
 			end
 		end
-		print("New fuel level: ", turtle.getFuelLevel())
+		print("New fuel level: " .. turtle.getFuelLevel())
 	end
 end
 
