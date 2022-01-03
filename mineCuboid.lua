@@ -26,7 +26,7 @@ function mineSquence(width, height, depth, side)
 		term.clear()
 		term.setCursorPos(1,1)
 	end
-	if side == "right" then
+	if side == "left" or side == tostring(nil) then
 		move.up()
 		for x=1, depth do
 			move.forward()
@@ -90,7 +90,7 @@ function mineSquence(width, height, depth, side)
 		end
 		tools.dropJunk()
 		end
-	elseif side == "left" or side == tostring(nil) then
+	elseif side == "right" then
 		move.up()
 		for x=1, depth do
 			move.forward()
@@ -164,7 +164,7 @@ end
 if type(tonumber(tArgs[1])) and type(tonumber(tArgs[2])) and type(tonumber(tArgs[3])) ~= "number" then
 	term.clear()
 	term.setCursorPos(1,1)
-	error("Width, height and depth are required! (Example: '5 5 10 right') [5 blocks wide, 5 block heigh, 10 blocks deep and turtle placed on right corner of cuboid]")
+	error("Width, height and depth are required! (Example: '5 5 10 right') [5 blocks wide, 5 block heigh, 10 blocks deep and to the right of turtle]")
 end
 
 local start = data.copyTable(data.coords)
