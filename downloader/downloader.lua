@@ -151,7 +151,7 @@ function endstats()
 end
 
 function download(vers, uptrue)
-	if vers == scripts or vers == nil then
+	if vers == script or vers == nil then
 		dlscript()
 		dlloader(uptrue)
 		endstats()
