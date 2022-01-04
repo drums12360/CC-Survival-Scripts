@@ -46,4 +46,32 @@ function data.loadData(dir, path)
 	return false
 end
 
+function data.gpsStart(side)
+	if data.hasWireless then
+		rednet.open(side)
+		local Start1 = vector.new(gps.locate(2))
+		while not turtle.forward() do
+			turtle.turnRight()
+		end
+		local Start2 = vector.new(gps.locate(2))
+		if Start1.x ~= Start2.x then
+			if Start1.x - Start2.x == -1 then
+			data.d = 3
+			elseif Start1.x - Start2.x == 1 then
+			data.d = 1
+			end
+		elseif Start1.z ~= Start2.z then
+			if Start1.z - Start2.z == -1 then
+				data.d = 0
+			elseif Start1.z - Start2.z == 1 then
+				data.d = 2
+			end
+		end
+		data.coords.x = Start1.x
+		data.coords.y = Start1.y
+		data.coords.z = Start1.z
+		turtle.back()
+	end
+end
+
 return data
