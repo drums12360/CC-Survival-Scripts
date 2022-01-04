@@ -18,7 +18,7 @@ local scripts = {
 	"stripMine.lua",
 	"mineCuboid.lua",
 	"mineVert.lua",
-	"mineStaircase.lua"
+	"mineStaircase.lua",
 }
 
 local scriptsSA = {
@@ -27,8 +27,8 @@ local scriptsSA = {
 	"stripMineSA.lua",
 	"mineCuboidSA.lua",
 	"mineVertSA.lua",
-	"mineStaircaseSA.lua"
-	"refuelSA.lua"
+	"mineStaircaseSA.lua",
+	"refuelSA.lua",
 }
 
 local loader = {
