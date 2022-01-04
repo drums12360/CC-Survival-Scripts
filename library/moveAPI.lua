@@ -1,9 +1,7 @@
 local data = require("library/dataAPI")
 local tools = require("library/toolsAPI")
 
-local move = {
-
-}
+local move = {}
 
 local fuelList = {
 	"minecraft:coal",

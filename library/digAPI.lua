@@ -1,8 +1,6 @@
 local move = require("library/moveAPI")
 
-local dig = {
-
-}
+local dig = {}
 
 local stack = {}
 

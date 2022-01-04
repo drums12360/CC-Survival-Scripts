@@ -1,9 +1,7 @@
 local data = require("library/dataAPI")
 local move = require("library/moveAPI")
 
-local storage = {
-
-}
+local storage = {}
 
 function storage.drop(slots)
 	local inspect, datai = turtle.inspect()
