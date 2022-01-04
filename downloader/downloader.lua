@@ -45,13 +45,13 @@ function dlscript()
 			failedLoads = failedLoads + 1
 			os.sleep(5)
 		else
-			fs.delete("library/",filename)
-			file = fs.open("library/",filename, "wb")
+			fs.delete("library/"..filename)
+			file = fs.open("library/"..filename, "wb")
 			file.write(content)
 			file.close()
 			term.clear()
 			term.setCursorPos(1,1)
-			print("Downloaded", filename,"!")
+			print("Downloaded "..filename.."!")
 			os.sleep(0.25)
 		end
 	end
@@ -70,7 +70,7 @@ function dlscript()
 			file.close()
 			term.clear()
 			term.setCursorPos(1,1)
-			print("Downloaded", filename,"!")
+			print("Downloaded "..filename.."!")
 			os.sleep(0.25)
 		end
 	end
@@ -92,7 +92,7 @@ function dlstandalone()
 			file.close()
 			term.clear()
 			term.setCursorPos(1,1)
-			print("Downloaded", filename,"!")
+			print("Downloaded "..filename.."!")
 			os.sleep(0.25)
 		end
 	end
@@ -115,8 +115,8 @@ function dlloader(uptrue)
 				file.close()
 				term.clear()
 				term.setCursorPos(1,1)
-				print("Downloaded new", filename,"!")
-				print("Execute", filename, "to update!")
+				print("Downloaded new "..filename.."!")
+				print("Execute "..filename.." to update!")
 				os.sleep(1)
 			else
 				fs.delete("startup/autoupdater.lua")
@@ -138,7 +138,7 @@ function endstats()
 	if failedLoads > 0 then
 		term.clear()
 		term.setCursorPos(1,1)
-		print("Download finished with", failedLoads, "failed downloads!")
+		print("Download finished with "..failedLoads.." failed downloads!")
 		term.setCursorPos(2,1)
 		os.sleep(5)
 	else
