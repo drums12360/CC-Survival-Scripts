@@ -36,14 +36,4 @@ mineCuboid = dataAPI, moveAPI, storageAPI, toolsAPI
 
 mineVert = dataAPI, moveAPI, digAPI, toolsAPI
 
-----
-
-[[ Functional but not reviewed ]]
-
-digRoom
-
-mineVert
-
-straicaseDown
-
-staircaseUp
+mineStaircase = dataAPI, moveAPI, toolsAPI

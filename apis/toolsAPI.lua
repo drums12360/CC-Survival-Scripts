@@ -91,10 +91,13 @@ end
 function tools.dig(direction)
 	if direction == nil then
 		turtle.dig()
+		os.sleep(0.4)
 	elseif direction == "up" then
 		turtle.digUp()
+		os.sleep(0.4)
 	elseif direction == "down" then
 		turtle.digDown()
+		os.sleep(0.4)
 	end
 end
 

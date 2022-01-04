@@ -1,2 +1,4 @@
-downloader/downloader.lua
+.vscode
+downloader
+standalone
 README.md

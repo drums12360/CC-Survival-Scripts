@@ -95,8 +95,7 @@ function move.forward(times)
 				return false
 			elseif inspect[1] and inspect[2].name ~= "minecraft:bedrock" then
 				while turtle.detect() do
-					turtle.dig()
-					os.sleep(0.4)
+					tools.dig()
 				end
 			else
 				turtle.attack()
@@ -185,7 +184,7 @@ function move.up(times)
 			if inspect[1] and inspect[2].name == "minecraft:bedrock" then
 				return false
 			elseif inspect[1] and inspect[2].name ~= "minecraft:bedrock" then
-				turtle.digUp()
+				tools.dig("up")
 			else
 				turtle.attackUp()
 			end
@@ -220,7 +219,7 @@ function move.down(times)
 			if inspect[1] and inspect[2].name == "minecraft:bedrock" then
 				return false
 			elseif inspect[1] and inspect[2].name ~= "minecraft:bedrock" then
-				turtle.digDown()
+				tools.dig("down")
 			else
 				turtle.attackDown()
 			end
