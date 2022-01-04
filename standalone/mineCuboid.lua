@@ -1,4 +1,5 @@
 local timeout = 5
+local d = 0
 local hasWireless = false
 local coords = {x = 0, y = 0,z = 0}
 local maxSlots = 16
@@ -52,43 +53,43 @@ end
 
 function turnLeft()
 	turtle.turnLeft()
-	data.d = (data.d - 1) % 4
-	data.saveData("/.save", "/face", {d = data.d})
+	d = (d - 1) % 4
+	saveData("/.save", "/face", {d = d})
 end
 
 function turnRight()
 	turtle.turnRight()
-	data.d = (data.d + 1) % 4
-	data.saveData("/.save", "/face", {d = data.d})
+	d = (d + 1) % 4
+	saveData("/.save", "/face", {d = d})
 end
 
 function turnAround()
 	turtle.turnRight()
 	turtle.turnRight()
-	data.d = (data.d + 2) % 4
-	data.saveData("/.save", "/face", {d = data.d})
+	d = (d + 2) % 4
+	saveData("/.save", "/face", {d = d})
 end
 
 function face(direction)
 	if type(direction) == "number" or "string" then
 		if type(direction) == "string" then
-			for k,v in pairs(data.direction) do
+			for k,v in pairs(direction) do
 				if v == direction then
 					direction = k
 					break
 				end
 			end
 		end
-		if direction == (data.d + 2) % 4 then
+		if direction == (d + 2) % 4 then
 			turnAround()
 			return true
-		elseif direction == (data.d - 1) % 4 then
+		elseif direction == (d - 1) % 4 then
 			turnLeft()
 			return true
-		elseif direction == (data.d + 1) % 4 then
+		elseif direction == (d + 1) % 4 then
 			turnRight()
 			return true
-		elseif direction == data.d then
+		elseif direction == d then
 			return true
 		end
 	end
@@ -109,7 +110,7 @@ function forward(times)
 				term.setCursorPos(1,1)
 				print("Out of fuel!")
 				if hasWireless == true then
-					rednet.broadcast("Out of fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
+					rednet.broadcast("Out of fuel at X: "..coords.x.." Y: "..coords.y.." Z: "..coords.z)
 				end
 				os.sleep(timeout)
 			end
@@ -126,16 +127,16 @@ function forward(times)
 				turtle.attack()
 			end
 		end
-		if data.d == 0 then
-			data.coords.z = data.coords.z - 1
-		elseif data.d == 1 then
-			data.coords.x = data.coords.x + 1
-		elseif data.d == 2 then
-			data.coords.z = data.coords.z + 1
-		elseif data.d == 3 then
-			data.coords.x = data.coords.x - 1
+		if d == 0 then
+			coords.z = coords.z - 1
+		elseif d == 1 then
+			coords.x = coords.x + 1
+		elseif d == 2 then
+			coords.z = coords.z + 1
+		elseif d == 3 then
+			coords.x = coords.x - 1
 		end
-		data.saveData("/.save", "/position", data.coords)
+		saveData("/.save", "/position", coords)
 	end
 	return true
 end
@@ -154,22 +155,22 @@ function backward(times)
 				term.setCursorPos(1,1)
 				print("Out of fuel!")
 				if hasWireless == true then
-					rednet.broadcast("Out of fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
+					rednet.broadcast("Out of fuel at X: "..coords.x.." Y: "..coords.y.." Z: "..coords.z)
 				end
 				os.sleep(timeout)
 			end
 		end
 		turtle.back()
-		if data.d == 0 then
-			data.coords.z = data.coords.z + 1
-		elseif data.d == 1 then
-			data.coords.x = data.coords.x - 1
-		elseif data.d == 2 then
-			data.coords.z = data.coords.z - 1
-		elseif data.d == 3 then
-			data.coords.x = data.coords.x + 1
+		if d == 0 then
+			coords.z = coords.z + 1
+		elseif d == 1 then
+			coords.x = coords.x - 1
+		elseif d == 2 then
+			coords.z = coords.z - 1
+		elseif d == 3 then
+			coords.x = coords.x + 1
 		end
-		data.saveData("/.save", "/position", data.coords)
+		saveData("/.save", "/position", coords)
 	end
 end
 
@@ -178,7 +179,7 @@ function up(times)
 		times = 1
 	end
 	if times < 0 then
-		data.down(-times)
+		down(-times)
 	end
 	for i=1, times do
 		if not downfuel() and turtle.getFuelLevel() == 0 then
@@ -186,10 +187,10 @@ function up(times)
 				term.clear()
 				term.setCursorPos(1,1)
 				print("Out of fuel")
-				if data.hasWireless == true then
-					rednet.broadcast("Out of fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
+				if hasWireless == true then
+					rednet.broadcast("Out of fuel at X: "..coords.x.." Y: "..coords.y.." Z: "..coords.z)
 				end
-				os.sleep(data.timeout)
+				os.sleep(timeout)
 			end
 		end
 		while not turtle.up() do
@@ -202,8 +203,8 @@ function up(times)
 				turtle.attackUp()
 			end
 		end
-		data.coords.y = data.coords.y + 1
-		data.saveData("/.save", "/position", data.coords)
+		coords.y = coords.y + 1
+		saveData("/.save", "/position", coords)
 	end
 	return true
 end
@@ -221,10 +222,10 @@ function down(times)
 				term.clear()
 				term.setCursorPos(1,1)
 				print("Out of fuel")
-				if data.hasWireless == true then
-					rednet.broadcast("Out of fuel at X: "..data.coords.x.." Y: "..data.coords.y.." Z: "..data.coords.z)
+				if hasWireless == true then
+					rednet.broadcast("Out of fuel at X: "..coords.x.." Y: "..coords.y.." Z: "..coords.z)
 				end
-				os.sleep(data.timeout)
+				os.sleep(timeout)
 			end
 		end
 		while not turtle.down() do
@@ -237,41 +238,41 @@ function down(times)
 				turtle.attackDown()
 			end
 		end
-		data.coords.y = data.coords.y - 1
-		data.saveData("/.save", "/position", data.coords)
+		coords.y = coords.y - 1
+		saveData("/.save", "/position", coords)
 	end
 	return true
 end
 
 function moveTo(x, y, z)
 	if x == "~" then
-		x = data.coords.x
+		x = coords.x
 	end
 	if y == "~" then
-		y = data.coords.y
+		y = coords.y
 	end
 	if z == "~" then
-		z = data.coords.z
+		z = coords.z
 	end
-	if y > data.coords.y then
-		up(y - data.coords.y)
+	if y > coords.y then
+		up(y - coords.y)
 	end
-	if x < data.coords.x then
+	if x < coords.x then
 		face(3)
-		forward(data.coords.x - x)
-	elseif x > data.coords.x then
+		forward(coords.x - x)
+	elseif x > coords.x then
 		face(1)
-		forward(x - data.coords.x)
+		forward(x - coords.x)
 	end
-	if z < data.coords.z then
+	if z < coords.z then
 		face(0)
-		forward(data.coords.z - z)
-	elseif z > data.coords.z then
+		forward(coords.z - z)
+	elseif z > coords.z then
 		face(2)
-		forward(z - data.coords.z)
+		forward(z - coords.z)
 	end
-	if y < data.coords.y then
-		down(data.coords.y - y)
+	if y < coords.y then
+		down(coords.y - y)
 	end
 end
 
@@ -350,7 +351,7 @@ function inventorySort()
 				turtle.select(j)
 				slot = j
 				turtle.transferTo(i)
-				inv[i] = data.copyTable(inv[j])
+				inv[i] = copyTable(inv[j])
 				inv[j] = nil
 				break
 				end
@@ -430,7 +431,7 @@ function mineSquence(width, height, depth, side)
 				if x % 2 == 0 then
 					down(3)
 					dig("down")
-					move.turnAround()
+					turnAround()
 				else
 					up(3)
 					dig("up")
@@ -494,7 +495,7 @@ function mineSquence(width, height, depth, side)
 				if x % 2 == 0 then
 					down(3)
 					dig("down")
-					move.turnAround()
+					turnAround()
 				else
 					up(3)
 					dig("up")
