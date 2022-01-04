@@ -1,8 +1,8 @@
-local data = require("library/dataAPI")
-local dig = require("library/digAPI")
-local move = require("library/moveAPI")
-local storage = require("library/storageAPI")
-local tools = require("library/toolsAPI")
+local data = require("library/dataLib")
+local dig = require("library/digLib")
+local move = require("library/moveLib")
+local storage = require("library/storageLib")
+local tools = require("library/toolsLib")
 
 local library = {
 	data = data,
