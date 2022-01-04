@@ -2,7 +2,7 @@ local tArgs = {...}
 
 function refuel(secs)
 	if secs == nil then
-		secs = 120
+		secs = tonumber(120)
 	end
 	print("Max fuel level: "..turtle.getFuelLimit())
 	print("Old fuel level: "..turtle.getFuelLevel())
@@ -11,8 +11,8 @@ function refuel(secs)
 		term.setCursorPos(1,1)
 		print("Turtle is fully refuled!")
 	else
-		print("Turtle will now loop refuel for", secs, "seconds!")
-		for i=1, secs do
+		print("Turtle will now loop refuel for "..secs.." seconds!")
+		for i=1, tonumber(secs) do
 			turtle.refuel()
 			sleep(.5)
 			if turtle.getFuelLevel() == turtle.getFuelLimit() then
@@ -22,11 +22,17 @@ function refuel(secs)
 				break
 			end
 		end
-		print("New fuel level:", turtle.getFuelLevel())
+		print("New fuel level: "..turtle.getFuelLevel())
+	end
+	if tostring(secs) == "replace" then
+		fs.move("refuelSA.lua", "refuel.lua")
+		term.clear()
+		term.setCursorPos(1,1)
+		print("Replaced standard 'refuel' script. Delete 'refuel' to revert it!")
 	end
 end
 
-refuel(tonumber(tArgs[1]))
+refuel(tArgs[1])
 os.sleep(5)
 term.clear()
 term.setCursorPos(1,1)
