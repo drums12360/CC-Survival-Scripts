@@ -1,8 +1,3 @@
---[[local data = require("dataAPI")
-local move = require("moveAPI")
-local storage = require("storageAPI")
-local dig = require("digAPI")
-local tools = require("toolsAPI")--]]
 local library = require("library/init")
 local tArgs = {...}
 
@@ -13,7 +8,7 @@ function mineSquence(amount)
 	end
 end
 
-if type(tArgs[1]) ~= "number" then
+if type(tonumber(tArgs[1])) ~= "number" then
 	term.clear()
 	term.setCursorPos(1,1)
 	error("Define mine lenght! (Example: '10') [10 blocks long]")

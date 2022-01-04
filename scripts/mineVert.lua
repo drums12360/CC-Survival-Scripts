@@ -1,7 +1,3 @@
---[[local data = require ("dataAPI")
-local move = require("moveAPI")
-local dig = require ("digAPI")
-local tools = require("toolsAPI")--]]
 local library = require("library/init")
 local tArgs = {...}
 
@@ -20,7 +16,7 @@ function mineSquence(depth, start)
 			if tbl[2].name == "minecraft:bedrock" then
 				term.clear()
 				term.setCursorPos(1,1)
-				print("Found bedrock at", library.data.coords.y-1, "blocks deep,")
+				print("Found bedrock at "..library.data.coords.y - 1.." blocks deep,")
 				print("returning to the surface!")
 				if library.data.hasWireless then
 					rednet.broadcast("Found bedrock at "..library.data.coords.y - 1 .." blocks deep,")

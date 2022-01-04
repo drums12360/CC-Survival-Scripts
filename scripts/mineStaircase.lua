@@ -1,6 +1,3 @@
---[[local data = require("dataAPI")
-local move = require("moveAPI")
-local tools = require("toolsAPI")--]]
 local library = require("library/init")
 local tArgs = {...}
 
