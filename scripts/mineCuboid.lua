@@ -2,7 +2,7 @@
 local move = require("moveAPI")
 local storage = require("storageAPI")
 local tools = require("toolsAPI")--]]
-local library = require(".library/init")
+local library = require("library/init")
 local tArgs = {...}
 
 function mineSquence(width, height, depth, side)

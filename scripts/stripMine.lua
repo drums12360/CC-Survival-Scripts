@@ -3,7 +3,7 @@ local move = require("moveAPI")
 local storage = require("storageAPI")
 local dig = require("digAPI")
 local tools = require("toolsAPI")--]]
-local library = require(".library/init")
+local library = require("library/init")
 local tArgs = {...}
 
 function mineSquence(amount)
