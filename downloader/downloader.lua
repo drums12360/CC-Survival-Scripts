@@ -146,7 +146,9 @@ function endstats()
 		term.setCursorPos(1,1)
 		print("Downloads finished!")
 		term.setCursorPos(2,1)
-		os.sleep(1)
+		os.sleep(2)
+		term.clear()
+		term.setCursorPos(1,1)
 	end
 end
 
@@ -184,10 +186,8 @@ function download(vers, uptrue)
 		term.clear()
 		term.setCursorPos(1,1)
 		error("Please provide a correct argument!")
+		os.sleep(5)
 	end
 end
 
-os.sleep(0.5)
 download(tostring(tArgs[1]), tostring(tArgs[2]))
-term.clear()
-term.setCursorPos(1,1)
