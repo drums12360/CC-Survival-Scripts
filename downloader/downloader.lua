@@ -36,7 +36,7 @@ local loader = {
 }
 
 function dlscript()
-	for index, filename inPairs(library) do
+	for index, filename in Pairs(library) do
 		local content = http.get(repUrl,"library/",filename).readAll()
 		if not content then
 			term.clear()
@@ -55,7 +55,7 @@ function dlscript()
 			os.sleep(0.25)
 		end
 	end
-	for index, filename inPairs(scripts) do
+	for index, filename in Pairs(scripts) do
 		local content = http.get(repUrl,"scripts/",filename).readAll()
 		if not content then
 			term.clear()
@@ -77,7 +77,7 @@ function dlscript()
 end
 
 function dlstandalone()
-	for index, filename inPairs(scriptsSA) do
+	for index, filename in Pairs(scriptsSA) do
 		local content = http.get(repUrl,"standalone/",filename).readAll()
 		if not content then
 			term.clear()
@@ -99,7 +99,7 @@ function dlstandalone()
 end
 
 function dlloader(uptrue)
-	for index, filename inPairs(loader) do
+	for index, filename in Pairs(loader) do
 		local content = http.get(repUrl,"downloader/",filename).readAll()
 		if not content then
 			term.clear()
