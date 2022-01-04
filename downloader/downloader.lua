@@ -108,7 +108,17 @@ function dlloader(uptrue)
 			failedLoads = failedLoads + 1
 			os.sleep(5)
 		else
-			if uptrue == yes then
+			if uptrue == no then
+				fs.delete(filename)
+				file = fs.open(filename, "wb")
+				file.write(content)
+				file.close()
+				term.clear()
+				term.setCursorPos(1,1)
+				print("Downloaded new", filename,"!")
+				print("Execute", filename, "to update!")
+				os.sleep(1)
+			else
 				fs.delete("./startup/autoupdater.lua)
 				file = fs.open("./startup/autoupdater.lua", "wb")
 				file.write(content)
@@ -118,16 +128,6 @@ function dlloader(uptrue)
 				print("Downloaded", filename!")
 				print("Autoupdater will update on each startup!")
 				print("New scripts will download with new autoupdater.")
-				os.sleep(1)
-			else
-				fs.delete(filename)
-				file = fs.open(filename, "wb")
-				file.write(content)
-				file.close()
-				term.clear()
-				term.setCursorPos(1,1)
-				print("Downloaded new", filename,"!")
-				print("Execute", filename, "to update!")
 				os.sleep(1)
 			end
 		end
@@ -151,15 +151,31 @@ function endstats()
 end
 
 function download(vers, uptrue)
-	if vers == script or vers == nil then
+	if vers == auto or vers == nil then
+		term.clear()
+		term.setCursorPos(1,1)
+ 		print("Downloading / updating scripts with autoupdate!")
+		os.sleep(0.5)
 		dlscript()
 		dlloader(uptrue)
 		endstats()
 	elseif vers == sa then
+		term.clear()
+		term.setCursorPos(1,1)
+ 		print("Downloading / updating standalone scripts!")
+		os.sleep(0.5)
 		dlstandalone()
 		dlloader()
 		endstats()
 	elseif vers == all then
+		term.clear()
+		term.setCursorPos(1,1)
+		if uptrue == no then
+ 			print("Downloading / updating normal scripts and standalone scripts!")
+		else
+			print("Downloading / updating normal scripts and standalone scripts with autoupdate!")
+		end
+		os.sleep(0.5)
 		dlscript()
 		dlstandalone()
 		dlloader(uptrue)
@@ -167,9 +183,6 @@ function download(vers, uptrue)
 	end
 end
 
-term.clear()
-term.setCursorPos(1,1)
-print("Downloading / Updating APIs and programs!")
 os.sleep(0.5)
 download(tostring(tArgs[1]), tostring(tArgs[2]))
 term.clear()

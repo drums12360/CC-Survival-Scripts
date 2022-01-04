@@ -8,8 +8,9 @@ Stuff for the [CC:Tweaked](https://www.curseforge.com/minecraft/mc-mods/cc-tweak
 
 wget https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/downloader/downloader.lua
 
-Start the downloader with "downloader" for default settings. If you want to download all standalone scripts do "downloader sa".
-If you want the downloader to autoupdate on each turtle startup do "downloader script yes"
+Start the downloader with "downloader" for default settings with autoupdate. Type "downloader auto no" if you dont want autoupdates on turtle startup.
+If you want to download all standalone scripts do "downloader sa". No autoupdates available.
+If you want to download all normal scripts and standalone with autoupdate do "downloader all". Type "downloader all no" if you dont want normal script autoupdates on turtle startup.
 
 ----
 
