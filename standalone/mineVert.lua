@@ -10,6 +10,48 @@ local api = {
 	slot = 1,
 }
 
+local stack = {}
+
+local inverter = {
+	["forward"] = api.backward,
+	["back"] = api.forward,
+	["turnLeft"] = api.turnRight,
+	["turnRight"] = api.turnLeft,
+	["up"] = api.down,
+	["down"] = api.up,
+}
+
+local converter = {
+	["forward"] = api.forward,
+	["back"] = api.backward,
+	["turnLeft"] = api.turnLeft,
+	["turnRight"] = api.turnRight,
+	["up"] = api.up,
+	["down"] = api.down,
+}
+
+local oreList = {
+	"minecraft:iron_ore",
+	"minecraft:coal_ore",
+	"minecraft:gold_ore",
+	"minecraft:diamond_ore",
+	"minecraft:emerald_ore",
+	"minecraft:copper_ore",
+	"minecraft:lapis_ore",
+	"minecraft:redstone_ore",
+	"minecraft:deepslate_iron_ore",
+	"minecraft:deepslate_coal_ore",
+	"minecraft:deepslate_gold_ore",
+	"minecraft:deepslate_diamond_ore",
+	"minecraft:deepslate_emerald_ore",
+	"minecraft:deepslate_copper_ore",
+	"minecraft:deepslate_lapis_ore",
+	"minecraft:deepslate_redstone_ore",
+	"minecraft:nether_gold_ore",
+	"minecraft:nether_quartz_ore",
+	"minecraft:obsidian",
+}
+
 local junkList = {
 	"minecraft:dirt",
 	"minecraft:gravel",
@@ -448,224 +490,182 @@ function api.moveTo(x, y, z)
 	end
 end
 
-function api.drop(slots)
-	local inspect, datai = turtle.inspect()
-	if datai.name == "minecraft:chest" then
-		for i=1, slots do
-			turtle.select(i)
-			turtle.drop()
+function api.stackPop()
+	local func = inverter[stack[#stack]]
+	table.remove(stack)
+	return func()
+end
+
+function api.checkOreTable(tbl)
+	if type(tbl) ~= "table" then
+		error("'tbl' is not of type table", 2)
+	end
+	if tbl[1] == true then
+		for k,v in pairs(oreList) do
+			if tbl[2].name == oreList[k] then
+				return true
+			end
 		end
-		turtle.select(1)
 	else
 		return false
 	end
 end
 
-function api.avoidChest()
-	local chest = {}
-	local inspect, datai = turtle.inspect()
-	if datai.name == "minecraft:chest" then
-		chest[1] = true
-		api.saveData("/.save", "/chest", chest)
-		api.turnAround()
+function api.veinMine(lastFunc)
+	if type(lastFunc) == "function" or "string" then
+		if type(lastFunc) == "function" then
+			for k,v in pairs(converter) do
+				if v == lastFunc then
+					table.insert(stack, k)
+					break
+				end
+			end
+		end
+		if api.checkOreTable({turtle.inspectUp()}) then
+			api.up()
+			return api.veinMine(api.up)
+		elseif api.checkOreTable({turtle.inspectDown()}) then
+			api.down()
+			return api.veinMine(api.down)
+		end
+		for i=1, 4 do
+			if api.checkOreTable({turtle.inspect()}) then
+				if i == 1 then
+					api.forward()
+					return api.veinMine(api.forward)
+				elseif i == 2 then
+					return api.veinMine(api.turnLeft)
+				elseif i == 3 then
+					table.insert(stack, "turnLeft")
+					return api.veinMine(api.turnLeft)
+				elseif i == 4 then
+					return api.veinMine(api.turnRight)
+				end
+			end
+			api.turnLeft()
+		end
+		if stack[#stack] == "turnLeft" then
+			if stack[#stack] == stack[#stack-1] then
+				api.stackPop()
+				api.stackPop()
+				lastFunc = stack[#stack]
+				if #stack > 0 then
+					return api.veinMine(lastFunc)
+				end
+				return
+			else
+				api.stackPop()
+				lastFunc = stack[#stack]
+				if #stack > 0 then
+					return api.veinMine(lastFunc)
+				end
+				return
+			end
+		else
+			api.stackPop()
+			lastFunc = stack[#stack]
+			if #stack > 0 then
+				return api.veinMine(lastFunc)
+			end
+			return
+		end
 	else
-		chest[1] = false
-		api.saveData("/.save", "/chest", chest)
+		error("'lastFunc' is not of type function or string", 2)
 	end
 end
 
-function api.emptyInv()
-	local start = api.loadData("/.save", "/start_pos")
-	if turtle.getItemCount(15) > 0 then
-		local mining = api.copyTable(api.coords)
-		api.moveTo(start.x, start.y, start.z)
-		api.drop(15)
-		turtle.select(1)
-		api.moveTo(mining.x, mining.y, mining.z)
-	end
-end
-
-function api.waitforemptyInv()
-	local start = api.loadData("/.save", "/start_pos")
-	if turtle.getItemCount(15) > 0 then
-		local mining = api.copyTable(api.coords)
-		api.moveTo(start.x, start.y, start.z)
-		turtle.select(1)
-		term.clear()
-		term.setCursorPos(1,1)
-		print("Press any key after emptying!")
-		os.pullEvent("key")
-		api.moveTo(mining.x, mining.y, mining.z)
-	end
-end
-
-function mineSquence(width, height, depth, side)
-	local requiredFuelLevel = math.ceil(((height * width * depth) / 3) + (height * depth) + (width + depth + height))
-	local currentFuelLevel = tonumber(turtle.getFuelLevel())
-	local rows = math.floor(height / 3)
-	local offset = height % 3
-	local lastRowCount = 0
-	if width % 2 == 0 then
-		term.clear()
-		term.setCursorPos(1,1)
-		error("Width needs to be an odd #!")
-	end
-	if not api.refuel() and currentFuelLevel < requiredFuelLevel then
-		while not api.refuel() do
-			term.clear()
-			term.setCursorPos(1,1)
-			print("Not enough Fuel! "..currentFuelLevel.."/"..requiredFuelLevel)
-			print("Place fuel into inventory!")
-			os.sleep(api.timeout)
-		end
-		term.clear()
-		term.setCursorPos(1,1)
-	end
-	if side == "left" or side == tostring(nil) then
+function api.checkForOre(value)
+	if api.checkOreTable({turtle.inspectUp()}) then
 		api.up()
-		for x=1, depth do
+		api.veinMine(api.up)
+	end
+	if api.checkOreTable({turtle.inspectDown()}) then
+		api.down()
+		api.veinMine(api.down)
+	end
+	api.turnLeft()
+	if api.checkOreTable({turtle.inspect()}) then
+		api.forward()
+		api.veinMine(api.forward)
+	end
+	api.turnAround()
+	if api.checkOreTable({turtle.inspect()}) then
+		api.forward()
+		api.veinMine(api.forward)
+	end
+	if value == "back_true" then
+		api.turnRight()
+		if api.checkOreTable({turtle.inspect()}) then
 			api.forward()
-			api.dig("up")
-			api.dig("down")
-		if x % 3 == 0 and lastRowCount % 2 == 1 then
-			api.turnLeft()
-		else
-		if lastRowCount % 2 == 0 then
-			api.turnLeft()
-		else
-			api.turnRight()
+			api.veinMine(api.forward)
 		end
-		end
-		for z=1, rows do
-			for y=1, width - 1 do
-				api.forward()
-				api.dig("up")
-				api.dig("down")
-			end
-			lastRowCount = z
-			if z ~= rows then
-				if x % 2 == 0 then
-					api.down(3)
-					api.dig("down")
-					api.turnAround()
-				else
-					api.up(3)
-					api.dig("up")
-					api.turnAround()
-				end
-			elseif offset ~= 0 then
-				if x % 2 == 0 then
-					api.down(offset)
-					api.dig("down")
-					api.turnAround()
-				else
-					api.up(offset)
-					api.dig("up")
-					api.turnAround()
-				end
-				for y=1, width - 1 do
-					api.forward()
-					if x % 2 == 0 then
-						api.dig("down")
-					else
-						api.dig("up")
-					end
-				end
-				lastRowCount = z + 1
-			end
-		end
-		if x % 3 == 2 and lastRowCount % 2 == 1 then
-			api.turnLeft()
-		else
-			if lastRowCount % 2 == 0 then
-				api.turnLeft()
-			else
-				api.turnRight()
-			end
-		end
-		api.dropJunk()
-		end
-	elseif side == "right" then
-		api.up()
-		for x=1, depth do
+		api.turnAround()
+		if api.checkOreTable({turtle.inspect()}) then
 			api.forward()
-			api.dig("up")
-			api.dig("down")
-		if x % 3 == 0 and lastRowCount % 2 == 1 then
-			api.turnRight()
-		else
-		if lastRowCount % 2 == 0 then
-			api.turnRight()
-		else
-			api.turnLeft()
+			api.veinMine(api.forward)
 		end
+	else
+		api.turnLeft()
+		if api.checkOreTable({turtle.inspect()}) then
+			api.forward()
+			api.veinMine(api.forward)
 		end
-		for z=1, rows do
-			for y=1, width - 1 do
-				api.forward()
-				api.dig("up")
-				api.dig("down")
-			end
-			lastRowCount = z
-			if z ~= rows then
-				if x % 2 == 0 then
-					api.down(3)
-					api.dig("down")
-					api.turnAround()
-				else
-					api.up(3)
-					api.dig("up")
-					api.turnAround()
+	end
+	return true
+end
+
+function mineSquence(depth, start)
+	for i=1, depth do
+		local run = true
+		if run then
+			api.down()
+			if start - 2 == api.coords.y then
+				if api.findJunk("minecraft:gravel") then
+					turtle.placeUp(api.slot)
 				end
-			elseif offset ~= 0 then
-				if x % 2 == 0 then
-					api.down(offset)
-					api.dig("down")
-					api.turnAround()
-				else
-					api.up(offset)
-					api.dig("up")
-						api.turnAround()
-				end
-				for y=1, width - 1 do
-					api.forward()
-					if x % 2 == 0 then
-						api.dig("down")
-					else
-						api.dig("up")
-					end
-				end
-				lastRowCount = z + 1
 			end
-		end
-		if x % 3 == 2 and lastRowCount % 2 == 1 then
-			api.turnRight()
+			api.checkForOre(tostring("back_true"))
+			local tbl = {turtle.inspectDown()}
+			if tbl[2].name == "minecraft:bedrock" then
+				term.clear()
+				term.setCursorPos(1,1)
+				print("Found bedrock at", api.coords.y-1, "blocks deep,")
+				print("returning to the surface!")
+				if api.hasWireless then
+					rednet.broadcast("Found bedrock at "..api.coords.y - 1 .." blocks deep,")
+					rednet.broadcast("returning to the surface!")
+				end
+				local y = start - api.coords.y
+				api.up(y)
+				if api.findJunk("minecraft:gravel") then
+					turtle.placeDown(api.slot)
+				end
+				run = false
+			elseif start - depth == api.coords.y then
+				local y = start - api.coords.y
+				api.up(y)
+				if api.findJunk("minecraft:gravel") then
+					turtle.placeDown(api.slot)
+				end
+				run = false
+			end
+			if turtle.getItemCount(16) >= 1 then
+				api.dropJunk()
+			end
 		else
-			if lastRowCount % 2 == 0 then
-				api.turnRight()
-			else
-				api.turnLeft()
-			end
+			do return end
 		end
-		api.dropJunk()
-		end
-	elseif side ~= "left" or side ~= "right" or side ~= tostring(nil) then
-		term.clear()
-		term.setCursorPos(1,1)
-		error("That is not a valid direction! (Possible directions are 'left', 'right' or none to use left as default)")
 	end
 end
 
-if type(tonumber(tArgs[1])) and type(tonumber(tArgs[2])) and type(tonumber(tArgs[3])) ~= "number" then
+if type(tonumber(tArgs[1])) ~= "number" then
 	term.clear()
 	term.setCursorPos(1,1)
-	error("Width, height and depth are required! (Example: '5 5 10 right') [5 blocks wide, 5 block heigh, 10 blocks deep and to the right of turtle]")
+	error("Define depth down! (Example: '10') [10 blocks down]")
 end
 
 local start = api.copyTable(api.coords)
 api.saveData("/.save", "/start_pos", start)
-mineSquence(tonumber(tArgs[1]), tonumber(tArgs[2]), tonumber(tArgs[3]), (tostring(tArgs[4])))
-api.moveTo("~",start.y + 1,"~")
+mineSquence(tonumber(tArgs[1]), start.y)
 api.moveTo(start.x, start.y, start.z)
-api.drop(api.maxSlots)
 fs.delete("/.save")

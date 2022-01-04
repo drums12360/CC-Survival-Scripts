@@ -12,6 +12,8 @@ wget https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/dow
 
 [[ API Name = Essentials? ]]
 
+init = All APIs
+
 dataAPI = No essentials
 
 toolsAPI = No essentials
@@ -26,14 +28,14 @@ digAPI = moveAPI
 
 [[ Prog Name = Essential APIs?] ]]
 
-stripTunnel = dataAPI, moveAPI, storageAPI, digAPI, toolsAPI
+stripTunnel = All APIs via init
 
-mineTunnel = dataAPI, moveAPI, storageAPI, digAPI, toolsAPI
+mineTunnel = All APIs via init
 
-stripMine = dataAPI, moveAPI, storageAPI, digAPI, toolsAPI
+stripMine = All APIs via init
 
-mineCuboid = dataAPI, moveAPI, storageAPI, toolsAPI
+mineCuboid = All APIs via init
 
-mineVert = dataAPI, moveAPI, digAPI, toolsAPI
+mineVert = All APIs via init
 
-mineStaircase = dataAPI, moveAPI, toolsAPI
+mineStaircase = All APIs via init

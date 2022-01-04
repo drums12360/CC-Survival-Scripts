@@ -1,7 +1,8 @@
-local data = require ("dataAPI")
+--[[local data = require ("dataAPI")
 local move = require("moveAPI")
 local dig = require ("digAPI")
-local tools = require("toolsAPI")
+local tools = require("toolsAPI")--]]
+local api = require("init.lua")
 local tArgs = {...}
 
 function mineSquence(depth, start)

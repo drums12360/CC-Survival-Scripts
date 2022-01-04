@@ -1,4 +1,5 @@
 local urls = {
+	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/init.lua",
 	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/dataAPI.lua",
 	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/toolsAPI.lua",
 	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/moveAPI.lua",
