@@ -4,6 +4,14 @@ Stuff for the [CC:Tweaked](https://www.curseforge.com/minecraft/mc-mods/cc-tweak
 
 ----
 
+[[ Download and update custom refuel script ]]
+
+wget https://github.com/Keigun-Spark/CC-Survival-Scripts/blob/main/standalone/refuelSA.lua
+
+Start "refuelSA" for 120 seconds auto refueling from items placed into selected slot.
+Start "refuelSA seconds (example: 'refuelSA 10') to auto refuel for that time.
+To replace the standard refuel script do "refuelSA replace". to revert it just delete "refuel".
+
 [[ Download and update functioning APIs and programms automatically with the downloader ]]
 
 wget https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/downloader/downloader.lua
