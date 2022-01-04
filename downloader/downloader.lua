@@ -119,7 +119,7 @@ function dlloader(uptrue)
 				print("Execute", filename, "to update!")
 				os.sleep(1)
 			else
-				fs.delete("./startup/autoupdater.lua)
+				fs.delete("./startup/autoupdater.lua")
 				file = fs.open("./startup/autoupdater.lua", "wb")
 				file.write(content)
 				file.close()
