@@ -696,7 +696,7 @@ function mineSquence(Shaft_Amount, Shaft_Width, Shaft_Distance)
 	end
 end
 
-if type(tonumber(tArgs[1])) and type(tonumber(tArgs[2])) and type(tonumber(tArgs[3])) ~= "number" then
+if type(tonumber(tArgs[1])) ~= "number" and type(tonumber(tArgs[2])) ~= "number" and type(tonumber(tArgs[3])) ~= "number" then
 	term.clear()
 	term.setCursorPos(1,1)
 	error("Define shaft amount, shaft width and shaft distance! (Example: '10 20 3') [10 deep, 20 to each side, and every 3 blocks]")
