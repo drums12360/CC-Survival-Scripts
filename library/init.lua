@@ -4,7 +4,7 @@ local move = require(".library/moveAPI")
 local storage = require(".library/storageAPI")
 local tools = require(".library/toolsAPI")
 
-local api = {
+local library = {
  	data = data,
 	timeout = data.timeout,
 	d = data.d,
@@ -19,4 +19,4 @@ local api = {
 	slot = tools.slot,
 }
 
-return api
+return library

@@ -9,30 +9,30 @@ local tArgs = {...}
 function mineSquence(Shaft_Amount, Shaft_Width, Shaft_Distance)
 	for i=1, Shaft_Amount do
 		for j=1, Shaft_Distance do
-			move.forward()
-			dig.checkForOre()
-			tools.dig("up")
+			library.move.forward()
+			library.dig.checkForOre()
+			library.tools.dig("up")
 		end
-		move.turnLeft()
+		library.move.turnLeft()
 		for j=1, Shaft_Width do
-			move.forward()
-			dig.checkForOre()
-			tools.dig("up")
+			library.move.forward()
+			library.dig.checkForOre()
+			library.tools.dig("up")
 		end
-		move.turnAround()
-		move.forward(Shaft_Width)
+		library.move.turnAround()
+		library.move.forward(Shaft_Width)
 		for j=1, Shaft_Width do
-			move.forward()
-			dig.checkForOre()
-			tools.dig("up")
+			library.move.forward()
+			library.dig.checkForOre()
+			library.tools.dig("up")
 		end
-		move.turnAround()
-		move.forward(Shaft_Width)
-		move.turnRight()
-		if data.loadData("/.save", "/chest")[1] == true then
-			storage.emptyInv()
-		elseif data.loadData("/.save", "/chest")[1] == false then
-			storage.waitforemptyInv()
+		library.move.turnAround()
+		library.move.forward(Shaft_Width)
+		library.move.turnRight()
+		if library.data.loadData("/.save", "/chest")[1] == true then
+			library.storage.emptyInv()
+		elseif library.data.loadData("/.save", "/chest")[1] == false then
+			library.storage.waitforemptyInv()
 		end
 	end
 end
@@ -43,10 +43,10 @@ if type(tonumber(tArgs[1])) and type(tonumber(tArgs[2])) and type(tonumber(tArgs
 	error("Define shaft amount, shaft width and shaft distance! (Example: '10 20 3') [10 deep, 20 to each side, and every 3 blocks]")
 end
 
-local start = data.copyTable(data.coords)
-data.saveData("/.save", "/start_pos", start)
-storage.avoidChest()
+local start = library.data.copyTable(library.data.coords)
+library.data.saveData("/.save", "/start_pos", start)
+library.storage.avoidChest()
 mineSquence(tonumber(tArgs[1]), tonumber(tArgs[2]), tonumber(tArgs[3]))
-move.moveTo(start.x, start.y, start.z)
-storage.drop(tools.maxSlots)
+library.move.moveTo(start.x, start.y, start.z)
+library.storage.drop(library.tools.maxSlots)
 fs.delete("/.save")

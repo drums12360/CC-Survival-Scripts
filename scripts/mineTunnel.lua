@@ -8,13 +8,13 @@ local tArgs = {...}
 
 function mineSquence(amount)
 	for i=1, amount do
-		move.forward()
-		dig.checkForOre()
-		tools.dig("up")
-		if data.loadData("/.save", "/chest")[1] == true then
-			storage.emptyInv()
-		elseif data.loadData("/.save", "/chest")[1] == false then
-			storage.waitforemptyInv()
+		library.move.forward()
+		library.dig.checkForOre()
+		library.tools.dig("up")
+		if library.data.loadData("/.save", "/chest")[1] == true then
+			library.storage.emptyInv()
+		elseif library.data.loadData("/.save", "/chest")[1] == false then
+			library.storage.waitforemptyInv()
 		end
 	end
 end
@@ -26,14 +26,14 @@ function returnSquence(amount)
 			return false
 		elseif turtle.getItemDetail(16).name == "minecraft:torch" and amount >= 4 then
 			turtle.select(16)
-			move.up()
-			move.backward()
+			library.move.up()
+			library.move.backward()
 			turtle.place()
 			moves = moves - 1
 			while moves >= 12 and turtle.getItemCount(16) ~= 0 do
-				move.turnAround()
-				move.forward(12)
-				move.turnAround()
+				library.move.turnAround()
+				library.move.forward(12)
+				library.move.turnAround()
 				turtle.place()
 				moves = moves - 12
 			end
@@ -50,11 +50,11 @@ if type(tonumber(tArgs[1])) ~= "number" then
 	error("Define tunnel lenght! (Example: '10') [10 block long]")
 end
 
-local start = data.copyTable(data.coords)
-data.saveData("/.save", "/start_pos", start)
-storage.avoidChest()
+local start = library.data.copyTable(library.data.coords)
+library.data.saveData("/.save", "/start_pos", start)
+library.storage.avoidChest()
 mineSquence(tonumber(tArgs[1]))
 returnSquence(tonumber(tArgs[1])-1)
-move.moveTo(start.x, start.y, start.z)
-storage.drop(tools.maxSlots)
+library.move.moveTo(start.x, start.y, start.z)
+library.storage.drop(library.tools.maxSlots)
 fs.delete("/.save")

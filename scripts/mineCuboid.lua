@@ -16,144 +16,144 @@ function mineSquence(width, height, depth, side)
 		term.setCursorPos(1,1)
 		error("Width needs to be an odd #!")
 	end
-	if not move.refuel() and currentFuelLevel < requiredFuelLevel then
-		while not move.refuel() do
+	if not library.move.refuel() and currentFuelLevel < requiredFuelLevel then
+		while not library.move.refuel() do
 			term.clear()
 			term.setCursorPos(1,1)
 			print("Not enough Fuel! "..currentFuelLevel.."/"..requiredFuelLevel)
 			print("Place fuel into inventory!")
-			os.sleep(data.timeout)
+			os.sleep(library.data.timeout)
 		end
 		term.clear()
 		term.setCursorPos(1,1)
 	end
 	if side == "left" or side == tostring(nil) then
-		move.up()
+		library.move.up()
 		for x=1, depth do
-			move.forward()
-			tools.dig("up")
-			tools.dig("down")
+			library.move.forward()
+			library.tools.dig("up")
+			library.tools.dig("down")
 		if x % 3 == 0 and lastRowCount % 2 == 1 then
-			move.turnLeft()
+			library.move.turnLeft()
 		else
 		if lastRowCount % 2 == 0 then
-			move.turnLeft()
+			library.move.turnLeft()
 		else
-			move.turnRight()
+			library.move.turnRight()
 		end
 		end
 		for z=1, rows do
 			for y=1, width - 1 do
-				move.forward()
-				tools.dig("up")
-				tools.dig("down")
+				library.move.forward()
+				library.tools.dig("up")
+				library.tools.dig("down")
 			end
 			lastRowCount = z
 			if z ~= rows then
 				if x % 2 == 0 then
-					move.down(3)
-					tools.dig("down")
-					move.turnAround()
+					library.move.down(3)
+					library.tools.dig("down")
+					library.move.turnAround()
 				else
-					move.up(3)
-					tools.dig("up")
-					move.turnAround()
+					library.move.up(3)
+					library.tools.dig("up")
+					library.move.turnAround()
 				end
 			elseif offset ~= 0 then
 				if x % 2 == 0 then
-					move.down(offset)
-					tools.dig("down")
-					move.turnAround()
+					library.move.down(offset)
+					library.tools.dig("down")
+					library.move.turnAround()
 				else
-					move.up(offset)
-					tools.dig("up")
-					move.turnAround()
+					library.move.up(offset)
+					library.tools.dig("up")
+					library.move.turnAround()
 				end
 				for y=1, width - 1 do
-					move.forward()
+					library.move.forward()
 					if x % 2 == 0 then
-						tools.dig("down")
+						library.tools.dig("down")
 					else
-						tools.dig("up")
+						library.tools.dig("up")
 					end
 				end
 				lastRowCount = z + 1
 			end
 		end
 		if x % 3 == 2 and lastRowCount % 2 == 1 then
-			move.turnLeft()
+			library.move.turnLeft()
 		else
 			if lastRowCount % 2 == 0 then
-				move.turnLeft()
+				library.move.turnLeft()
 			else
-				move.turnRight()
+				library.move.turnRight()
 			end
 		end
-		tools.dropJunk()
+		library.tools.dropJunk()
 		end
 	elseif side == "right" then
-		move.up()
+		library.move.up()
 		for x=1, depth do
-			move.forward()
-			tools.dig("up")
-			tools.dig("down")
+			library.move.forward()
+			library.tools.dig("up")
+			library.tools.dig("down")
 		if x % 3 == 0 and lastRowCount % 2 == 1 then
-			move.turnRight()
+			library.move.turnRight()
 		else
 		if lastRowCount % 2 == 0 then
-			move.turnRight()
+			library.move.turnRight()
 		else
-			move.turnLeft()
+			library.move.turnLeft()
 		end
 		end
 		for z=1, rows do
 			for y=1, width - 1 do
-				move.forward()
-				tools.dig("up")
-				tools.dig("down")
+				library.move.forward()
+				library.tools.dig("up")
+				library.tools.dig("down")
 			end
 			lastRowCount = z
 			if z ~= rows then
 				if x % 2 == 0 then
-					move.down(3)
-					tools.dig("down")
-					move.turnAround()
+					library.move.down(3)
+					library.tools.dig("down")
+					library.move.turnAround()
 				else
-					move.up(3)
-					tools.dig("up")
-					move.turnAround()
+					library.move.up(3)
+					library.tools.dig("up")
+					library.move.turnAround()
 				end
 			elseif offset ~= 0 then
 				if x % 2 == 0 then
-					move.down(offset)
-					tools.dig("down")
-					move.turnAround()
+					library.move.down(offset)
+					library.tools.dig("down")
+					library.move.turnAround()
 				else
-					move.up(offset)
-					tools.dig("up")
-						move.turnAround()
+					library.move.up(offset)
+					library.tools.dig("up")
+						library.move.turnAround()
 				end
 				for y=1, width - 1 do
-					move.forward()
+					library.move.forward()
 					if x % 2 == 0 then
-						tools.dig("down")
+						library.tools.dig("down")
 					else
-						tools.dig("up")
+						library.tools.dig("up")
 					end
 				end
 				lastRowCount = z + 1
 			end
 		end
 		if x % 3 == 2 and lastRowCount % 2 == 1 then
-			move.turnRight()
+			library.move.turnRight()
 		else
 			if lastRowCount % 2 == 0 then
-				move.turnRight()
+				library.move.turnRight()
 			else
-				move.turnLeft()
+				library.move.turnLeft()
 			end
 		end
-		tools.dropJunk()
+		library.tools.dropJunk()
 		end
 	elseif side ~= "left" or side ~= "right" or side ~= tostring(nil) then
 		term.clear()
@@ -168,10 +168,10 @@ if type(tonumber(tArgs[1])) and type(tonumber(tArgs[2])) and type(tonumber(tArgs
 	error("Width, height and depth are required! (Example: '5 5 10 right') [5 blocks wide, 5 block heigh, 10 blocks deep and to the right of turtle]")
 end
 
-local start = data.copyTable(data.coords)
-data.saveData("/.save", "/start_pos", start)
+local start = library.data.copyTable(library.data.coords)
+library.data.saveData("/.save", "/start_pos", start)
 mineSquence(tonumber(tArgs[1]), tonumber(tArgs[2]), tonumber(tArgs[3]), (tostring(tArgs[4])))
-move.moveTo("~",start.y + 1,"~")
-move.moveTo(start.x, start.y, start.z)
-storage.drop(tools.maxSlots)
+library.move.moveTo("~",start.y + 1,"~")
+library.move.moveTo(start.x, start.y, start.z)
+library.storage.drop(library.tools.maxSlots)
 fs.delete("/.save")
