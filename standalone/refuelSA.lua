@@ -6,9 +6,10 @@ function refuel(secs, repl)
 		term.clear()
 		term.setCursorPos(1,1)
 		print("Replaced standard 'refuel' script. Delete 'refuel' to revert it!")
+		return
 	end
 	if secs == nil then
-		secs = tonumber(120)
+		secs = 120
 	end
 	print("Max fuel level: "..turtle.getFuelLimit())
 	print("Old fuel level: "..turtle.getFuelLevel())
@@ -30,15 +31,15 @@ function refuel(secs, repl)
 	end
 end
 
-if type(tonumber(tArgs[1])) ~= "number" then
-	if type(tonumber(tArgs[1])) ~= "nil" then
+if type(tArgs[1]) ~= "number" and tArgs[1] ~= "replace" then
+	if type(tArgs[1]) ~= "nil" then
 		term.clear()
 		term.setCursorPos(1,1)
 		error("Define step amount and direction! (Example: '10 up') [10 steps, upwards]")
 	end
 end
 
-refuel(tonumber(tArgs[1]), tostring(tArgs[2]))
+refuel(tArgs[1]), tostring(tArgs[2]))
 term.clear()
 term.setCursorPos(1,1)
 os.sleep(5)
