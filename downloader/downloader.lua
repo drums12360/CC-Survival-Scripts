@@ -1,19 +1,28 @@
+local repUrl = "https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/"
 local urls = {
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/init.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/dataAPI.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/toolsAPI.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/moveAPI.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/storageAPI.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/apis/digAPI.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/stripTunnel.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/mineTunnel.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/stripMine.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/mineCuboid.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/mineVert.lua",
-	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/mineStaircase.lua"
 	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/standalone/refuel.lua",
 	"https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scripts/main/downloader/downloader.lua",
 }
+
+local apis = {
+	"init.lua",
+	"dataAPI.lua",
+	"toolsAPI.lua",
+	"moveAPI.lua",
+	"storageAPI.lua",
+	"digAPI.lua",
+}
+
+local progs = {
+	"stripTunnel.lua",
+	"mineTunnel.lua",
+	"stripMine.lua",
+	"mineCuboid.lua",
+	"mineVert.lua",
+	"mineStaircase.lua"
+}
+
+local refuel = 
 
 function download(url)
 	local content = http.get(url).readAll()
