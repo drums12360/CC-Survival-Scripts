@@ -180,6 +180,10 @@ function download(vers, uptrue)
 		dlstandalone()
 		dlloader(uptrue)
 		endstats()
+	else
+		term.clear()
+		term.setCursorPos(1,1)
+		error("Please provide a correct argument!")
 	end
 end
 
