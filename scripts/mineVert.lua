@@ -16,10 +16,10 @@ function mineSquence(depth, start)
 			if tbl[2].name == "minecraft:bedrock" then
 				term.clear()
 				term.setCursorPos(1,1)
-				print("Found bedrock at "..library.data.coords.y - 1.." blocks deep,")
+				print("Found bedrock at "..library.data.coords.y.." blocks deep,")
 				print("returning to the surface!")
 				if library.data.hasWireless then
-					rednet.broadcast("Found bedrock at "..library.data.coords.y - 1 .." blocks deep,")
+					rednet.broadcast("Found bedrock at "..library.data.coords.y.." blocks deep,")
 					rednet.broadcast("returning to the surface!")
 				end
 				local y = start - library.data.coords.y
