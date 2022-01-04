@@ -1,4 +1,4 @@
-local data = require("dataAPI")
+local data = require(".library/dataAPI")
 
 local tools = {
 	maxSlots = 16,

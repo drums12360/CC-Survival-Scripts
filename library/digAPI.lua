@@ -1,4 +1,4 @@
-local move = require("moveAPI")
+local move = require(".library/moveAPI")
 
 local dig = {
 

@@ -1,6 +1,6 @@
 local tArgs = {...}
 
-local api = {
+local lib = {
 	timeout = 5,
 	d = 0,
 	hasWireless = false,
@@ -13,21 +13,21 @@ local api = {
 local stack = {}
 
 local inverter = {
-	["forward"] = api.backward,
-	["back"] = api.forward,
-	["turnLeft"] = api.turnRight,
-	["turnRight"] = api.turnLeft,
-	["up"] = api.down,
-	["down"] = api.up,
+	["forward"] = lib.backward,
+	["back"] = lib.forward,
+	["turnLeft"] = lib.turnRight,
+	["turnRight"] = lib.turnLeft,
+	["up"] = lib.down,
+	["down"] = lib.up,
 }
 
 local converter = {
-	["forward"] = api.forward,
-	["back"] = api.backward,
-	["turnLeft"] = api.turnLeft,
-	["turnRight"] = api.turnRight,
-	["up"] = api.up,
-	["down"] = api.down,
+	["forward"] = lib.forward,
+	["back"] = lib.backward,
+	["turnLeft"] = lib.turnLeft,
+	["turnRight"] = lib.turnRight,
+	["up"] = lib.up,
+	["down"] = lib.down,
 }
 
 local oreList = {
@@ -37,7 +37,7 @@ local oreList = {
 	"minecraft:diamond_ore",
 	"minecraft:emerald_ore",
 	"minecraft:copper_ore",
-	"minecraft:lapis_ore",
+	"minecraft:llibs_ore",
 	"minecraft:redstone_ore",
 	"minecraft:deepslate_iron_ore",
 	"minecraft:deepslate_coal_ore",
@@ -45,7 +45,7 @@ local oreList = {
 	"minecraft:deepslate_diamond_ore",
 	"minecraft:deepslate_emerald_ore",
 	"minecraft:deepslate_copper_ore",
-	"minecraft:deepslate_lapis_ore",
+	"minecraft:deepslate_llibs_ore",
 	"minecraft:deepslate_redstone_ore",
 	"minecraft:nether_gold_ore",
 	"minecraft:nether_quartz_ore",
@@ -71,7 +71,7 @@ local fuelList = {
 	"minecraft:lava_bucket",
 }
 
-function api.copyTable(tbl)
+function lib.copyTable(tbl)
 	if type(tbl) ~= "table" then
 		error("The type of 'tbl' is not a table",2)
 	end
@@ -82,7 +82,7 @@ function api.copyTable(tbl)
 	return rtbl
 end
 
-function api.saveData(dir, path, tbl)
+function lib.saveData(dir, path, tbl)
 	if type(tbl) ~= "table" then
 		error("The type of 'tbl' is not a table",2)
 	elseif type(path) ~= "string" or type(dir) ~= "string" then
@@ -96,7 +96,7 @@ function api.saveData(dir, path, tbl)
 	f.close()
 end
 
-function api.loadData(dir, path)
+function lib.loadData(dir, path)
 	if type(path) ~= "string" or type(dir) ~= "string" then
 		error("The type of 'path' or 'dir' is not a string",2)
 	end
@@ -111,13 +111,13 @@ function api.loadData(dir, path)
 	return false
 end
 
-function api.findItem(name)
-	for i=1, api.maxSlots do
+function lib.findItem(name)
+	for i=1, lib.maxSlots do
 		if turtle.getItemCount(i) ~= 0 then
 			local item = turtle.getItemDetail(i).name
 			if item == name then
 				turtle.select(i)
-				api.slot = tonumber(i)
+				lib.slot = tonumber(i)
 				return true
 			end
 		end
@@ -125,20 +125,20 @@ function api.findItem(name)
 	return false
 end
 
-function api.inventorySort()
+function lib.inventorySort()
 	local inv = {}
-	for i=1, api.maxSlots do
+	for i=1, lib.maxSlots do
 		inv[i] = turtle.getItemDetail(i)
 	end
-	for i=1, api.maxSlots do
+	for i=1, lib.maxSlots do
 		if inv[i] and inv[i].count < 64 then
-		for j=(i+1), api.maxSlots do
+		for j=(i+1), lib.maxSlots do
 			if inv[j] and inv[i].name == inv[j].name then
 				if turtle.getItemSpace(i) == 0 then
 					break
 				end
 				turtle.select(j)
-				api.slot = j
+				lib.slot = j
 				local count = turtle.getItemSpace(i)
 				if count > inv[j].count then
 					count = inv[j].count
@@ -153,14 +153,14 @@ function api.inventorySort()
 		end
 		end
 	end
-	for i=1, api.maxSlots do
+	for i=1, lib.maxSlots do
 		if not inv[i] then
-			for j=(i+1), api.maxSlots do
+			for j=(i+1), lib.maxSlots do
 				if inv[j] then
 				turtle.select(j)
-				api.slot = j
+				lib.slot = j
 				turtle.transferTo(i)
-				inv[i] = api.copyTable(inv[j])
+				inv[i] = lib.copyTable(inv[j])
 				inv[j] = nil
 				break
 				end
@@ -168,12 +168,12 @@ function api.inventorySort()
 		end
 	end
 	turtle.select(1)
-	api.slot = 1
+	lib.slot = 1
 end
 
 
-function api.place(blockName, direction)
-	api.findItem(blockName)
+function lib.place(blockName, direction)
+	lib.findItem(blockName)
 	if direction == nil then
 		turtle.place()
 	elseif direction == "up" then
@@ -183,7 +183,7 @@ function api.place(blockName, direction)
 	end
 end
 
-function api.dig(direction)
+function lib.dig(direction)
 	if direction == nil then
 		turtle.dig()
 		os.sleep(0.4)
@@ -196,8 +196,8 @@ function api.dig(direction)
 	end
 end
 
-function api.dropJunk()
-	for i=1, api.maxSlots do
+function lib.dropJunk()
+	for i=1, lib.maxSlots do
 		if turtle.getItemCount(i) ~= 0 then
 			local item = turtle.getItemDetail(i).name
 			local isJunk = false
@@ -209,19 +209,19 @@ function api.dropJunk()
 			end
 			if isJunk then
 				turtle.select(i)
-				api.slot = tonumber(i)
+				lib.slot = tonumber(i)
 				turtle.dropUp()
 			end
 		end
 	end
-	api.inventorySort()
+	lib.inventorySort()
 end
 
-function api.findJunk(exclude)
+function lib.findJunk(exclude)
 	if exclude == nil then
 		exclude = "nothing"
 	end
-	for i=1, api.maxSlots do
+	for i=1, lib.maxSlots do
 		if turtle.getItemCount(i) ~= 0 then
 			local item = turtle.getItemDetail(i).name
 			local isJunk = false
@@ -233,7 +233,7 @@ function api.findJunk(exclude)
 			end
 			if isJunk then
 				turtle.select(i)
-				api.slot = tonumber(i)
+				lib.slot = tonumber(i)
 				return true
 			end
 		end
@@ -241,10 +241,10 @@ function api.findJunk(exclude)
 	return false
 end
 
-function api.refuel()
+function lib.refuel()
 	for index, value in ipairs(fuelList) do
-		if api.findItem(tostring(value)) then
-			while turtle.getItemCount(api.slot) >= 1 and turtle.getFuelLevel() < turtle.getFuelLimit() do
+		if lib.findItem(tostring(value)) then
+			while turtle.getItemCount(lib.slot) >= 1 and turtle.getFuelLevel() < turtle.getFuelLimit() do
 				turtle.refuel()
 			end
 			return true
@@ -253,68 +253,68 @@ function api.refuel()
 	return false
 end
 
-function api.turnLeft()
+function lib.turnLeft()
 	turtle.turnLeft()
-	api.d = (api.d - 1) % 4
-	api.saveData("/.save", "/face", {d = api.d})
+	lib.d = (lib.d - 1) % 4
+	lib.saveData("/.save", "/face", {d = lib.d})
 end
 
-function api.turnRight()
+function lib.turnRight()
 	turtle.turnRight()
-	api.d = (api.d + 1) % 4
-	api.saveData("/.save", "/face", {d = api.d})
+	lib.d = (lib.d + 1) % 4
+	lib.saveData("/.save", "/face", {d = lib.d})
 end
 
-function api.turnAround()
+function lib.turnAround()
 	turtle.turnRight()
 	turtle.turnRight()
-	api.d = (api.d + 2) % 4
-	api.saveData("/.save", "/face", {d = api.d})
+	lib.d = (lib.d + 2) % 4
+	lib.saveData("/.save", "/face", {d = lib.d})
 end
 
-function api.face(direction)
+function lib.face(direction)
 	if type(direction) == "number" or "string" then
 		if type(direction) == "string" then
-			for k,v in pairs(api.direction) do
+			for k,v in pairs(lib.direction) do
 				if v == direction then
 					direction = k
 					break
 				end
 			end
 		end
-		if direction == (api.d + 2) % 4 then
-			api.turnAround()
+		if direction == (lib.d + 2) % 4 then
+			lib.turnAround()
 			return true
-		elseif direction == (api.d - 1) % 4 then
-			api.turnLeft()
+		elseif direction == (lib.d - 1) % 4 then
+			lib.turnLeft()
 			return true
-		elseif direction == (api.d + 1) % 4 then
-			api.turnRight()
+		elseif direction == (lib.d + 1) % 4 then
+			lib.turnRight()
 			return true
-		elseif direction == api.d then
+		elseif direction == lib.d then
 			return true
 		end
 	end
 	error("the type of 'direction' is not of type number, string or is invalid")
 end
 
-function api.forward(times)
+function lib.forward(times)
 	if times == nil then
 		times = 1
 	end
 	if times < 0 then
-		api.backward(-times)
+		lib.backward(-times)
 	end
 	for i=1, times do
-		if not api.refuel() and turtle.getFuelLevel() == 0 then
-			while not api.refuel() do
+		if not lib.refuel() and turtle.getFuelLevel() == 0 then
+			while not lib.refuel() do
 				term.clear()
 				term.setCursorPos(1,1)
 				print("Out of fuel!")
-				if api.hasWireless == true then
-					rednet.broadcast("Out of fuel at X: "..api.coords.x.." Y: "..api.coords.y.." Z: "..api.coords.z)
+				if lib.hasWireless == true then
+					rednet.broadcast("Out of fuel at X: "..lib.coords.x.." Y: "..lib.coords.y.." Z: "..lib.coords.z)
 				end
-				os.sleep(api.timeout)
+				os.sleep(lib.timeout)
 			end
 		end
 		while not turtle.forward() do
@@ -323,88 +323,88 @@ function api.forward(times)
 				return false
 			elseif inspect[1] and inspect[2].name ~= "minecraft:bedrock" then
 				while turtle.detect() do
-					api.dig()
+					lib.dig()
 				end
 			else
 				turtle.attack()
 			end
 		end
-		if api.d == 0 then
-			api.coords.z = api.coords.z - 1
-		elseif api.d == 1 then
-			api.coords.x = api.coords.x + 1
-		elseif api.d == 2 then
-			api.coords.z = api.coords.z + 1
-		elseif api.d == 3 then
-			api.coords.x = api.coords.x - 1
+		if lib.d == 0 then
+			lib.coords.z = lib.coords.z - 1
+		elseif lib.d == 1 then
+			lib.coords.x = lib.coords.x + 1
+		elseif lib.d == 2 then
+			lib.coords.z = lib.coords.z + 1
+		elseif lib.d == 3 then
+			lib.coords.x = lib.coords.x - 1
 		end
-		api.saveData("/.save", "/position", api.coords)
+		lib.saveData("/.save", "/position", lib.coords)
 	end
 	return true
 end
 
-function api.left(times)
-	api.turnLeft()
-	api.forward(times)
-	api.turnRight()
+function lib.left(times)
+	lib.turnLeft()
+	lib.forward(times)
+	lib.turnRight()
 end
 
-function api.right(times)
-	api.turnRight()
-	api.forward(times)
-	api.turnLeft()
+function lib.right(times)
+	lib.turnRight()
+	lib.forward(times)
+	lib.turnLeft()
 end
 
-function api.backward(times)
+function lib.backward(times)
 	if times == nil then
 		times = 1
 	end
 	if times < 0 then
-		api.forward(-times)
+		lib.forward(-times)
 	end
 	for i=1, times do
-		if not api.refuel() and turtle.getFuelLevel() == 0 then
-			while not api.refuel() do
+		if not lib.refuel() and turtle.getFuelLevel() == 0 then
+			while not lib.refuel() do
 				term.clear()
 				term.setCursorPos(1,1)
 				print("Out of fuel!")
-				if api.hasWireless == true then
-					rednet.broadcast("Out of fuel at X: "..api.coords.x.." Y: "..api.coords.y.." Z: "..api.coords.z)
+				if lib.hasWireless == true then
+					rednet.broadcast("Out of fuel at X: "..lib.coords.x.." Y: "..lib.coords.y.." Z: "..lib.coords.z)
 				end
-				os.sleep(api.timeout)
+				os.sleep(lib.timeout)
 			end
 		end
 		turtle.back()
-		if api.d == 0 then
-			api.coords.z = api.coords.z + 1
-		elseif api.d == 1 then
-			api.coords.x = api.coords.x - 1
-		elseif api.d == 2 then
-			api.coords.z = api.coords.z - 1
-		elseif api.d == 3 then
-			api.coords.x = api.coords.x + 1
+		if lib.d == 0 then
+			lib.coords.z = lib.coords.z + 1
+		elseif lib.d == 1 then
+			lib.coords.x = lib.coords.x - 1
+		elseif lib.d == 2 then
+			lib.coords.z = lib.coords.z - 1
+		elseif lib.d == 3 then
+			lib.coords.x = lib.coords.x + 1
 		end
-		api.saveData("/.save", "/position", api.coords)
+		lib.saveData("/.save", "/position", lib.coords)
 	end
 end
 
-function api.up(times)
+function lib.up(times)
 	if times == nil then
 		times = 1
 	end
 	if times < 0 then
-		api.down(-times)
+		lib.down(-times)
 	end
 	for i=1, times do
-		if not api.refuel() and turtle.getFuelLevel() == 0 then
-			while not api.refuel() do
+		if not lib.refuel() and turtle.getFuelLevel() == 0 then
+			while not lib.refuel() do
 				term.clear()
 				term.setCursorPos(1,1)
 				print("Out of fuel")
-				if api.hasWireless == true then
-					rednet.broadcast("Out of fuel at X: "..api.coords.x.." Y: "..api.coords.y.." Z: "..api.coords.z)
+				if lib.hasWireless == true then
+					rednet.broadcast("Out of fuel at X: "..lib.coords.x.." Y: "..lib.coords.y.." Z: "..lib.coords.z)
 				end
-				os.sleep(api.timeout)
+				os.sleep(lib.timeout)
 			end
 		end
 		while not turtle.up() do
@@ -412,34 +412,34 @@ function api.up(times)
 			if inspect[1] and inspect[2].name == "minecraft:bedrock" then
 				return false
 			elseif inspect[1] and inspect[2].name ~= "minecraft:bedrock" then
-				api.dig("up")
+				lib.dig("up")
 			else
 				turtle.attackUp()
 			end
 		end
-		api.coords.y = api.coords.y + 1
-		api.saveData("/.save", "/position", api.coords)
+		lib.coords.y = lib.coords.y + 1
+		lib.saveData("/.save", "/position", lib.coords)
 	end
 	return true
 end
 
-function api.down(times)
+function lib.down(times)
 	if times == nil then
 		times = 1
 	end
 	if times < 0 then
-		api.up(-times)
+		lib.up(-times)
 	end
 	for i=1, times do
-		if not api.refuel() and turtle.getFuelLevel() == 0 then
-			while not api.refuel() do
+		if not lib.refuel() and turtle.getFuelLevel() == 0 then
+			while not lib.refuel() do
 				term.clear()
 				term.setCursorPos(1,1)
 				print("Out of fuel")
-				if api.hasWireless == true then
-					rednet.broadcast("Out of fuel at X: "..api.coords.x.." Y: "..api.coords.y.." Z: "..api.coords.z)
+				if lib.hasWireless == true then
+					rednet.broadcast("Out of fuel at X: "..lib.coords.x.." Y: "..lib.coords.y.." Z: "..lib.coords.z)
 				end
-				os.sleep(api.timeout)
+				os.sleep(lib.timeout)
 			end
 		end
 		while not turtle.down() do
@@ -447,56 +447,56 @@ function api.down(times)
 			if inspect[1] and inspect[2].name == "minecraft:bedrock" then
 				return false
 			elseif inspect[1] and inspect[2].name ~= "minecraft:bedrock" then
-				api.dig("down")
+				lib.dig("down")
 			else
 				turtle.attackDown()
 			end
 		end
-		api.coords.y = api.coords.y - 1
-		api.saveData("/.save", "/position", api.coords)
+		lib.coords.y = lib.coords.y - 1
+		lib.saveData("/.save", "/position", lib.coords)
 	end
 	return true
 end
 
-function api.moveTo(x, y, z)
+function lib.moveTo(x, y, z)
 	if x == "~" then
-		x = api.coords.x
+		x = lib.coords.x
 	end
 	if y == "~" then
-		y = api.coords.y
+		y = lib.coords.y
 	end
 	if z == "~" then
-		z = api.coords.z
+		z = lib.coords.z
 	end
-	if y > api.coords.y then
-		api.up(y - api.coords.y)
+	if y > lib.coords.y then
+		lib.up(y - lib.coords.y)
 	end
-	if x < api.coords.x then
-		api.face(3)
-		api.forward(api.coords.x - x)
-	elseif x > api.coords.x then
-		api.face(1)
-		api.forward(x - api.coords.x)
+	if x < lib.coords.x then
+		lib.face(3)
+		lib.forward(lib.coords.x - x)
+	elseif x > lib.coords.x then
+		lib.face(1)
+		lib.forward(x - lib.coords.x)
 	end
-	if z < api.coords.z then
-		api.face(0)
-		api.forward(api.coords.z - z)
-	elseif z > api.coords.z then
-		api.face(2)
-		api.forward(z - api.coords.z)
+	if z < lib.coords.z then
+		lib.face(0)
+		lib.forward(lib.coords.z - z)
+	elseif z > lib.coords.z then
+		lib.face(2)
+		lib.forward(z - lib.coords.z)
 	end
-	if y < api.coords.y then
-		api.down(api.coords.y - y)
+	if y < lib.coords.y then
+		lib.down(lib.coords.y - y)
 	end
 end
 
-function api.stackPop()
+function lib.stackPop()
 	local func = inverter[stack[#stack]]
 	table.remove(stack)
 	return func()
 end
 
-function api.checkOreTable(tbl)
+function lib.checkOreTable(tbl)
 	if type(tbl) ~= "table" then
 		error("'tbl' is not of type table", 2)
 	end
@@ -511,7 +511,7 @@ function api.checkOreTable(tbl)
 	end
 end
 
-function api.veinMine(lastFunc)
+function lib.veinMine(lastFunc)
 	if type(lastFunc) == "function" or "string" then
 		if type(lastFunc) == "function" then
 			for k,v in pairs(converter) do
@@ -521,51 +521,51 @@ function api.veinMine(lastFunc)
 				end
 			end
 		end
-		if api.checkOreTable({turtle.inspectUp()}) then
-			api.up()
-			return api.veinMine(api.up)
-		elseif api.checkOreTable({turtle.inspectDown()}) then
-			api.down()
-			return api.veinMine(api.down)
+		if lib.checkOreTable({turtle.inspectUp()}) then
+			lib.up()
+			return lib.veinMine(lib.up)
+		elseif lib.checkOreTable({turtle.inspectDown()}) then
+			lib.down()
+			return lib.veinMine(lib.down)
 		end
 		for i=1, 4 do
-			if api.checkOreTable({turtle.inspect()}) then
+			if lib.checkOreTable({turtle.inspect()}) then
 				if i == 1 then
-					api.forward()
-					return api.veinMine(api.forward)
+					lib.forward()
+					return lib.veinMine(lib.forward)
 				elseif i == 2 then
-					return api.veinMine(api.turnLeft)
+					return lib.veinMine(lib.turnLeft)
 				elseif i == 3 then
 					table.insert(stack, "turnLeft")
-					return api.veinMine(api.turnLeft)
+					return lib.veinMine(lib.turnLeft)
 				elseif i == 4 then
-					return api.veinMine(api.turnRight)
+					return lib.veinMine(lib.turnRight)
 				end
 			end
-			api.turnLeft()
+			lib.turnLeft()
 		end
 		if stack[#stack] == "turnLeft" then
 			if stack[#stack] == stack[#stack-1] then
-				api.stackPop()
-				api.stackPop()
+				lib.stackPop()
+				lib.stackPop()
 				lastFunc = stack[#stack]
 				if #stack > 0 then
-					return api.veinMine(lastFunc)
+					return lib.veinMine(lastFunc)
 				end
 				return
 			else
-				api.stackPop()
+				lib.stackPop()
 				lastFunc = stack[#stack]
 				if #stack > 0 then
-					return api.veinMine(lastFunc)
+					return lib.veinMine(lastFunc)
 				end
 				return
 			end
 		else
-			api.stackPop()
+			lib.stackPop()
 			lastFunc = stack[#stack]
 			if #stack > 0 then
-				return api.veinMine(lastFunc)
+				return lib.veinMine(lastFunc)
 			end
 			return
 		end
@@ -574,41 +574,41 @@ function api.veinMine(lastFunc)
 	end
 end
 
-function api.checkForOre(value)
-	if api.checkOreTable({turtle.inspectUp()}) then
-		api.up()
-		api.veinMine(api.up)
+function lib.checkForOre(value)
+	if lib.checkOreTable({turtle.inspectUp()}) then
+		lib.up()
+		lib.veinMine(lib.up)
 	end
-	if api.checkOreTable({turtle.inspectDown()}) then
-		api.down()
-		api.veinMine(api.down)
+	if lib.checkOreTable({turtle.inspectDown()}) then
+		lib.down()
+		lib.veinMine(lib.down)
 	end
-	api.turnLeft()
-	if api.checkOreTable({turtle.inspect()}) then
-		api.forward()
-		api.veinMine(api.forward)
+	lib.turnLeft()
+	if lib.checkOreTable({turtle.inspect()}) then
+		lib.forward()
+		lib.veinMine(lib.forward)
 	end
-	api.turnAround()
-	if api.checkOreTable({turtle.inspect()}) then
-		api.forward()
-		api.veinMine(api.forward)
+	lib.turnAround()
+	if lib.checkOreTable({turtle.inspect()}) then
+		lib.forward()
+		lib.veinMine(lib.forward)
 	end
 	if value == "back_true" then
-		api.turnRight()
-		if api.checkOreTable({turtle.inspect()}) then
-			api.forward()
-			api.veinMine(api.forward)
+		lib.turnRight()
+		if lib.checkOreTable({turtle.inspect()}) then
+			lib.forward()
+			lib.veinMine(lib.forward)
 		end
-		api.turnAround()
-		if api.checkOreTable({turtle.inspect()}) then
-			api.forward()
-			api.veinMine(api.forward)
+		lib.turnAround()
+		if lib.checkOreTable({turtle.inspect()}) then
+			lib.forward()
+			lib.veinMine(lib.forward)
 		end
 	else
-		api.turnLeft()
-		if api.checkOreTable({turtle.inspect()}) then
-			api.forward()
-			api.veinMine(api.forward)
+		lib.turnLeft()
+		if lib.checkOreTable({turtle.inspect()}) then
+			lib.forward()
+			lib.veinMine(lib.forward)
 		end
 	end
 	return true
@@ -618,39 +618,39 @@ function mineSquence(depth, start)
 	for i=1, depth do
 		local run = true
 		if run then
-			api.down()
-			if start - 2 == api.coords.y then
-				if api.findJunk("minecraft:gravel") then
-					turtle.placeUp(api.slot)
+			lib.down()
+			if start - 2 == lib.coords.y then
+				if lib.findJunk("minecraft:gravel") then
+					turtle.placeUp(lib.slot)
 				end
 			end
-			api.checkForOre(tostring("back_true"))
+			lib.checkForOre(tostring("back_true"))
 			local tbl = {turtle.inspectDown()}
 			if tbl[2].name == "minecraft:bedrock" then
 				term.clear()
 				term.setCursorPos(1,1)
-				print("Found bedrock at", api.coords.y-1, "blocks deep,")
+				print("Found bedrock at", lib.coords.y-1, "blocks deep,")
 				print("returning to the surface!")
-				if api.hasWireless then
-					rednet.broadcast("Found bedrock at "..api.coords.y - 1 .." blocks deep,")
+				if lib.hasWireless then
+					rednet.broadcast("Found bedrock at "..lib.coords.y - 1 .." blocks deep,")
 					rednet.broadcast("returning to the surface!")
 				end
-				local y = start - api.coords.y
-				api.up(y)
-				if api.findJunk("minecraft:gravel") then
-					turtle.placeDown(api.slot)
+				local y = start - lib.coords.y
+				lib.up(y)
+				if lib.findJunk("minecraft:gravel") then
+					turtle.placeDown(lib.slot)
 				end
 				run = false
-			elseif start - depth == api.coords.y then
-				local y = start - api.coords.y
-				api.up(y)
-				if api.findJunk("minecraft:gravel") then
-					turtle.placeDown(api.slot)
+			elseif start - depth == lib.coords.y then
+				local y = start - lib.coords.y
+				lib.up(y)
+				if lib.findJunk("minecraft:gravel") then
+					turtle.placeDown(lib.slot)
 				end
 				run = false
 			end
 			if turtle.getItemCount(16) >= 1 then
-				api.dropJunk()
+				lib.dropJunk()
 			end
 		else
 			do return end
@@ -664,8 +664,8 @@ if type(tonumber(tArgs[1])) ~= "number" then
 	error("Define depth down! (Example: '10') [10 blocks down]")
 end
 
-local start = api.copyTable(api.coords)
-api.saveData("/.save", "/start_pos", start)
+local start = lib.copyTable(lib.coords)
+lib.saveData("/.save", "/start_pos", start)
 mineSquence(tonumber(tArgs[1]), start.y)
-api.moveTo(start.x, start.y, start.z)
+lib.moveTo(start.x, start.y, start.z)
 fs.delete("/.save")
