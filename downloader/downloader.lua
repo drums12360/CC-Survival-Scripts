@@ -32,7 +32,7 @@ local scriptsSA = {
 }
 
 local loader = {
-	"downloader.lua"
+	"downloader.lua",
 }
 
 function dlscript()
