@@ -5,7 +5,7 @@ local lib = {
 	d = 0,
 	hasWireless = false,
 	direction = {[0] = "north", [1] = "east", [2] = "south", [3] = "west"},
-	coords = {x = 0, y = 0,z = 0}
+	coords = {x = 0, y = 0,z = 0},
 	maxSlots = 16,
 	slot = 1,
 }
