@@ -4,7 +4,7 @@ local tools = require("toolsAPI")--]]
 local library = require("library/init")
 local tArgs = {...}
 
-local function mineSequence(steps, direction)
+local function mineSquence(steps, direction)
 	for i=1, steps do
 		if direction == "up" then
 			while turtle.detectUp() do
