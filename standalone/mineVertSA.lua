@@ -234,11 +234,11 @@ function lib.findJunk(exclude)
 			if isJunk then
 				turtle.select(i)
 				lib.slot = tonumber(i)
-				return true
+				return isJunk
 			end
 		end
 	end
-	return false
+	return isJunk
 end
 
 function lib.refuel()

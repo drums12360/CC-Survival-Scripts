@@ -139,11 +139,11 @@ function tools.findJunk(exclude)
 			if isJunk then
 				turtle.select(i)
 				tools.slot = tonumber(i)
-				return true
+				return isJunk
 			end
 		end
 	end
-	return false
+	return isJunk
 end
 
 return tools
