@@ -5,7 +5,7 @@ local tools = require("toolsAPI")
 local tArgs = {...}
 
 function mineSquence(width, height, depth, side)
-	local requiredFuelLevel = math.ceil(((height * width * depth) / 3) + (height * depth) + ((width * 2) + depth + height))
+	local requiredFuelLevel = math.ceil(((height * width * depth) / 3) + (height * depth) + (width + depth + height))
 	local currentFuelLevel = tonumber(turtle.getFuelLevel())
 	local rows = math.floor(height / 3)
 	local offset = height % 3
