@@ -36,12 +36,12 @@ local loader = {
 }
 
 function dlscript()
-	for index, filename in Pairs(library) do
-		local content = http.get(repUrl,"library/",filename).readAll()
+	for index, filename in ipairs(library) do
+		local content = http.get(repUrl.."library/"..filename).readAll()
 		if not content then
 			term.clear()
 			term.setCursorPos(1,1)
-			print("Could not connect to website ", repUrl,"library/",filename)
+			print("Could not connect to website ", repUrl.."library/"..filename)
 			failedLoads = failedLoads + 1
 			os.sleep(5)
 		else
@@ -55,12 +55,12 @@ function dlscript()
 			os.sleep(0.25)
 		end
 	end
-	for index, filename in Pairs(scripts) do
-		local content = http.get(repUrl,"scripts/",filename).readAll()
+	for index, filename in ipairs(scripts) do
+		local content = http.get(repUrl.."scripts/"..filename).readAll()
 		if not content then
 			term.clear()
 			term.setCursorPos(1,1)
-			print("Could not connect to website ", repUrl,"scripts/",filename)
+			print("Could not connect to website ", repUrl.."scripts/"..filename)
 			failedLoads = failedLoads + 1
 			os.sleep(5)
 		else
@@ -77,12 +77,12 @@ function dlscript()
 end
 
 function dlstandalone()
-	for index, filename in Pairs(scriptsSA) do
-		local content = http.get(repUrl,"standalone/",filename).readAll()
+	for index, filename in ipairs(scriptsSA) do
+		local content = http.get(repUrl.."standalone/"..filename).readAll()
 		if not content then
 			term.clear()
 			term.setCursorPos(1,1)
-			print("Could not connect to website ", repUrl,"standalone/",filename)
+			print("Could not connect to website ", repUrl.."standalone/"..filename)
 			failedLoads = failedLoads + 1
 			os.sleep(5)
 		else
@@ -99,12 +99,12 @@ function dlstandalone()
 end
 
 function dlloader(uptrue)
-	for index, filename in Pairs(loader) do
-		local content = http.get(repUrl,"downloader/",filename).readAll()
+	for index, filename in ipairs(loader) do
+		local content = http.get(repUrl.."downloader/"..filename).readAll()
 		if not content then
 			term.clear()
 			term.setCursorPos(1,1)
-			print("Could not connect to website ", repUrl,"scripts/",filename)
+			print("Could not connect to website ", repUrl.."scripts/"..filename)
 			failedLoads = failedLoads + 1
 			os.sleep(5)
 		else
