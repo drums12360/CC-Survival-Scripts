@@ -52,7 +52,7 @@ function mineSquence(width, height, depth, side)
 				if x % 2 == 0 then
 					move.down(3)
 					tools.dig("down")
-					tools.turnAround()
+					move.turnAround()
 				else
 					move.up(3)
 					tools.dig("up")
@@ -116,7 +116,7 @@ function mineSquence(width, height, depth, side)
 				if x % 2 == 0 then
 					move.down(3)
 					tools.dig("down")
-					tools.turnAround()
+					move.turnAround()
 				else
 					move.up(3)
 					tools.dig("up")
