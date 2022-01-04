@@ -3,44 +3,39 @@ local tArgs = {...}
 
 function mineSquence(depth, start)
 	for i=1, depth do
-		local run = true
-		if run then
-			library.move.down()
-			if start - 2 == library.data.coords.y then
-				if library.tools.findJunk("minecraft:gravel") then
-					turtle.placeUp(library.tools.slot)
-				end
+		library.move.down()
+		if start - 2 == library.data.coords.y then
+			if library.tools.findJunk("minecraft:gravel") then
+				turtle.placeUp(library.tools.slot)
 			end
-			library.dig.checkForOre(tostring("back_true"))
-			local tbl = {turtle.inspectDown()}
-			if tbl[2].name == "minecraft:bedrock" then
-				term.clear()
-				term.setCursorPos(1,1)
-				print("Found bedrock at "..library.data.coords.y.." blocks deep,")
-				print("returning to the surface!")
-				if library.data.hasWireless then
-					rednet.broadcast("Found bedrock at "..library.data.coords.y.." blocks deep,")
-					rednet.broadcast("returning to the surface!")
-				end
-				local y = start - library.data.coords.y
-				library.move.up(y)
-				if library.tools.findJunk("minecraft:gravel") then
-					turtle.placeDown(library.tools.slot)
-				end
-				run = false
-			elseif start - depth == library.data.coords.y then
-				local y = start - library.data.coords.y
-				library.move.up(y)
-				if library.tools.findJunk("minecraft:gravel") then
-					turtle.placeDown(library.tools.slot)
-				end
-				run = false
+		end
+		library.dig.checkForOre(tostring("back_true"))
+		local tbl = {turtle.inspectDown()}
+		if tbl[2].name == "minecraft:bedrock" then
+			term.clear()
+			term.setCursorPos(1,1)
+			print("Found bedrock at "..library.data.coords.y.." blocks deep,")
+			print("returning to the surface!")
+			if library.data.hasWireless then
+				rednet.broadcast("Found bedrock at "..library.data.coords.y.." blocks deep,")
+				rednet.broadcast("returning to the surface!")
 			end
-			if turtle.getItemCount(16) >= 1 then
-				library.tools.dropJunk()
+			local y = start - library.data.coords.y
+			library.move.up(y)
+			if library.tools.findJunk("minecraft:gravel") then
+				turtle.placeDown(library.tools.slot)
+				return
 			end
-		else
-			do return end
+		elseif start - depth == library.data.coords.y then
+			local y = start - library.data.coords.y
+			library.move.up(y)
+			if library.tools.findJunk("minecraft:gravel") then
+				turtle.placeDown(library.tools.slot)
+				return
+			end
+		end
+		if turtle.getItemCount(16) >= 1 then
+			library.tools.dropJunk()
 		end
 	end
 end

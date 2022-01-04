@@ -616,44 +616,39 @@ end
 
 function mineSquence(depth, start)
 	for i=1, depth do
-		local run = true
-		if run then
-			lib.down()
-			if start - 2 == lib.coords.y then
-				if lib.findJunk("minecraft:gravel") then
-					turtle.placeUp(lib.slot)
-				end
+		lib.down()
+		if start - 2 == lib.coords.y then
+			if lib.findJunk("minecraft:gravel") then
+				turtle.placeUp(lib.slot)
 			end
-			lib.checkForOre(tostring("back_true"))
-			local tbl = {turtle.inspectDown()}
-			if tbl[2].name == "minecraft:bedrock" then
-				term.clear()
-				term.setCursorPos(1,1)
-				print("Found bedrock at "..lib.coords.y.." blocks deep,")
-				print("returning to the surface!")
-				if lib.hasWireless then
-					rednet.broadcast("Found bedrock at "..lib.coords.y.." blocks deep,")
-					rednet.broadcast("returning to the surface!")
-				end
-				local y = start - lib.coords.y
-				lib.up(y)
-				if lib.findJunk("minecraft:gravel") then
-					turtle.placeDown(lib.slot)
-				end
-				run = false
-			elseif start - depth == lib.coords.y then
-				local y = start - lib.coords.y
-				lib.up(y)
-				if lib.findJunk("minecraft:gravel") then
-					turtle.placeDown(lib.slot)
-				end
-				run = false
+		end
+		lib.checkForOre(tostring("back_true"))
+		local tbl = {turtle.inspectDown()}
+		if tbl[2].name == "minecraft:bedrock" then
+			term.clear()
+			term.setCursorPos(1,1)
+			print("Found bedrock at "..lib.coords.y.." blocks deep,")
+			print("returning to the surface!")
+			if lib.hasWireless then
+				rednet.broadcast("Found bedrock at "..lib.coords.y.." blocks deep,")
+				rednet.broadcast("returning to the surface!")
 			end
-			if turtle.getItemCount(16) >= 1 then
-				lib.dropJunk()
+			local y = start - lib.coords.y
+			lib.up(y)
+			if lib.findJunk("minecraft:gravel") then
+				turtle.placeDown(lib.slot)
+				return
 			end
-		else
-			do return end
+		elseif start - depth == lib.coords.y then
+			local y = start - lib.coords.y
+			lib.up(y)
+			if lib.findJunk("minecraft:gravel") then
+				turtle.placeDown(lib.slot)
+				return
+			end
+		end
+		if turtle.getItemCount(16) >= 1 then
+			lib.dropJunk()
 		end
 	end
 end
