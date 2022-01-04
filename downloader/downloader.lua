@@ -108,7 +108,7 @@ function dlloader(uptrue)
 			failedLoads = failedLoads + 1
 			os.sleep(5)
 		else
-			if uptrue == no then
+			if uptrue == "no" then
 				fs.delete(filename)
 				file = fs.open(filename, "wb")
 				file.write(content)
@@ -151,7 +151,7 @@ function endstats()
 end
 
 function download(vers, uptrue)
-	if vers == auto or vers == nil then
+	if vers == "auto" or vers == "nil" then
 		term.clear()
 		term.setCursorPos(1,1)
  		print("Downloading / updating scripts with autoupdate!")
@@ -159,7 +159,7 @@ function download(vers, uptrue)
 		dlscript()
 		dlloader(uptrue)
 		endstats()
-	elseif vers == sa then
+	elseif vers == "sa" then
 		term.clear()
 		term.setCursorPos(1,1)
  		print("Downloading / updating standalone scripts!")
@@ -167,7 +167,7 @@ function download(vers, uptrue)
 		dlstandalone()
 		dlloader()
 		endstats()
-	elseif vers == all then
+	elseif vers == "all" then
 		term.clear()
 		term.setCursorPos(1,1)
 		if uptrue == no then
