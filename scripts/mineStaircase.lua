@@ -13,8 +13,8 @@ local function mineSquence(steps, direction)
 			library.move.forward()
 			library.move.up()
 		elseif direction == "down" then
-			while turtle.detectUp() do
-				library.tools.dig("up")
+			while turtle.detectDown() do
+				library.tools.dig("down")
 			end
 			library.move.forward()
 			library.move.down()
@@ -22,7 +22,7 @@ local function mineSquence(steps, direction)
 	end
 end
 
-if type(tonumber(tArgs[1])) ~= "number" or type(tostring(tArgs[1])) ~= "string" then
+if type(tonumber(tArgs[1])) ~= "number" or type(tostring(tArgs[1])) ~= "up" or type(tostring(tArgs[1])) ~= "down" then
 	term.clear()
 	term.setCursorPos(1,1)
 	error("Define step amount and direction! (Example: '10 up') [10 steps, upwards]")
