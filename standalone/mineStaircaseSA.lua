@@ -462,7 +462,7 @@ local function mineSquence(steps, direction)
 			end
 			library.move.forward()
 			library.move.down()
-		endmin
+		end
 	end
 end
 
