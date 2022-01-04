@@ -1,5 +1,5 @@
-local data = require(".library/dataAPI")
-local move = require(".library/moveAPI")
+local data = require("library/dataAPI")
+local move = require("library/moveAPI")
 
 local storage = {
 
