@@ -5,11 +5,11 @@ local repUrl = "https://raw.githubusercontent.com/Keigun-Spark/CC-Survival-Scrip
 
 local library = {
 	"init.lua",
-	"dataAPI.lua",
-	"toolsAPI.lua",
-	"moveAPI.lua",
-	"storageAPI.lua",
-	"digAPI.lua",
+	"dataLib.lua",
+	"toolsLib.lua",
+	"moveLib.lua",
+	"storageLib.lua",
+	"digLib.lua",
 }
 
 local scripts = {
