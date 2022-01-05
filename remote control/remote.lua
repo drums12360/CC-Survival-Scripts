@@ -129,16 +129,32 @@ function alias(alias)
 	return false
 end
 
----@param id number the id#/alias we wish to connect to
-function connect(id)
-	if type(id) == "string" then
-		_,id = alias(id)
+function sendCommand(com)
+	local comList = {
+		"forward",
+		"back",
+		"turnLeft",
+		"turnRight",
+		"up",
+		"down",
+		"dig",
+		"digUp",
+		"digDown",
+		"place",
+		"placeUp",
+		"placeDown",
+	}
+	for i = 1, #comList do
+		if com == comList[i] then
+			rednet.send(currentID, com)
+			local response = waitForResponse(currentID)
+			if response ~= standardReplys.done then
+				print(response)
+			end
+			return
+		end
 	end
-	rednet.send(id, "connect")
-	local response = waitForResponse(id)
-	if response == standardReplys.done then
-		currentID = id
-	end
+	printError("Not a command")
 end
 
 function disconnect()
@@ -149,13 +165,48 @@ function disconnect()
 	end
 end
 
-local converter = {
-	["connect"] = connect,
-	["help"] = help,
-	["clear"] = clear
-}
+---@param id number the id#/alias we wish to connect to
+function connect(id)
+	local converter = {
+		["help"] = help,
+		["clear"] = clear,
+		["turtle"] = sendCommand,
+	}
+	if type(id) == "string" then
+		_,id = alias(id)
+	end
+	rednet.send(id, "connect")
+	local response = waitForResponse(id)
+	if response == standardReplys.done then
+		currentID = id
+	end
+	while true do
+		term.write(tostring(currentID).."> ")
+		local command = read()
+		if command == "" then
+			command = nil
+			print("nil")
+		end
+		if command then
+			command = parse(command)
+			if command[1] == "exit" or "disconnect" then
+				disconnect()
+				return
+			elseif command[2] then
+				pcall(converter[command[1]],command[2])
+			else
+				pcall(converter[command[1]])
+			end
+		end
+	end
+end
 
 while true do
+	local converter = {
+		["connect"] = connect,
+		["help"] = help,
+		["clear"] = clear
+	}
 	term.write("> ")
 	local command = read()
 	if command == "" then
@@ -164,13 +215,15 @@ while true do
 	end
 	if command then
 		command = parse(command)
+		if command[2] then
+			pcall(converter[command[1]],command[2])
+		
+		else
+			pcall(converter[command[1]])
+		end
 		if command[1] == "exit" then
 			rednet.close()
 			os.queueEvent("terminate")
-		elseif command[2] then
-			pcall(converter[command[1]],command[2])
-		else
-			pcall(converter[command[1]])
 		end
 	end
 end

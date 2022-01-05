@@ -13,6 +13,23 @@ local reply = {
 	ready = "ready",
 	running = "running",
 }
+
+function getAlias()
+	
+end
+
+function setAlias()
+	
+end
+
+function connect()
+
+end
+
+function disconnect()
+	
+end
+
 local converter = {
 	["forward"] = turtle.forward,
 	["back"] = turtle.backward,
@@ -33,17 +50,19 @@ local converter = {
 	["status"] = status,
 }
 
-function getAlias()
-	
-end
-
-function setAlias()
-	
-end
-
 while true do
 	local id,command = rednet.receive()
 	print(command)
-	-- converter[command]()
-	rednet.send(id,"done")
+	if command == "connect" then
+		controllerID = id
+		connect()
+		rednet.send(controllerID, reply.done)
+	else
+		local success,err = converter[command]()
+		if success then
+			rednet.send(controllerID,"done")
+		else
+			rednet.send(controllerID,err)
+		end
+	end
 end
