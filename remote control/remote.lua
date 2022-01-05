@@ -30,9 +30,13 @@ function saveData(dir, file, tbl)
 	end
 	local handle = fs.open(dir..file, "w")
 	tbl = textutils.unserialise(tbl)
-
 end
 
+
+---@param dir string
+---@param file string
+---@return boolean|table
+--Returns a table or false
 function loadData(dir, file)
 	if fs.exists(dir..file) then
 		local handle = fs.open(dir..file, "r")
@@ -40,8 +44,11 @@ function loadData(dir, file)
 		tbl = textutils.serialise(tbl)
 		return tbl
 	end
+	return false
 end
 
+---@param str string
+---@return table tbl
 function parse(str)
 	local tbl = {}
 	for word in string.gmatch(str, "([^ ]+)") do
