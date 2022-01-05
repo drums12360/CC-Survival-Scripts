@@ -1,10 +1,5 @@
 --[[
 This program controls the program turtle.lua via the rednet API
-
-things to put in program
-	help function
-	connect to mutliple sources
-	corroutine for receiving confirmation of connection with timeout
 ]]
 if peripheral.find("modem") then
 	peripheral.find("modem", rednet.open)
@@ -65,7 +60,7 @@ function status()
 			rednet.send(currentID,"status")
 			repeat
 				local id,status = rednet.receive(nil,2)
-				if nil == id or status then
+				if not id or not status then
 					disconnect()
 					currentID = nil
 					print("Disconnected")
@@ -75,15 +70,18 @@ function status()
 			until id == currentID
 		end
 		print(currentStatus)
+		sleep(2)
 	end
 end
 
 function waitForResponse(id)
 	local rID,response
-	repeat
+	for i=1,3 do
 		rID,response = rednet.receive(nil,2)
-	until rID == id
-	return response
+		if rID == id then
+			return response
+		end
+	end
 end
 
 function help()
@@ -108,9 +106,7 @@ end
 function getAlias(id)
 	rednet.send(id, "getAlias")
 	local msg = waitForResponse(id)
-	if type(msg) == "table" then
-		aliases[msg[1]] = id
-	end
+	aliases[msg] = id
 end
 
 ---@return boolean, number id
@@ -155,7 +151,7 @@ while true do
 		command = parse(command)
 		if command[1] == "exit" then
 			rednet.close()
-			return
+			os.queueEvent("terminate")
 		else
 			command[1](command[2])
 		end
