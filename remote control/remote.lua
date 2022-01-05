@@ -18,6 +18,7 @@ local standardReplys = {
 local converter = {
 	["connect"] = connect,
 	["help"] = help,
+	["clear"] = clear
 }
 
 function saveData(dir, file, tbl)
@@ -91,9 +92,15 @@ function waitForResponse(id)
 	end
 end
 
+function clear()
+	term.clear()
+	term.setCursorPos(1,1)
+end
+
 function help()
 	print("connect id/name")
 	print("exit")
+	print("clear")
 end
 
 ---@param id number
