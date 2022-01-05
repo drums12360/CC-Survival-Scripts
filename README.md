@@ -1,4 +1,4 @@
-# CC-Survival-Scripts
+# CC-Survival-Scripts-Clone
 
 Stuff for the [CC:Tweaked](https://www.curseforge.com/minecraft/mc-mods/cc-tweaked) mod
 
