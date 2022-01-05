@@ -160,7 +160,7 @@ while true do
 			rednet.close()
 			os.queueEvent("terminate")
 		else
-			command[1](command[2])
+			converter[command[1]](command[2])
 		end
 	end
 end
