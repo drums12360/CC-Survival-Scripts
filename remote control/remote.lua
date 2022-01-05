@@ -15,11 +15,6 @@ local standardReplys = {
 	running = "running",
 	done = "done",
 }
-local converter = {
-	["connect"] = connect,
-	["help"] = help,
-	["clear"] = clear
-}
 
 function saveData(dir, file, tbl)
 	if type(tbl) ~= "table" then
@@ -154,6 +149,12 @@ function disconnect()
 	end
 end
 
+local converter = {
+	["connect"] = connect,
+	["help"] = help,
+	["clear"] = clear
+}
+
 while true do
 	term.write("> ")
 	local command = read()
@@ -166,8 +167,10 @@ while true do
 		if command[1] == "exit" then
 			rednet.close()
 			os.queueEvent("terminate")
+		elseif command[2] then
+			pcall(converter[command[1]],command[2])
 		else
-			converter[command[1]](command[2])
+			pcall(converter[command[1]])
 		end
 	end
 end

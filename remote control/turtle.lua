@@ -43,6 +43,7 @@ end
 
 while true do
 	local id,command = rednet.receive()
-	converter[command]()
+	print(command)
+	-- converter[command]()
 	rednet.send(id,"done")
 end
