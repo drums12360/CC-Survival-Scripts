@@ -1,7 +1,7 @@
 local tArgs = {...}
 
 function refuel(secs, repl)
-	if repl == replace then
+	if repl == "replace" then
 		fs.move("refuelSA.lua", "refuel.lua")
 		term.clear()
 		term.setCursorPos(1,1)

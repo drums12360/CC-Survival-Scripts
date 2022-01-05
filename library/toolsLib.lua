@@ -126,10 +126,10 @@ function tools.findJunk(exclude)
 	if exclude == nil then
 		exclude = "nothing"
 	end
+	local isJunk = false
 	for i=1, tools.maxSlots do
 		if turtle.getItemCount(i) ~= 0 then
 			local item = turtle.getItemDetail(i).name
-			local isJunk = false
 			for index, value in ipairs(junkList) do
 				if item == value and item ~= exclude then
 					isJunk = true

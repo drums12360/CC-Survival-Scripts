@@ -458,10 +458,10 @@ local function mineSquence(steps, direction)
 			lib.up()
 		elseif direction == "down" then
 			while turtle.detectDown() do
-				library.tools.dig("down")
+				lib.dig("down")
 			end
-			library.move.forward()
-			library.move.down()
+			lib.forward()
+			lib.down()
 		end
 	end
 end
