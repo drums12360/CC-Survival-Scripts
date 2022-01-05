@@ -5,11 +5,11 @@ local repUrl = "https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts
 
 local library = {
 	"init.lua",
-	"dataAPI.lua",
-	"toolsAPI.lua",
-	"moveAPI.lua",
-	"storageAPI.lua",
-	"digAPI.lua",
+	"dataLib.lua",
+	"toolsLib.lua",
+	"moveLib.lua",
+	"storageLib.lua",
+	"digLib.lua",
 }
 
 local scripts = {
