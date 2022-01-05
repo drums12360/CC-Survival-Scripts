@@ -1,4 +1,4 @@
-local library = require("library/init")
+local library = require("library")
 local tArgs = {...}
 
 function mineSquence(amount)
