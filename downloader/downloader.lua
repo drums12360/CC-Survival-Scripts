@@ -172,7 +172,7 @@ function download(vers, uptrue)
 	elseif vers == "all" then
 		term.clear()
 		term.setCursorPos(1,1)
-		if uptrue == no then
+		if uptrue == "no" then
  			print("Downloading / updating normal scripts and standalone scripts!")
 		else
 			print("Downloading / updating normal scripts and standalone scripts with autoupdate!")
