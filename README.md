@@ -9,6 +9,22 @@ Downloader CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Su
 
 Refuel CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/standalone/refuelSA.lua`
 
+## Remote Control v0.1.5
+
+File names are subject to change
+
+### Features
+
+- Turtle remembers current Controller ID for security purposes
+- History and Auto Complete
+- Works with ender modems if desired
+
+### Files
+
+| File | Description |
+| --- | --- |
+| remote.lua | As the file name implies it controls the other script via the rednet api |
+| turtle.lua | Controlled by the remote via the rednet api |
 
 ## Libraries with description 
 
