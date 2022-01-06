@@ -26,4 +26,4 @@ File names are subject to change
 | File | Description |
 | --- | --- |
 | remote.lua | As the file name implies it controls the other script via the rednet api |
-| turtle.lua | Controled by the remote via the rednet api |
+| turtle.lua | Controlled by the remote via the rednet api |
