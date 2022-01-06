@@ -20,7 +20,7 @@ local reply = {
 	running = "running",
 }
 
-function parse(str)
+local function parse(str)
 	local tbl = {}
 	for word in string.gmatch(str, "([^ ]+)") do
 		word = tonumber(word) or word
@@ -32,14 +32,14 @@ function parse(str)
 	return tbl
 end
 
-function setAlias(name)
+local function setAlias(name)
 	if name == "nil" then name = nil end
 	os.setComputerLabel(name)
 	alias = name
 	return true
 end
 
-function getAlias()
+local function getAlias()
 	local name = nil
 	if not alias then
 		name = "nil"
@@ -50,11 +50,11 @@ function getAlias()
 	return true
 end
 
-function status()
+local function status()
 	
 end
 
-function disconnect()
+local function disconnect()
 	rednet.send(controllerID, reply.done)
 	controllerID = nil
 end
@@ -77,7 +77,7 @@ local converter = {
 	["status"] = status,
 }
 
-function connect()
+local function connect()
 	local id,command
 	rednet.send(controllerID, reply.done)
 	while true do

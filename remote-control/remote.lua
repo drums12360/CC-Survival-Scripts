@@ -20,7 +20,7 @@ local standardReplys = {
 	done = "done",
 }
 
-function saveData(dir, file, tbl)
+local function saveData(dir, file, tbl)
 	if type(tbl) ~= "table" then
 		print("Wrong data type")
 		return
@@ -32,7 +32,7 @@ function saveData(dir, file, tbl)
 	tbl = textutils.unserialise(tbl)
 end
 
-function loadData(dir, file)
+local function loadData(dir, file)
 	if fs.exists(dir..file) then
 		local handle = fs.open(dir..file, "r")
 		local tbl = handle.readAll()
@@ -42,7 +42,7 @@ function loadData(dir, file)
 	return false
 end
 
-function parse(str)
+local function parse(str)
 	local tbl = {}
 	for word in string.gmatch(str, "([^ ]+)") do
 		word = tonumber(word) or word
@@ -54,7 +54,7 @@ function parse(str)
 	return tbl
 end
 
-function status()
+local function status()
 	while true do
 		if currentID then
 			rednet.send(currentID,"status")
@@ -73,7 +73,7 @@ function status()
 	end
 end
 
-function waitForResponse(id)
+local function waitForResponse(id)
 	local rID,response
 	for i=1,3 do
 		rID,response = rednet.receive(nil,2)
@@ -83,18 +83,18 @@ function waitForResponse(id)
 	end
 end
 
-function clear()
+local function clear()
 	term.clear()
 	term.setCursorPos(1,1)
 end
 
-function help()
+local function help()
 	print("connect id/name")
 	print("exit")
 	print("clear")
 end
 
-function setAlias(name)
+local function setAlias(name)
 	rednet.send(currentID, "setAlias "..name)
 	local recipt = waitForResponse(currentID)
 	if recipt ~= standardReplys.done then
@@ -103,7 +103,7 @@ function setAlias(name)
 	aliases[name] = currentID
 end
 
-function getAlias()
+local function getAlias()
 	rednet.send(currentID, "getAlias")
 	local msg = waitForResponse(currentID)
 	if msg == "nil" then
@@ -114,7 +114,7 @@ function getAlias()
 	return msg
 end
 
-function alias(alias)
+local function alias(alias)
 	for k,v in pairs(aliases) do
 		if alias == k then
 			local id = v
@@ -124,7 +124,7 @@ function alias(alias)
 	return false
 end
 
-function sendCommand(com)
+local function sendCommand(com)
 	local comList = {
 		"forward",
 		"back",
@@ -152,7 +152,7 @@ function sendCommand(com)
 	printError("Not a command")
 end
 
-function disconnect()
+local function disconnect()
 	rednet.send(currentID,"disconnect")
 	local response = waitForResponse(currentID)
 	if response == standardReplys.done then
@@ -160,7 +160,7 @@ function disconnect()
 	end
 end
 
-function connect(id)
+local function connect(id)
 	local hCommand = {}
 	local commandList = {
 		"clear",
