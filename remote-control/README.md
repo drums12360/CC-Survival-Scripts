@@ -13,7 +13,7 @@ File names are subject to change
 | `disconnect` | Can only be used while connected to a turtle. Close the Rednet connection to the turtle. |
 | `turtle` | Can only be used while connected to a turtle. Controls the turtle's movement and whether to dig or place blocks. |
 | `getAlias` | Can only be used while connected to a turtle. Gets the `label` and uses it as the alias. |
-| `setAlias` | Can only be used while connected to a turtle. Sets the `label` and uses it as the alias. |
+| `setAlias <name/nil>` | Can only be used while connected to a turtle. Sets the `label` and uses it as the alias. |
 
 ## Files
 
