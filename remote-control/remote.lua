@@ -2,8 +2,7 @@
 This program controls the program turtle.lua via the rednet API
 
 todo:
-stop using pcall
-status update corroutine on connect and end on disconnect
+start status update corroutine on connect and end on disconnect
 ]]
 local complete = require("cc.completion")
 if peripheral.find("modem") then
@@ -194,7 +193,7 @@ function connect(id)
 		else
 			term.write(tostring(currentID).."> ")
 		end
-		local command = read(nil,hCommand,function(text) return complete.choice(text,commandList) end)
+		local command = read(nil,hCommand,function(text) if text ~= "" then return complete.choice(text,commandList) end end)
 		if command == "" then
 			command = nil
 			print("nil")
@@ -232,7 +231,7 @@ while true do
 		"help",
 	}
 	term.write("> ")
-	local command = read(nil,hConnect,function(text) return complete.choice(text,commandList) end)
+	local command = read(nil,hConnect,function(text) if text ~= "" then return complete.choice(text,commandList) end end)
 	if command == "" then
 		command = nil
 		print("nil")
