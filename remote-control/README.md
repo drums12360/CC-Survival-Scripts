@@ -1,6 +1,8 @@
 # Remote Control v0.1.5
 
-File names are subject to change
+Remote CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/remote-control/remote.lua`
+
+Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/remote-control/turtle.lua`
 
 ## Features
 
@@ -22,6 +24,8 @@ File names are subject to change
 | `setAlias <name/nil>` | Can only be used while connected to a turtle. Sets the `label` and uses it as the alias. |
 
 ## Files
+
+File names are subject to change
 
 | File | Description |
 | --- | --- |
