@@ -21,6 +21,18 @@ local reply = {
 	running = "running",
 }
 
+function parse(str)
+	local tbl = {}
+	for word in string.gmatch(str, "([^ ]+)") do
+		word = tonumber(word) or word
+		if word == "true" or word == "false" then
+			word = textutils.unserialise(word)
+		end
+		table.insert(tbl,word)
+	end
+	return tbl
+end
+
 function setAlias(name)
 	if name == "nil" then name = nil end
 	os.setComputerLabel(name)
@@ -73,11 +85,17 @@ function connect()
 		id,command = rednet.receive()
 		if controllerID == id then
 			print(command)
-			if command == "disconnect" then
+			command = parse(command)
+			if command[1] == "disconnect" then
 				disconnect()
 				return
-			elseif converter[command] then
-				local success,err = converter[command]()
+			elseif converter[command[1]] then
+				local success,err = nil,nil
+				if #command > 1 then
+					success,err = converter[command[1]](command[2])
+				else
+					success,err = converter[command[1]]()
+				end
 				if success then
 					rednet.send(controllerID,"done")
 				else

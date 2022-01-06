@@ -5,6 +5,7 @@ todo:
 stop using pcall
 status update corroutine on connect and end on disconnect
 ]]
+local complete = require("cc.completion")
 if peripheral.find("modem") then
 	peripheral.find("modem", rednet.open)
 else
@@ -62,7 +63,6 @@ function status()
 				local id,status = rednet.receive(nil,2)
 				if not id or not status then
 					disconnect()
-					currentID = nil
 					print("Disconnected")
 					return
 				end
@@ -162,9 +162,21 @@ function disconnect()
 end
 
 function connect(id)
+	local hCommand = {}
+	local commandList = {
+		"clear",
+		"disconnect",
+		"getAlias",
+		"help",
+		"setAlias",
+		"turtle ",
+	}
 	local converter = {
-		["help"] = help,
 		["clear"] = clear,
+		["disconnect"] = disconnect,
+		["getAlias"] = getAlias,
+		["help"] = help,
+		["setAlias"] = setAlias,
 		["turtle"] = sendCommand,
 	}
 	if type(id) == "string" then
@@ -176,31 +188,37 @@ function connect(id)
 		currentID = id
 	end
 	local name = getAlias()
-	while true do
+	while currentID do
 		if name then
 			term.write(name.."> ")
 		else
 			term.write(tostring(currentID).."> ")
 		end
-		
-		local command = read()
+		local command = read(nil,hCommand,function(text) return complete.choice(text,commandList) end)
 		if command == "" then
 			command = nil
 			print("nil")
 		end
+		if hCommand[#hCommand] ~= command and command then
+			table.insert(hCommand,command)
+		end
 		if command then
 			command = parse(command)
-			if command[1] == "exit" or command[1] == "disconnect" then
+			if command[1] == "exit" then
 				disconnect()
-				return
-			elseif command[2] then
-				pcall(converter[command[1]],command[2])
-			else
-				pcall(converter[command[1]])
+				return true
+			elseif converter[command[1]] then
+				if #command > 1 then
+					converter[command[1]](command[2])
+				else
+					converter[command[1]]()
+				end
 			end
 		end
 	end
 end
+
+local hConnect = {}
 
 while true do
 	local converter = {
@@ -208,22 +226,36 @@ while true do
 		["help"] = help,
 		["clear"] = clear
 	}
+	local commandList = {
+		"clear",
+		"connect ",
+		"help",
+	}
 	term.write("> ")
-	local command = read()
+	local command = read(nil,hConnect,function(text) return complete.choice(text,commandList) end)
 	if command == "" then
 		command = nil
 		print("nil")
+	end
+	if hConnect[#hConnect] ~= command and command then
+		table.insert(hConnect,command)
 	end
 	if command then
 		command = parse(command)
 		if command[1] == "exit" then
 			rednet.close()
-			break
-		elseif command[2] then
-			pcall(converter[command[1]],command[2])
-		else
-			pcall(converter[command[1]])
+			return
+		elseif converter[command[1]] then
+			local exit
+			if #command > 1 then
+				exit = converter[command[1]](command[2])
+			else
+				exit = converter[command[1]]()
+			end
+			if exit then
+				rednet.close()
+				return
+			end
 		end
-
 	end
 end
