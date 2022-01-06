@@ -54,25 +54,6 @@ local function parse(str)
 	return tbl
 end
 
-local function status()
-	while true do
-		if currentID then
-			rednet.send(currentID,"status")
-			repeat
-				local id,status = rednet.receive(nil,2)
-				if not id or not status then
-					disconnect()
-					print("Disconnected")
-					return
-				end
-				currentStatus = status
-			until id == currentID
-		end
-		print(currentStatus)
-		sleep(2)
-	end
-end
-
 local function waitForResponse(id)
 	local rID,response
 	for i=1,3 do
@@ -101,6 +82,7 @@ local function setAlias(name)
 		return
 	end
 	aliases[name] = currentID
+	saveData("/.save", "/aliases", aliases)
 end
 
 local function getAlias()
@@ -110,13 +92,14 @@ local function getAlias()
 		msg = nil
 	else
 		aliases[msg] = currentID
+		saveData("/.save", "/aliases", aliases)
 	end
 	return msg
 end
 
-local function alias(alias)
+local function alias(name)
 	for k,v in pairs(aliases) do
-		if alias == k then
+		if name == k then
 			local id = v
 			return true, id
 		end
@@ -157,6 +140,25 @@ local function disconnect()
 	local response = waitForResponse(currentID)
 	if response == standardReplys.done then
 		currentID = nil
+	end
+end
+
+local function status()
+	while true do
+		if currentID then
+			rednet.send(currentID,"status")
+			repeat
+				local id,msg = rednet.receive(nil,2)
+				if not id or not msg then
+					disconnect()
+					print("Disconnected")
+					return
+				end
+				currentStatus = status
+			until id == currentID
+		end
+		print(currentStatus)
+		sleep(2)
 	end
 end
 
@@ -218,6 +220,8 @@ local function connect(id)
 end
 
 local hConnect = {}
+
+aliases = loadData("/.save", "/aliases")
 
 while true do
 	local converter = {
