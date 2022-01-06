@@ -7,7 +7,7 @@ status update corroutine start on connect and end on disconect
 if peripheral.find("modem") then
 	peripheral.find("modem", rednet.open)
 else
-	return
+	error("Modem not found.",0)
 end
 local controllerID = nil
 local turtleID = os.getComputerID()

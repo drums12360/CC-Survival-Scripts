@@ -8,7 +8,7 @@ local complete = require("cc.completion")
 if peripheral.find("modem") then
 	peripheral.find("modem", rednet.open)
 else
-	return
+	error("Modem not found.",0)
 end
 local currentID = nil
 local currentStatus = nil
