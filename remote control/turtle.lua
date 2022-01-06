@@ -25,7 +25,6 @@ function setAlias(name)
 	if name == "nil" then name = nil end
 	os.setComputerLabel(name)
 	alias = name
-	rednet.send(controllerID, alias)
 	return true
 end
 
@@ -36,7 +35,7 @@ function getAlias()
 	else
 		name = alias
 	end
-
+	rednet.send(controllerID, name)
 	return true
 end
 
@@ -45,8 +44,8 @@ function status()
 end
 
 function disconnect()
+	rednet.send(controllerID, reply.done)
 	controllerID = nil
-	return true
 end
 
 local converter = {
@@ -64,18 +63,20 @@ local converter = {
 	["placeDown"] = turtle.placeDown,
 	["getAlias"] = getAlias,
 	["setAlias"] = setAlias,
-	["disconnect"] = disconnect,
 	["status"] = status,
 }
 
 function connect()
 	local id,command = nil,nil
 	rednet.send(controllerID, reply.done)
-	while command ~= "disconnect" do
-		id,command = rednet.receive(nil,5)
+	while true do
+		id,command = rednet.receive()
 		if controllerID == id then
 			print(command)
-			if converter[command] then
+			if command == "disconnect" then
+				disconnect()
+				return
+			elseif converter[command] then
 				local success,err = converter[command]()
 				if success then
 					rednet.send(controllerID,"done")

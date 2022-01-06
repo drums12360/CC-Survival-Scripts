@@ -96,18 +96,22 @@ function help()
 end
 
 function setAlias(name)
-	aliases[name] = currentID
 	rednet.send(currentID, "setAlias "..name)
 	local recipt = waitForResponse(currentID)
 	if recipt ~= standardReplys.done then
-		return setAlias(name)
+		return
 	end
+	aliases[name] = currentID
 end
 
 function getAlias()
 	rednet.send(currentID, "getAlias")
 	local msg = waitForResponse(currentID)
-	aliases[msg] = currentID
+	if msg == "nil" then
+		msg = nil
+	else
+		aliases[msg] = currentID
+	end
 	return msg
 end
 
@@ -171,9 +175,14 @@ function connect(id)
 	if response == standardReplys.done then
 		currentID = id
 	end
-	 name = getAlias()
+	local name = getAlias()
 	while true do
-		term.write(name or tostring(currentID).."> ")
+		if name then
+			term.write(name.."> ")
+		else
+			term.write(tostring(currentID).."> ")
+		end
+		
 		local command = read()
 		if command == "" then
 			command = nil
@@ -181,7 +190,7 @@ function connect(id)
 		end
 		if command then
 			command = parse(command)
-			if command[1] == "exit" or "disconnect" then
+			if command[1] == "exit" or command[1] == "disconnect" then
 				disconnect()
 				return
 			elseif command[2] then
