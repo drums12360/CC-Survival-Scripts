@@ -11,8 +11,6 @@ Refuel CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Surviv
 
 ## Remote Control v0.1.5
 
-File names are subject to change
-
 ### Features
 
 - Turtle remembers current Controller ID for security purposes
@@ -20,6 +18,8 @@ File names are subject to change
 - Works with ender modems if desired
 
 ### Files
+
+File names are subject to change
 
 | File | Description |
 | --- | --- |
