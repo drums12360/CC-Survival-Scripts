@@ -2,7 +2,6 @@
 this program is controlled by remote.lua
 
 todo:
-check for one connection at a time
 status update corroutine start on connect and end on disconect
 ]]
 if peripheral.find("modem") then
@@ -79,7 +78,7 @@ local converter = {
 }
 
 function connect()
-	local id,command = nil,nil
+	local id,command
 	rednet.send(controllerID, reply.done)
 	while true do
 		id,command = rednet.receive()
