@@ -2,12 +2,12 @@
 
 Stuff for the [CC:Tweaked](https://www.curseforge.com/minecraft/mc-mods/cc-tweaked) mod
 
-Downloader CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/downloader/downloader.lua`
+Downloader CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/downloader/downloader.lua`
 | File Name | Description | Usage |
 | ----------- | ----------- | ----------- |
 | downloader.lua | Downloads all normal scripts and/or standalone scripts | `downloader <version> <no auto updater>` Executing without variables given will result in normal scripts and active auto updater. For standalone scripts use `sa`. For normal and standalone scripts use `all`. For normal or all scripts without auto updater write `auto no` or `all no`|
 
-Refuel CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/standalone/refuelSA.lua`
+Refuel CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/standalone/refuelSA.lua`
 
 
 ## Libraries with description 
