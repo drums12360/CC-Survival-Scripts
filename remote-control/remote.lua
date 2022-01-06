@@ -165,9 +165,9 @@ function connect(id)
 	local commandList = {
 		"clear",
 		"disconnect",
-		"getAlias",
+		"getAlias ",
 		"help",
-		"setAlias",
+		"setAlias ",
 		"turtle ",
 	}
 	local converter = {
