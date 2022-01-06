@@ -90,7 +90,7 @@ function connect()
 				disconnect()
 				return
 			elseif converter[command[1]] then
-				local success,err = nil,nil
+				local success,err
 				if #command > 1 then
 					success,err = converter[command[1]](command[2])
 				else
