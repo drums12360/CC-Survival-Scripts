@@ -42,4 +42,4 @@ Refuel CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Surviv
 | mineVertSA.lua | Digs in a straight line down untill finds ore then vein mines it, block off hole while mining | `mineVertSA <depth>` |
 | stripMineSA.lua | Digs in a straight line untill it finds ore then vein mines it | `stripMineSA <depth>` |
 | stripTunnelSA.lua | Classical two block heigh stripmine without torches and vein mine on the lower block | `stripTunnelSA <Shaft_Amount> <Shaft_Width> <Shaft_Distance>` How far in, how long each shaft is and the distance between them, recommended `3`.|
-| refuelSA.lua | Custom refuel script which lets you manually refuel for x amount of time | `refuelSA <time_inSeconds> <replace_original>` If no time is given, default is 120 seconds. If yo uwant to replace the default script write `replace` |
+| refuelSA.lua | Custom refuel script which lets you manually refuel for x amount of time | `refuelSA <time_inSeconds> <replace_original>` If no time is given, default is 120 seconds. If you want to replace the default script write `replace` |
