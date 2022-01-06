@@ -1,3 +1,10 @@
+--[[
+this program is controlled by remote.lua
+
+todo:
+check for one connection at a time
+status update corroutine start on connect and end on disconect
+]]
 if peripheral.find("modem") then
 	peripheral.find("modem", rednet.open)
 else
@@ -14,20 +21,32 @@ local reply = {
 	running = "running",
 }
 
+function setAlias(name)
+	if name == "nil" then name = nil end
+	os.setComputerLabel(name)
+	alias = name
+	rednet.send(controllerID, alias)
+	return true
+end
+
 function getAlias()
-	
+	local name = nil
+	if not alias then
+		name = "nil"
+	else
+		name = alias
+	end
+
+	return true
 end
 
-function setAlias()
+function status()
 	
-end
-
-function connect()
-
 end
 
 function disconnect()
-	
+	controllerID = nil
+	return true
 end
 
 local converter = {
@@ -45,10 +64,30 @@ local converter = {
 	["placeDown"] = turtle.placeDown,
 	["getAlias"] = getAlias,
 	["setAlias"] = setAlias,
-	["connect"] = connect,
 	["disconnect"] = disconnect,
 	["status"] = status,
 }
+
+function connect()
+	local id,command = nil,nil
+	rednet.send(controllerID, reply.done)
+	while command ~= "disconnect" do
+		id,command = rednet.receive(nil,5)
+		if controllerID == id then
+			print(command)
+			if converter[command] then
+				local success,err = converter[command]()
+				if success then
+					rednet.send(controllerID,"done")
+				else
+					rednet.send(controllerID,err)
+				end
+			end
+		else
+			rednet.send(id,reply.busy)
+		end
+	end
+end
 
 while true do
 	local id,command = rednet.receive()
@@ -56,13 +95,5 @@ while true do
 	if command == "connect" then
 		controllerID = id
 		connect()
-		rednet.send(controllerID, reply.done)
-	else
-		local success,err = converter[command]()
-		if success then
-			rednet.send(controllerID,"done")
-		else
-			rednet.send(controllerID,err)
-		end
 	end
 end

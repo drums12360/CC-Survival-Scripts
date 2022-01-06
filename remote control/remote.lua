@@ -1,5 +1,9 @@
 --[[
 This program controls the program turtle.lua via the rednet API
+
+todo:
+stop using pcall
+status update corroutine on connect and end on disconnect
 ]]
 if peripheral.find("modem") then
 	peripheral.find("modem", rednet.open)
@@ -28,11 +32,6 @@ function saveData(dir, file, tbl)
 	tbl = textutils.unserialise(tbl)
 end
 
-
----@param dir string
----@param file string
----@return boolean|table
---Returns a table or false
 function loadData(dir, file)
 	if fs.exists(dir..file) then
 		local handle = fs.open(dir..file, "r")
@@ -43,8 +42,6 @@ function loadData(dir, file)
 	return false
 end
 
----@param str string
----@return table tbl
 function parse(str)
 	local tbl = {}
 	for word in string.gmatch(str, "([^ ]+)") do
@@ -98,27 +95,22 @@ function help()
 	print("clear")
 end
 
----@param id number
----@param alias string
-function setAlias(id, alias)
-	aliases[alias] = id
-	rednet.send(id, "setAlias")
-	rednet.send(id, alias)
-	local recipt = waitForResponse(id)
+function setAlias(name)
+	aliases[name] = currentID
+	rednet.send(currentID, "setAlias "..name)
+	local recipt = waitForResponse(currentID)
 	if recipt ~= standardReplys.done then
-		return setAlias(id, alias)
+		return setAlias(name)
 	end
 end
 
--- Gets the alias aka label from remote
----@param id number
-function getAlias(id)
-	rednet.send(id, "getAlias")
-	local msg = waitForResponse(id)
-	aliases[msg] = id
+function getAlias()
+	rednet.send(currentID, "getAlias")
+	local msg = waitForResponse(currentID)
+	aliases[msg] = currentID
+	return msg
 end
 
----@return boolean, number id
 function alias(alias)
 	for k,v in pairs(aliases) do
 		if alias == k then
@@ -165,7 +157,6 @@ function disconnect()
 	end
 end
 
----@param id number the id#/alias we wish to connect to
 function connect(id)
 	local converter = {
 		["help"] = help,
@@ -180,8 +171,9 @@ function connect(id)
 	if response == standardReplys.done then
 		currentID = id
 	end
+	 name = getAlias()
 	while true do
-		term.write(tostring(currentID).."> ")
+		term.write(name or tostring(currentID).."> ")
 		local command = read()
 		if command == "" then
 			command = nil
@@ -215,15 +207,14 @@ while true do
 	end
 	if command then
 		command = parse(command)
-		if command[2] then
+		if command[1] == "exit" then
+			rednet.close()
+			break
+		elseif command[2] then
 			pcall(converter[command[1]],command[2])
-		
 		else
 			pcall(converter[command[1]])
 		end
-		if command[1] == "exit" then
-			rednet.close()
-			os.queueEvent("terminate")
-		end
+
 	end
 end
