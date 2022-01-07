@@ -87,7 +87,7 @@ end
 
 local converter = {
 	["forward"] = turtle.forward,
-	["back"] = turtle.backward,
+	["back"] = turtle.back,
 	["turnLeft"] = turtle.turnLeft,
 	["turnRight"] = turtle.turnRight,
 	["up"] = turtle.up,

@@ -51,7 +51,7 @@ local function saveData(dir, file, tbl)
 		fs.makeDir(dir)
 	end
 	local handle = fs.open(dir..file, "w")
-	tbl = textutils.unserialise(tbl)
+	tbl = textutils.serialise(tbl)
 	handle.write(tbl)
 	handle.close()
 end
@@ -62,7 +62,7 @@ local function loadData(dir, file)
 		local handle = fs.open(dir..file, "r")
 		local tbl = handle.readAll()
 		handle.close()
-		tbl = textutils.serialise(tbl)
+		tbl = textutils.unserialise(tbl)
 		return tbl
 	end
 	return false
@@ -273,7 +273,7 @@ end
 
 local hConnect = {}
 
-aliases = loadData("/.save", "/aliases")
+aliases = loadData("/.save", "/aliases") or {}
 
 local lUpdate = true
 local ids
