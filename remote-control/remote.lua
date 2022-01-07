@@ -51,7 +51,7 @@ local function saveData(dir, file, tbl)
 		fs.makeDir(dir)
 	end
 	local handle = fs.open(dir..file, "w")
-	tbl = textutils.unserialise(tbl)
+	tbl = textutils.serialise(tbl)
 	handle.write(tbl)
 	handle.close()
 end
