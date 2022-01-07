@@ -292,9 +292,9 @@ while true do
 		"lUpdate",
 		"help",
 	}
-	if update then
+	if lUpdate then
 		ids = {rednet.lookup(hFilter)}
-		update = false
+		lUpdate = false
 		for k,id in pairs(ids) do
 			if id == hostID then
 				ids[k] = nil
