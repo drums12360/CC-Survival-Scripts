@@ -192,6 +192,7 @@ local function connect(id)
 	local commandList = {
 		"clear",
 		"disconnect",
+		"exit",
 		"getAlias",
 		"help",
 		"setAlias ",
@@ -226,7 +227,17 @@ local function connect(id)
 		else
 			term.write(tostring(currentID).."> ")
 		end
-		local command = read(nil,hCommand,function(text) if text ~= "" then return complete.choice(text,commandList) elseif text == "turtle " then return complete.choice(text,sendCommand()) end end)
+		term.setTextColor(colors.white)
+		local command = read(nil,hCommand,
+		function(text)
+			if text ~= "" then
+				local tbl = sendCommand()
+				for i = 1, #tbl do
+					table.insert(commandList,"turtle "..tbl[i])
+				end
+				return complete.choice(text,commandList)
+			end
+		end)
 		if command == "" then
 			command = nil
 		end
@@ -263,11 +274,13 @@ while true do
 	local commandList = {
 		"clear",
 		"connect ",
+		"exit",
 		"help",
 	}
 	term.setBackgroundColor(bColor)
 	term.setTextColor(tColor)
 	term.write("> ")
+	term.setTextColor(colors.white)
 	local command = read(nil,hConnect,function(text) if text ~= "" then return complete.choice(text,commandList) end end)
 	if command == "" then
 		command = nil
