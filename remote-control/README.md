@@ -1,8 +1,8 @@
 # Remote Control v0.3.0
 
-Remote CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/remote.lua`
+Remote CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/remote-control/rcRemote.lua`
 
-Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/turtle.lua`
+Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/remote-control/rcTurtle.lua`
 
 ## Features
 
@@ -30,5 +30,5 @@ File names are subject to change
 
 | File | Description |
 | --- | --- |
-| remote.lua | As the file name implies it controls the other script via the rednet api |
-| turtle.lua | Controlled by the remote via the rednet api |
+| rcRemote.lua | As the file name implies it controls the other script via the rednet api |
+| rcTurtle.lua | Controlled by the remote via the rednet api |

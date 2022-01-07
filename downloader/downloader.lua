@@ -1,7 +1,7 @@
 local tArgs = {...}
 local failedLoads = 0
 
-local repUrl = "https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/"
+local repUrl = "https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/"
 
 local library = {
 	"init.lua",
