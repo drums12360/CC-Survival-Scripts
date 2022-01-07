@@ -32,6 +32,7 @@ local sFilter = "rcStatus"
 local hostID = os.getComputerID()
 local currentID = nil
 local currentStatus = nil
+local currentName = nil
 rednet.host(hFilter,os.getComputerLabel() or tostring(hostID))
 local aliases = {}
 local standardReplys = {
@@ -93,6 +94,7 @@ end
 local function clear()
 	term.clear()
 	term.setCursorPos(1,1)
+	print("Status: "..tostring(currentStatus))
 end
 
 -- list of commands available
@@ -110,14 +112,25 @@ local function help()
 end
 
 -- sets the alias and label of the connected turtle
-local function setAlias(name)
-	rednet.send(currentID, "setAlias "..name, cFilter)
+local function setAlias(label)
+	rednet.send(currentID, "setAlias "..label, cFilter)
 	local recipt = waitForResponse(currentID, cFilter)
 	if recipt ~= standardReplys.done then
 		return
 	end
-	aliases[name] = currentID
+	if label == nil or label == "nil" then
+		label = nil
+		for k,v in pairs(aliases) do
+			if v == currentID then
+				aliases[k] = nil
+				break
+			end
+		end
+	else
+		aliases[label] = currentID
+	end
 	saveData("/.save", "/aliases", aliases)
+	currentName = label
 end
 
 -- gets the label and sets the alias of the connected turtle
@@ -130,7 +143,7 @@ local function getAlias()
 		aliases[msg] = currentID
 		saveData("/.save", "/aliases", aliases)
 	end
-	return msg
+	currentName = msg
 end
 
 -- standard world actions for the connected turtle
@@ -171,12 +184,10 @@ end
 local function disconnect()
 	rednet.send(currentID, "disconnect", cFilter)
 	local response = waitForResponse(currentID, cFilter)
-	if response == standardReplys.done then
-		currentID = nil
-	end
+	currentID = nil
 end
 
--- will keep the session alive once implemented
+-- will keep the session alive
 local function status()
 	while true do
 		if currentID then
@@ -185,29 +196,25 @@ local function status()
 				local id,msg = rednet.receive(sFilter, 2)
 				if not id or not msg then
 					disconnect()
-					print("Disconnected")
+					printError("Disconnected")
 					return
 				end
-				currentStatus = status
+				currentStatus = msg
 			until id == currentID
 		end
-		print(currentStatus)
+		local cx,cy = term.getCursorPos()
+		term.setCursorPos(1,1)
+		term.clearLine()
+		term.write("Status: "..currentStatus)
+		term.setCursorPos(cx,cy)
 		sleep(2)
 	end
 end
 
--- connects to turtle and intiates session
-local function connect(id)
+local exit
+-- wrapper function for connect
+local function connection()
 	local hCommand = {}
-	local commandList = {
-		"clear",
-		"disconnect",
-		"exit",
-		"getAlias",
-		"help",
-		"setAlias ",
-		"turtle ",
-	}
 	local converter = {
 		["clear"] = clear,
 		["disconnect"] = disconnect,
@@ -216,25 +223,20 @@ local function connect(id)
 		["setAlias"] = setAlias,
 		["turtle"] = sendCommand,
 	}
-	if id == nil then return end
-	if type(id) == "string" then
-		if aliases[id] then
-			id = aliases[id]
-		else
-			printError("Alias isn't registered.")
-			return
-		end
-	end
-	rednet.send(id, "connect", cFilter)
-	local response = waitForResponse(id, cFilter)
-	if response == standardReplys.done then
-		currentID = id
-	end
-	local name = getAlias()
 	while currentID do
+		local commandList = {
+			"clear",
+			"disconnect",
+			"exit",
+			"getAlias",
+			"help",
+			"setAlias ",
+			"turtle ",
+		}
+		
 		term.setTextColor(cColor)
-		if name then
-			term.write(name.."> ")
+		if currentName then
+			term.write(currentName.."> ")
 		else
 			term.write(tostring(currentID).."> ")
 		end
@@ -249,6 +251,11 @@ local function connect(id)
 				return complete.choice(text,commandList)
 			end
 		end)
+		local cx,cy = term.getCursorPos()
+		term.setCursorPos(1,1)
+		term.clearLine()
+		term.write("Status: "..currentStatus)
+		term.setCursorPos(cx,cy)
 		if command == "" then
 			command = nil
 		end
@@ -259,7 +266,7 @@ local function connect(id)
 			command = parse(command)
 			if command[1] == "exit" then
 				disconnect()
-				return true
+				exit = true
 			elseif converter[command[1]] then
 				if #command > 1 then
 					converter[command[1]](command[2])
@@ -268,6 +275,29 @@ local function connect(id)
 				end
 			end
 		end
+	end
+end
+
+-- connects to turtle and intiates session
+local function connect(id)
+	if id == nil then return end
+	if type(id) == "string" then
+		if aliases[id] then
+			id = aliases[id]
+		else
+			printError("Alias isn't registered.")
+			return
+		end
+	end
+	rednet.send(id, "connect", cFilter)
+	local response = waitForResponse(id, cFilter)
+	if response == standardReplys.done then
+		currentID = id
+	end
+	getAlias()
+	parallel.waitForAny(connection, status)
+	if currentID then
+		disconnect()
 	end
 end
 
@@ -280,6 +310,7 @@ local ids
 
 -- main loop
 while true do
+	clear()
 	local converter = {
 		["connect"] = connect,
 		["help"] = help,
@@ -329,11 +360,10 @@ while true do
 		elseif command[1] == "lUpdate" then
 			lUpdate = true
 		elseif converter[command[1]] then
-			local exit
 			if #command > 1 then
-				exit = converter[command[1]](command[2])
+				converter[command[1]](command[2])
 			else
-				exit = converter[command[1]]()
+				converter[command[1]]()
 			end
 			if exit then
 				rednet.close()

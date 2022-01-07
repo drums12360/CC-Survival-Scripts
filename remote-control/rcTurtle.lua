@@ -76,7 +76,20 @@ end
 
 -- not implemented
 local function status()
-	
+	while true do
+		local id,msg = rednet.receive(sFilter, 5)
+		if not id or not msg then
+			controllerID = nil
+			return
+		end
+		msg = parse(msg)
+		if msg[1] == "status" then
+			rednet.send(controllerID, currentStatus, sFilter)
+		else
+			controllerID = nil
+			return
+		end
+	end
 end
 
 -- disconnects from current session
@@ -100,15 +113,18 @@ local converter = {
 	["placeDown"] = turtle.placeDown,
 	["getAlias"] = getAlias,
 	["setAlias"] = setAlias,
-	["status"] = status,
 }
 
 -- starts session with controller
 local function connect()
-	local id,command
+	currentStatus = reply.ready
+	if not checkController() then
+		controllerID = nil
+		return
+	end
 	rednet.send(controllerID, reply.done, cFilter)
 	while true do
-		id,command = rednet.receive(cFilter)
+		local id,command = rednet.receive(cFilter)
 		if controllerID == id then
 			print(command)
 			command = parse(command)
@@ -140,6 +156,6 @@ while true do
 	print(command)
 	if command == "connect" then
 		controllerID = id
-		connect()
+		parallel.waitForAny(connect, status)
 	end
 end
