@@ -28,8 +28,8 @@ File names are subject to change
 
 | File | Description |
 | --- | --- |
-| rcRemote.lua | As the file name implies it controls the other script via the rednet api |
-| rcTurtle.lua | Controlled by the remote via the rednet api |
+| rcRemote.lua | As the file name implies it controls rcTurtle via the rednet api |
+| rcTurtle.lua | Controlled by rcRemote via the rednet api |
 
 ## Libraries with description 
 
