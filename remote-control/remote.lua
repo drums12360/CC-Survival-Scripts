@@ -28,10 +28,11 @@ end
 local cFilter = "rcCommand"
 local hFilter = "rcDNS"
 local sFilter = "rcStatus"
-rednet.host(hFilter,os.getComputerLabel() or tostring(os.getComputerID()))
 
+local hostID = os.getComputerID()
 local currentID = nil
 local currentStatus = nil
+rednet.host(hFilter,os.getComputerLabel() or tostring(hostID))
 local aliases = {}
 local standardReplys = {
 	ready = "ready",
@@ -215,6 +216,7 @@ local function connect(id)
 		["setAlias"] = setAlias,
 		["turtle"] = sendCommand,
 	}
+	if id == nil then return end
 	if type(id) == "string" then
 		if aliases[id] then
 			id = aliases[id]
@@ -273,6 +275,9 @@ local hConnect = {}
 
 aliases = loadData("/.save", "/aliases")
 
+local lUpdate = true
+local ids
+
 -- main loop
 while true do
 	local converter = {
@@ -284,8 +289,19 @@ while true do
 		"clear",
 		"connect ",
 		"exit",
+		"lUpdate",
 		"help",
 	}
+	if update then
+		ids = {rednet.lookup(hFilter)}
+		update = false
+		for k,id in pairs(ids) do
+			if id == hostID then
+				ids[k] = nil
+				break
+			end
+		end
+	end
 	term.setBackgroundColor(bColor)
 	term.setTextColor(pColor)
 	term.write("> ")
@@ -293,7 +309,6 @@ while true do
 	local command = read(nil,hConnect,
 		function(text)
 			if text ~= "" then
-				local ids = {rednet.lookup(hFilter)}
 				for _,v in pairs(ids) do
 					table.insert(commandList, "connect "..tostring(v))
 				end
@@ -311,6 +326,8 @@ while true do
 		if command[1] == "exit" then
 			rednet.close()
 			return
+		elseif command[1] == "lUpdate" then
+			lUpdate = true
 		elseif converter[command[1]] then
 			local exit
 			if #command > 1 then
