@@ -1,4 +1,4 @@
-# Remote Control v0.3.0
+# Remote Control v0.3.3
 
 Remote CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/remote-control/rcRemote.lua`
 
@@ -9,6 +9,7 @@ Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Surviv
 - Turtle remembers current Controller ID for security purposes
 - History and Auto Complete
 - Works with ender modems if desired
+- Keep Alive and Status Updates
 
 ## Commands
 
