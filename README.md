@@ -9,17 +9,18 @@ Downloader CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Su
 
 Refuel CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/standalone/refuelSA.lua`
 
-## Remote Control v0.3.0
+## Remote Control v0.3.3
 
-Remote CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/remote.lua`
+Remote CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/rcRemote.lua`
 
-Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/turtle.lua`
+Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/rcTurtle.lua`
 
 ### Features
 
 - Turtle remembers current Controller ID for security purposes
 - History and Auto Complete
 - Works with ender modems if desired
+- Keep Alive and Status Updates
 
 ### Files
 
@@ -27,8 +28,8 @@ File names are subject to change
 
 | File | Description |
 | --- | --- |
-| remote.lua | As the file name implies it controls the other script via the rednet api |
-| turtle.lua | Controlled by the remote via the rednet api |
+| rcRemote.lua | As the file name implies it controls rcTurtle via the rednet api |
+| rcTurtle.lua | Controlled by rcRemote via the rednet api |
 
 ## Libraries with description 
 

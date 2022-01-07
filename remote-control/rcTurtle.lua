@@ -1,5 +1,5 @@
 --[[
-this program is controlled by remote.lua
+this program is controlled by rcRemote.lua
 
 todo:
 status update corroutine start on connect and end on disconect
@@ -41,7 +41,7 @@ local function parse(str)
 	return tbl
 end
 
--- sets that label of the turtle
+-- sets the label of the turtle
 local function setAlias(name)
 	if name == "nil" then name = nil end
 	os.setComputerLabel(name)
@@ -63,7 +63,7 @@ local function getAlias()
 	return true
 end
 
--- makes sure that we are talking to a verified host
+-- makes sure that we are talking to a verified controller
 local function checkController()
 	local tbl = {rednet.lookup(hFilter)}
 	for _,id in pairs(tbl) do
@@ -74,9 +74,22 @@ local function checkController()
 	return false
 end
 
--- not implemented
+-- provides status updates from the turtle
 local function status()
-	
+	while true do
+		local id,msg = rednet.receive(sFilter, 5)
+		if not id or not msg then
+			controllerID = nil
+			return
+		end
+		msg = parse(msg)
+		if msg[1] == "status" then
+			rednet.send(controllerID, currentStatus, sFilter)
+		else
+			controllerID = nil
+			return
+		end
+	end
 end
 
 -- disconnects from current session
@@ -100,15 +113,18 @@ local converter = {
 	["placeDown"] = turtle.placeDown,
 	["getAlias"] = getAlias,
 	["setAlias"] = setAlias,
-	["status"] = status,
 }
 
 -- starts session with controller
 local function connect()
-	local id,command
+	currentStatus = reply.ready
+	if not checkController() then
+		controllerID = nil
+		return
+	end
 	rednet.send(controllerID, reply.done, cFilter)
 	while true do
-		id,command = rednet.receive(cFilter)
+		local id,command = rednet.receive(cFilter)
 		if controllerID == id then
 			print(command)
 			command = parse(command)
@@ -140,6 +156,6 @@ while true do
 	print(command)
 	if command == "connect" then
 		controllerID = id
-		connect()
+		parallel.waitForAny(connect, status)
 	end
 end
