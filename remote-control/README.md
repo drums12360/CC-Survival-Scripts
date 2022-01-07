@@ -19,7 +19,7 @@ Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Surviv
 | `connect <id/alias>` | Can't be used if already connected to a turtle. Connects to the turtle via Rednet. |
 | `help` | Can be used at anytime. It's a help command simple enough. |
 | `disconnect` | Can only be used while connected to a turtle. Closes the Rednet connection to the turtle. |
-| `turtle` | Can only be used while connected to a turtle. Controls the turtle's movement and whether to dig or place blocks. |
+| `turtle <command>` | Can only be used while connected to a turtle. Controls the turtle's movement and whether to dig or place blocks. |
 | `getAlias` | Can only be used while connected to a turtle. Gets the `label` and uses it as the alias. |
 | `setAlias <name/nil>` | Can only be used while connected to a turtle. Sets the `label` and uses it as the alias. |
 
