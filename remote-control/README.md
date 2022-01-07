@@ -1,8 +1,8 @@
-# Remote Control v0.1.5
+# Remote Control v0.3.0
 
-Remote CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/remote-control/remote.lua`
+Remote CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/remote.lua`
 
-Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/remote-control/turtle.lua`
+Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/turtle.lua`
 
 ## Features
 
@@ -14,7 +14,8 @@ Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Surviv
 
 | Command | Description |
 | --- | --- |
-| `exit` | Can be used at anytime to exit the script safely. `ctl + t` is ill advised may brick turtle from further control. |
+| `lUpdate` | Can't be used if already connected to a turtle. Updates the `rednet.lookup` table. This will take about 2 seconds to complete. |
+| `exit` | Can be used at anytime to exit the script safely. `ctl + t` is ill advised as it might brick the `turtle` from further control. |
 | `clear` | Can be used at anytime to clear the screen. |
 | `connect <id/alias>` | Can't be used if already connected to a turtle. Connects to the turtle via Rednet. |
 | `help` | Can be used at anytime. It's a help command simple enough. |
