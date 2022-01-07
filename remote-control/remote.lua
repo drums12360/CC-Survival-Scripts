@@ -273,7 +273,7 @@ end
 
 local hConnect = {}
 
-aliases = loadData("/.save", "/aliases")
+aliases = loadData("/.save", "/aliases") or {}
 
 local lUpdate = true
 local ids
