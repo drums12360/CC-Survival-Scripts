@@ -1,5 +1,5 @@
 --[[
-this program is controlled by remote.lua
+this program is controlled by rcRemote.lua
 
 todo:
 status update corroutine start on connect and end on disconect
@@ -41,7 +41,7 @@ local function parse(str)
 	return tbl
 end
 
--- sets that label of the turtle
+-- sets the label of the turtle
 local function setAlias(name)
 	if name == "nil" then name = nil end
 	os.setComputerLabel(name)
@@ -63,7 +63,7 @@ local function getAlias()
 	return true
 end
 
--- makes sure that we are talking to a verified host
+-- makes sure that we are talking to a verified controller
 local function checkController()
 	local tbl = {rednet.lookup(hFilter)}
 	for _,id in pairs(tbl) do
@@ -74,7 +74,7 @@ local function checkController()
 	return false
 end
 
--- not implemented
+-- provides status updates from the turtle
 local function status()
 	while true do
 		local id,msg = rednet.receive(sFilter, 5)

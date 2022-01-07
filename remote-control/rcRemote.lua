@@ -1,8 +1,5 @@
 --[[
-This program controls the program turtle.lua via the rednet API
-
-todo:
-start status update corroutine on connect and end on disconnect
+This program controls the program rcTurtle.lua via the rednet API
 ]]
 local complete = require("cc.completion")
 
