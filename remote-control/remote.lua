@@ -90,7 +90,9 @@ end
 local function help()
 	if currentID then
 		print("discconect")
-		print("")
+		print("turtle <command>")
+		print("setAlias <name>")
+		print("getAlias")
 	else
 		print("connect <id/name>")
 	end
