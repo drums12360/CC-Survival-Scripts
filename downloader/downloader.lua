@@ -186,7 +186,6 @@ function download(vers, uptrue)
 		term.clear()
 		term.setCursorPos(1,1)
 		error("Please provide a correct argument!")
-		os.sleep(5)
 	end
 end
 

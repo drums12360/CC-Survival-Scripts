@@ -9,6 +9,25 @@ Downloader CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Su
 
 Refuel CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/standalone/refuelSA.lua`
 
+## Remote Control v0.3.0
+
+Remote CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/remote.lua`
+Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/turtle.lua`
+
+### Features
+
+- Turtle remembers current Controller ID for security purposes
+- History and Auto Complete
+- Works with ender modems if desired
+
+### Files
+
+File names are subject to change
+
+| File | Description |
+| --- | --- |
+| remote.lua | As the file name implies it controls the other script via the rednet api |
+| turtle.lua | Controlled by the remote via the rednet api |
 
 ## Libraries with description 
 
@@ -42,4 +61,4 @@ Refuel CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Surviv
 | mineVertSA.lua | Digs in a straight line down untill finds ore then vein mines it, block off hole while mining | `mineVertSA <depth>` |
 | stripMineSA.lua | Digs in a straight line untill it finds ore then vein mines it | `stripMineSA <depth>` |
 | stripTunnelSA.lua | Classical two block heigh stripmine without torches and vein mine on the lower block | `stripTunnelSA <Shaft_Amount> <Shaft_Width> <Shaft_Distance>` How far in, how long each shaft is and the distance between them, recommended `3`.|
-| refuelSA.lua | Custom refuel script which lets you manually refuel for x amount of time | `refuelSA <time_inSeconds> <replace_original>` If no time is given, default is 120 seconds. If yo uwant to replace the default script write `replace` |
+| refuelSA.lua | Custom refuel script which lets you manually refuel for x amount of time | `refuelSA <time_inSeconds> <replace_original>` If no time is given, default is 120 seconds. If you want to replace the default script write `replace` |
