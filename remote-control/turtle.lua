@@ -11,10 +11,16 @@ else
 	error("Modem not found.",0)
 end
 
+-- rednet protocol filters
+local cFilter = "rcCommand"
+local hFilter = "rcDNS"
+local sFilter = "rcStatus"
+
 local controllerID = nil
 local turtleID = os.getComputerID()
 local currentStatus = nil
 local alias = os.getComputerLabel()
+rednet.host(hFilter,alias or tostring(turtleID))
 local reply = {
 	busy = "busy",
 	done = "done",
@@ -40,6 +46,8 @@ local function setAlias(name)
 	if name == "nil" then name = nil end
 	os.setComputerLabel(name)
 	alias = name
+	rednet.unhost(hFilter)
+	rednet.host(hFilter,alias or tostring(turtleID))
 	return true
 end
 
@@ -51,8 +59,19 @@ local function getAlias()
 	else
 		name = alias
 	end
-	rednet.send(controllerID, name)
+	rednet.send(controllerID, name, cFilter)
 	return true
+end
+
+-- makes sure that we are talking to a verified host
+local function checkController()
+	local tbl = {rednet.lookup(hFilter)}
+	for _,id in pairs(tbl) do
+		if id == controllerID then
+			return true
+		end
+	end
+	return false
 end
 
 -- not implemented
@@ -62,7 +81,7 @@ end
 
 -- disconnects from current session
 local function disconnect()
-	rednet.send(controllerID, reply.done)
+	rednet.send(controllerID, reply.done, cFilter)
 	controllerID = nil
 end
 
@@ -87,9 +106,9 @@ local converter = {
 -- starts session with controller
 local function connect()
 	local id,command
-	rednet.send(controllerID, reply.done)
+	rednet.send(controllerID, reply.done, cFilter)
 	while true do
-		id,command = rednet.receive()
+		id,command = rednet.receive(cFilter)
 		if controllerID == id then
 			print(command)
 			command = parse(command)
@@ -104,9 +123,9 @@ local function connect()
 					success,err = converter[command[1]]()
 				end
 				if success then
-					rednet.send(controllerID,"done")
+					rednet.send(controllerID, "done" , cFilter)
 				else
-					rednet.send(controllerID,err)
+					rednet.send(controllerID, err,  cFilter)
 				end
 			end
 		else
@@ -117,7 +136,7 @@ end
 
 -- main loop
 while true do
-	local id,command = rednet.receive()
+	local id,command = rednet.receive(cFilter)
 	print(command)
 	if command == "connect" then
 		controllerID = id

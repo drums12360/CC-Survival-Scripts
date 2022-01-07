@@ -15,12 +15,20 @@ end
 
 -- color pallet
 local bColor = colors.black
-local tColor = colors.white
+local pColor = colors.white
 local cColor = colors.white
+local uColor = colors.white
 if term.isColor() then
-	tColor = colors.blue
+	pColor = colors.blue
 	cColor = colors.green
+	uColor = colors.white
 end
+
+-- set up rednet protocols and rednet lookup
+local cFilter = "rcCommand"
+local hFilter = "rcDNS"
+local sFilter = "rcStatus"
+rednet.host(hFilter,os.getComputerLabel() or tostring(os.getComputerID()))
 
 local currentID = nil
 local currentStatus = nil
@@ -70,10 +78,10 @@ local function parse(str)
 end
 
 -- waits for a response from specified id
-local function waitForResponse(id)
+local function waitForResponse(id,filter)
 	local rID,response
 	for i=1,3 do
-		rID,response = rednet.receive(nil,2)
+		rID,response = rednet.receive(filter,2)
 		if rID == id then
 			return response
 		end
@@ -102,8 +110,8 @@ end
 
 -- sets the alias and label of the connected turtle
 local function setAlias(name)
-	rednet.send(currentID, "setAlias "..name)
-	local recipt = waitForResponse(currentID)
+	rednet.send(currentID, "setAlias "..name, cFilter)
+	local recipt = waitForResponse(currentID, cFilter)
 	if recipt ~= standardReplys.done then
 		return
 	end
@@ -113,8 +121,8 @@ end
 
 -- gets the label and sets the alias of the connected turtle
 local function getAlias()
-	rednet.send(currentID, "getAlias")
-	local msg = waitForResponse(currentID)
+	rednet.send(currentID, "getAlias", cFilter)
+	local msg = waitForResponse(currentID, cFilter)
 	if msg == "nil" then
 		msg = nil
 	else
@@ -145,9 +153,10 @@ local function sendCommand(com)
 	else
 		for i = 1, #comList do
 			if com == comList[i] then
-				rednet.send(currentID, com)
-				local response = waitForResponse(currentID)
+				rednet.send(currentID, com, cFilter)
+				local response = waitForResponse(currentID, cFilter)
 				if response ~= standardReplys.done then
+					term.setTextColor(pColor)
 					print(response)
 				end
 				return
@@ -159,8 +168,8 @@ end
 
 -- disconnects from the connected turtle
 local function disconnect()
-	rednet.send(currentID,"disconnect")
-	local response = waitForResponse(currentID)
+	rednet.send(currentID, "disconnect", cFilter)
+	local response = waitForResponse(currentID, cFilter)
 	if response == standardReplys.done then
 		currentID = nil
 	end
@@ -170,9 +179,9 @@ end
 local function status()
 	while true do
 		if currentID then
-			rednet.send(currentID,"status")
+			rednet.send(currentID, "status", sFilter)
 			repeat
-				local id,msg = rednet.receive(nil,2)
+				local id,msg = rednet.receive(sFilter, 2)
 				if not id or not msg then
 					disconnect()
 					print("Disconnected")
@@ -214,8 +223,8 @@ local function connect(id)
 			return
 		end
 	end
-	rednet.send(id, "connect")
-	local response = waitForResponse(id)
+	rednet.send(id, "connect", cFilter)
+	local response = waitForResponse(id, cFilter)
 	if response == standardReplys.done then
 		currentID = id
 	end
@@ -227,7 +236,7 @@ local function connect(id)
 		else
 			term.write(tostring(currentID).."> ")
 		end
-		term.setTextColor(colors.white)
+		term.setTextColor(uColor)
 		local command = read(nil,hCommand,
 		function(text)
 			if text ~= "" then
@@ -278,10 +287,19 @@ while true do
 		"help",
 	}
 	term.setBackgroundColor(bColor)
-	term.setTextColor(tColor)
+	term.setTextColor(pColor)
 	term.write("> ")
-	term.setTextColor(colors.white)
-	local command = read(nil,hConnect,function(text) if text ~= "" then return complete.choice(text,commandList) end end)
+	term.setTextColor(uColor)
+	local command = read(nil,hConnect,
+		function(text)
+			if text ~= "" then
+				local ids = {rednet.lookup(hFilter)}
+				for _,v in pairs(ids) do
+					table.insert(commandList, "connect "..tostring(v))
+				end
+				return complete.choice(text,commandList)
+			end
+		end)
 	if command == "" then
 		command = nil
 	end
