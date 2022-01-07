@@ -1,8 +1,8 @@
 # Remote Control v0.3.0
 
-Remote CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/rcRemote.lua`
+Remote CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/remote-control/rcRemote.lua`
 
-Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/rcTurtle.lua`
+Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/remote-control/rcTurtle.lua`
 
 ## Features
 
