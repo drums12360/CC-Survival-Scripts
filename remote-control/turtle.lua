@@ -115,6 +115,7 @@ local function connect()
 	end
 end
 
+-- main loop
 while true do
 	local id,command = rednet.receive()
 	print(command)
