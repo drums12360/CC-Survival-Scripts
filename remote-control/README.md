@@ -1,4 +1,4 @@
-# Remote Control v0.3.3
+# Remote Control v0.3.3 Dev
 
 Remote CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/remote-control/rcRemote.lua`
 
