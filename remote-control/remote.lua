@@ -62,7 +62,7 @@ local function loadData(dir, file)
 		local handle = fs.open(dir..file, "r")
 		local tbl = handle.readAll()
 		handle.close()
-		tbl = textutils.serialise(tbl)
+		tbl = textutils.unserialise(tbl)
 		return tbl
 	end
 	return false
