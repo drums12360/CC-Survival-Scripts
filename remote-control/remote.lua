@@ -5,11 +5,23 @@ todo:
 start status update corroutine on connect and end on disconnect
 ]]
 local complete = require("cc.completion")
+
+-- find modem and open rednet or error
 if peripheral.find("modem") then
 	peripheral.find("modem", rednet.open)
 else
 	error("Modem not found.",0)
 end
+
+-- color pallet
+local bColor = colors.black
+local tColor = colors.white
+local cColor = colors.white
+if term.isColor() then
+	tColor = colors.blue
+	cColor = colors.green
+end
+
 local currentID = nil
 local currentStatus = nil
 local aliases = {}
@@ -20,9 +32,10 @@ local standardReplys = {
 	done = "done",
 }
 
+-- save table data to a file
 local function saveData(dir, file, tbl)
 	if type(tbl) ~= "table" then
-		print("Wrong data type")
+		print("Wrong data type.")
 		return
 	end
 	if not fs.exists(dir) then
@@ -30,30 +43,33 @@ local function saveData(dir, file, tbl)
 	end
 	local handle = fs.open(dir..file, "w")
 	tbl = textutils.unserialise(tbl)
+	handle.write(tbl)
+	handle.close()
 end
 
+-- load table data from a file
 local function loadData(dir, file)
 	if fs.exists(dir..file) then
 		local handle = fs.open(dir..file, "r")
 		local tbl = handle.readAll()
+		handle.close()
 		tbl = textutils.serialise(tbl)
 		return tbl
 	end
 	return false
 end
 
+-- takes a string and splits it at a space and returns it in a table as strings and numbers
 local function parse(str)
 	local tbl = {}
 	for word in string.gmatch(str, "([^ ]+)") do
 		word = tonumber(word) or word
-		if word == "true" or word == "false" then
-			word = textutils.unserialise(word)
-		end
 		table.insert(tbl,word)
 	end
 	return tbl
 end
 
+-- waits for a response from specified id
 local function waitForResponse(id)
 	local rID,response
 	for i=1,3 do
@@ -64,17 +80,25 @@ local function waitForResponse(id)
 	end
 end
 
+-- clears the screen
 local function clear()
 	term.clear()
 	term.setCursorPos(1,1)
 end
 
+-- list of commands available
 local function help()
-	print("connect id/name")
+	if currentID then
+		print("discconect")
+		print("")
+	else
+		print("connect <id/name>")
+	end
 	print("exit")
 	print("clear")
 end
 
+-- sets the alias and label of the connected turtle
 local function setAlias(name)
 	rednet.send(currentID, "setAlias "..name)
 	local recipt = waitForResponse(currentID)
@@ -85,6 +109,7 @@ local function setAlias(name)
 	saveData("/.save", "/aliases", aliases)
 end
 
+-- gets the label and sets the alias of the connected turtle
 local function getAlias()
 	rednet.send(currentID, "getAlias")
 	local msg = waitForResponse(currentID)
@@ -97,16 +122,7 @@ local function getAlias()
 	return msg
 end
 
-local function alias(name)
-	for k,v in pairs(aliases) do
-		if name == k then
-			local id = v
-			return true, id
-		end
-	end
-	return false
-end
-
+-- standard world actions for the connected turtle
 local function sendCommand(com)
 	local comList = {
 		"forward",
@@ -122,19 +138,24 @@ local function sendCommand(com)
 		"placeUp",
 		"placeDown",
 	}
-	for i = 1, #comList do
-		if com == comList[i] then
-			rednet.send(currentID, com)
-			local response = waitForResponse(currentID)
-			if response ~= standardReplys.done then
-				print(response)
+	if not com then
+		return comList
+	else
+		for i = 1, #comList do
+			if com == comList[i] then
+				rednet.send(currentID, com)
+				local response = waitForResponse(currentID)
+				if response ~= standardReplys.done then
+					print(response)
+				end
+				return
 			end
-			return
 		end
+		printError("Not a command")
 	end
-	printError("Not a command")
 end
 
+-- disconnects from the connected turtle
 local function disconnect()
 	rednet.send(currentID,"disconnect")
 	local response = waitForResponse(currentID)
@@ -143,6 +164,7 @@ local function disconnect()
 	end
 end
 
+-- will keep the session alive once implemented
 local function status()
 	while true do
 		if currentID then
@@ -162,12 +184,13 @@ local function status()
 	end
 end
 
+-- connects to turtle and intiates session
 local function connect(id)
 	local hCommand = {}
 	local commandList = {
 		"clear",
 		"disconnect",
-		"getAlias ",
+		"getAlias",
 		"help",
 		"setAlias ",
 		"turtle ",
@@ -181,7 +204,12 @@ local function connect(id)
 		["turtle"] = sendCommand,
 	}
 	if type(id) == "string" then
-		_,id = alias(id)
+		if aliases[id] then
+			id = aliases[id]
+		else
+			printError("Alias isn't registered.")
+			return
+		end
 	end
 	rednet.send(id, "connect")
 	local response = waitForResponse(id)
@@ -190,15 +218,15 @@ local function connect(id)
 	end
 	local name = getAlias()
 	while currentID do
+		term.setTextColor(cColor)
 		if name then
 			term.write(name.."> ")
 		else
 			term.write(tostring(currentID).."> ")
 		end
-		local command = read(nil,hCommand,function(text) if text ~= "" then return complete.choice(text,commandList) end end)
+		local command = read(nil,hCommand,function(text) if text ~= "" then return complete.choice(text,commandList) elseif text == "turtle " then return complete.choice(text,sendCommand()) end end)
 		if command == "" then
 			command = nil
-			print("nil")
 		end
 		if hCommand[#hCommand] ~= command and command then
 			table.insert(hCommand,command)
@@ -223,6 +251,7 @@ local hConnect = {}
 
 aliases = loadData("/.save", "/aliases")
 
+-- main loop
 while true do
 	local converter = {
 		["connect"] = connect,
@@ -234,11 +263,12 @@ while true do
 		"connect ",
 		"help",
 	}
+	term.setBackgroundColor(bColor)
+	term.setTextColor(tColor)
 	term.write("> ")
 	local command = read(nil,hConnect,function(text) if text ~= "" then return complete.choice(text,commandList) end end)
 	if command == "" then
 		command = nil
-		print("nil")
 	end
 	if hConnect[#hConnect] ~= command and command then
 		table.insert(hConnect,command)
