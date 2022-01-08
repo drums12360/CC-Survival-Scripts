@@ -41,6 +41,7 @@ File names are subject to change
 | digLib.lua | stack and vein mine |
 | moveLib.lua | Basic movement helper funtions |
 | init.lua = library | Uses all the files in library folder |
+| argOptParser.lua | @LDDestroier 's argParser2.lua. Takes program args `-o`, `-o optArg` or  `--opt`, `--opt optArg` and does something useful with it |
 
 ## Scripts with dependencies 
 
