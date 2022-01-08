@@ -1,6 +1,7 @@
 --[[
 This program controls the program rcTurtle.lua via the rednet API
 ]]
+local tArgs = {...}
 local complete = require("cc.completion")
 
 -- find modem and open rednet or error
@@ -88,7 +89,7 @@ local function waitForResponse(id,filter)
 end
 
 -- clears the screen
-local function clear()
+local function cmdClear()
 	term.clear()
 	term.setCursorPos(1,1)
 	print("Status: "..tostring(currentStatus))
@@ -103,14 +104,23 @@ local function help()
 		print("getAlias")
 	else
 		print("connect <id/name>")
+		print("lUpdate")
 	end
 	print("exit")
 	print("clear")
 end
 
 -- sets the alias and label of the connected turtle
-local function setAlias(label)
-	rednet.send(currentID, "setAlias "..label, cFilter)
+local function setAlias(...)
+	local args = {...}
+	local label
+	if #args > 1 then
+		label = table.concat(args, " ")
+	else
+		label = args[1]
+	end
+	print(textutils.serialise(args))
+	rednet.send(currentID, {"setAlias", argNum = 1 ,args = {label}}, cFilter)
 	local recipt = waitForResponse(currentID, cFilter)
 	if recipt ~= standardReplys.done then
 		return
@@ -132,7 +142,7 @@ end
 
 -- gets the label and sets the alias of the connected turtle
 local function getAlias()
-	rednet.send(currentID, "getAlias", cFilter)
+	rednet.send(currentID, {"getAlias", argNum = 0}, cFilter)
 	local msg = waitForResponse(currentID, cFilter)
 	if msg == "nil" then
 		msg = nil
@@ -144,7 +154,8 @@ local function getAlias()
 end
 
 -- standard world actions for the connected turtle
-local function sendCommand(com)
+local function sendCommand(com, ...)
+	local args = {...}
 	local comList = {
 		"forward",
 		"back",
@@ -158,15 +169,17 @@ local function sendCommand(com)
 		"place",
 		"placeUp",
 		"placeDown",
+		"select",
+		"getItemDetail",
 	}
 	if not com then
 		return comList
 	else
 		for i = 1, #comList do
 			if com == comList[i] then
-				rednet.send(currentID, com, cFilter)
+				rednet.send(currentID,{com, argNum = #args, args = args}, cFilter)
 				local response = waitForResponse(currentID, cFilter)
-				if response ~= standardReplys.done then
+				if response.status ~= standardReplys.done then
 					term.setTextColor(pColor)
 					print(response)
 				end
@@ -179,7 +192,7 @@ end
 
 -- disconnects from the connected turtle
 local function disconnect()
-	rednet.send(currentID, "disconnect", cFilter)
+	rednet.send(currentID, {"disconnect", argNum = 0}, cFilter)
 	local response = waitForResponse(currentID, cFilter)
 	currentID = nil
 end
@@ -188,7 +201,7 @@ end
 local function status()
 	while true do
 		if currentID then
-			rednet.send(currentID, "status", sFilter)
+			rednet.send(currentID,{status = "status"}, sFilter)
 			repeat
 				local id,msg = rednet.receive(sFilter, 2)
 				if not id or not msg then
@@ -196,7 +209,7 @@ local function status()
 					printError("Disconnected")
 					return
 				end
-				currentStatus = msg
+				currentStatus = msg.status
 			until id == currentID
 		end
 		local cx,cy = term.getCursorPos()
@@ -266,7 +279,7 @@ local function connection()
 				exit = true
 			elseif converter[command[1]] then
 				if #command > 1 then
-					converter[command[1]](command[2])
+					converter[command[1]](unpack(command, 2, #command))
 				else
 					converter[command[1]]()
 				end
@@ -306,12 +319,12 @@ local lUpdate = true
 local ids
 
 -- main loop
+cmdClear()
 while true do
-	clear()
 	local converter = {
 		["connect"] = connect,
 		["help"] = help,
-		["clear"] = clear
+		["clear"] = cmdClear,
 	}
 	local commandList = {
 		"clear",

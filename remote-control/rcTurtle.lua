@@ -1,8 +1,5 @@
 --[[
 this program is controlled by rcRemote.lua
-
-todo:
-status update corroutine start on connect and end on disconect
 ]]
 -- finds a modem or errors
 if peripheral.find("modem") then
@@ -27,19 +24,6 @@ local reply = {
 	ready = "ready",
 	running = "running",
 }
-
--- parse strings with spaces to a table with strings numbers and bools
-local function parse(str)
-	local tbl = {}
-	for word in string.gmatch(str, "([^ ]+)") do
-		word = tonumber(word) or word
-		if word == "true" or word == "false" then
-			word = textutils.unserialise(word)
-		end
-		table.insert(tbl,word)
-	end
-	return tbl
-end
 
 -- sets the label of the turtle
 local function setAlias(name)
@@ -82,9 +66,8 @@ local function status()
 			controllerID = nil
 			return
 		end
-		msg = parse(msg)
-		if msg[1] == "status" then
-			rednet.send(controllerID, currentStatus, sFilter)
+		if msg.status == "status" then
+			rednet.send(controllerID, {status = currentStatus}, sFilter)
 		else
 			controllerID = nil
 			return
@@ -111,6 +94,9 @@ local converter = {
 	["place"] = turtle.place,
 	["placeUp"] = turtle.placeUp,
 	["placeDown"] = turtle.placeDown,
+	["select"] = turtle.select,
+	["getItemDetail"] = turtle.getItemDetail,
+	["getSelectedSlot"] = turtle.getSelectedSlot,
 	["getAlias"] = getAlias,
 	["setAlias"] = setAlias,
 }
@@ -126,22 +112,21 @@ local function connect()
 	while true do
 		local id,command = rednet.receive(cFilter)
 		if controllerID == id then
-			print(command)
-			command = parse(command)
+			print(command[1])
 			if command[1] == "disconnect" then
 				disconnect()
 				return
 			elseif converter[command[1]] then
-				local success,err
-				if #command > 1 then
-					success,err = converter[command[1]](command[2])
+				local output
+				if command.argNum > 0 then
+					output = {converter[command[1]](unpack(command.args))}
 				else
-					success,err = converter[command[1]]()
+					output = {converter[command[1]]()}
 				end
-				if success then
-					rednet.send(controllerID, "done" , cFilter)
+				if output then
+					rednet.send(controllerID, {output, status = "done"}, cFilter)
 				else
-					rednet.send(controllerID, err,  cFilter)
+					rednet.send(controllerID, "error",  cFilter)
 				end
 			end
 		else
