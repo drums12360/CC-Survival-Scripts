@@ -81,6 +81,7 @@ local function disconnect()
 	controllerID = nil
 end
 
+-- all the commands allowed to run
 local converter = {
 	["forward"] = turtle.forward,
 	["back"] = turtle.back,
@@ -97,6 +98,9 @@ local converter = {
 	["select"] = turtle.select,
 	["getItemDetail"] = turtle.getItemDetail,
 	["getSelectedSlot"] = turtle.getSelectedSlot,
+	["inspect"] = turtle.inspect,
+	["inspectUp"] = turtle.inspectUp,
+	["inspectDown"] = turtle.inspectDown,
 	["getAlias"] = getAlias,
 	["setAlias"] = setAlias,
 }

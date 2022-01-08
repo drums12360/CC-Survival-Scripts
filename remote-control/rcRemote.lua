@@ -170,6 +170,7 @@ local function sendCommand(com, ...)
 		"placeUp",
 		"placeDown",
 		"select",
+		"getSelectedSlot",
 		"getItemDetail",
 		"inspect",
 		"inspectUp",
@@ -335,8 +336,9 @@ aliases = loadData("/.save", "/aliases") or {}
 local lUpdate = true
 local ids
 
--- main loop
 cmdClear()
+
+-- main loop
 while true do
 	local converter = {
 		["connect"] = connect,
