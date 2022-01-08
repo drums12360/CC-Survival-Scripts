@@ -188,9 +188,19 @@ local function sendCommand(com, ...)
 					print(textutils.serialise(response.output))
 				end
 				if type(response.output[2]) == "string" then
-					rednet.send(currentID,{"inspect", argNum = 0, args = {}}, cFilter)
-					local extra = waitForResponse(currentID, cFilter)
-
+					if com == "forward" then
+						rednet.send(currentID,{"inspect", argNum = 0, args = {}}, cFilter)
+						local extra = waitForResponse(currentID, cFilter)
+						response.output[3] = extra[2]
+					elseif com == "up" then
+						rednet.send(currentID,{"inspectUp", argNum = 0, args = {}}, cFilter)
+						local extra = waitForResponse(currentID, cFilter)
+						response.output[3] = extra[2]
+					elseif com == "down" then
+						rednet.send(currentID,{"inspectDown", argNum = 0, args = {}}, cFilter)
+						local extra = waitForResponse(currentID, cFilter)
+						response.output[3] = extra[2]
+					end
 				end
 				return response.output
 			end
