@@ -98,7 +98,7 @@ end
 -- list of commands available
 local function help()
 	if currentID then
-		print("discconect")
+		print("disconnect")
 		print("turtle <command>")
 		print("setAlias <name>")
 		print("getAlias")
@@ -122,7 +122,7 @@ local function setAlias(...)
 	print(textutils.serialise(args))
 	rednet.send(currentID, {"setAlias", argNum = 1 ,args = {label}}, cFilter)
 	local recipt = waitForResponse(currentID, cFilter)
-	if recipt ~= standardReplys.done then
+	if recipt.status ~= standardReplys.done then
 		return
 	end
 	if label == nil or label == "nil" then
@@ -171,6 +171,9 @@ local function sendCommand(com, ...)
 		"placeDown",
 		"select",
 		"getItemDetail",
+		"inspect",
+		"inspectUp",
+		"inspectDown",
 	}
 	if not com then
 		return comList
@@ -181,9 +184,14 @@ local function sendCommand(com, ...)
 				local response = waitForResponse(currentID, cFilter)
 				if response.status ~= standardReplys.done then
 					term.setTextColor(pColor)
-					print(response)
+					print(textutils.serialise(response.output))
 				end
-				return
+				if type(response.output[2]) == "string" then
+					rednet.send(currentID,{"inspect", argNum = 0, args = {}}, cFilter)
+					local extra = waitForResponse(currentID, cFilter)
+
+				end
+				return response.output
 			end
 		end
 		printError("Not a command")
@@ -226,7 +234,7 @@ local exit
 local function connection()
 	local hCommand = {}
 	local converter = {
-		["clear"] = clear,
+		["clear"] = cmdClear,
 		["disconnect"] = disconnect,
 		["getAlias"] = getAlias,
 		["help"] = help,
@@ -274,14 +282,23 @@ local function connection()
 		end
 		if command then
 			command = parse(command)
+			local output
 			if command[1] == "exit" then
 				disconnect()
 				exit = true
 			elseif converter[command[1]] then
 				if #command > 1 then
-					converter[command[1]](unpack(command, 2, #command))
+					output = converter[command[1]](unpack(command, 2, #command))
 				else
-					converter[command[1]]()
+					output = converter[command[1]]()
+				end
+			end
+			if output then
+				if type(output) == "table" then
+					term.setTextColor(pColor)
+					print(textutils.serialise(output))
+				else
+					print(output)
 				end
 			end
 		end
@@ -289,7 +306,7 @@ local function connection()
 end
 
 -- connects to turtle and intiates session
-local function connect(id)
+local function connect(id,func)
 	if id == nil then return end
 	if type(id) == "string" then
 		if aliases[id] then
@@ -305,7 +322,7 @@ local function connect(id)
 		currentID = id
 	end
 	getAlias()
-	parallel.waitForAny(connection, status)
+	parallel.waitForAny(func, status)
 	if currentID then
 		disconnect()
 	end
@@ -369,16 +386,18 @@ while true do
 			return
 		elseif command[1] == "lUpdate" then
 			lUpdate = true
+		elseif command[1] == "connect" then
+			connect(command[2],connection)
 		elseif converter[command[1]] then
 			if #command > 1 then
-				converter[command[1]](command[2])
+				converter[command[1]](unpack(command, 2, #command))
 			else
 				converter[command[1]]()
 			end
-			if exit then
-				rednet.close()
-				return
-			end
+		end
+		if exit then
+			rednet.close()
+			return
 		end
 	end
 end

@@ -124,7 +124,7 @@ local function connect()
 					output = {converter[command[1]]()}
 				end
 				if output then
-					rednet.send(controllerID, {output, status = "done"}, cFilter)
+					rednet.send(controllerID, {output = output, status = "done"}, cFilter)
 				else
 					rednet.send(controllerID, "error",  cFilter)
 				end
