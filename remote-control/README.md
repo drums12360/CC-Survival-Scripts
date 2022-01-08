@@ -10,6 +10,7 @@ Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Surviv
 - History and Auto Complete
 - Works with ender modems if desired
 - Keep Alive and Status Updates
+- Protection from random RCE
 
 ## Commands
 
