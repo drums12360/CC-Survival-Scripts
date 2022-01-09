@@ -11,6 +11,15 @@ else
 	error("Modem not found.",0)
 end
 
+-- load vericode dependency
+local vericode = require "vericode"
+if not fs.exists("mykey.key") then
+    vericode.generateKeypair("mykey.key")
+    print("Please copy mykey.key.pub to the client computer.")
+    return
+end
+local key = vericode.loadKey("mykey.key")
+
 -- color pallet
 local isColor = term.isColor()
 local bColor = colors.black

@@ -8,6 +8,10 @@ else
 	error("Modem not found.",0)
 end
 
+-- load varicode dependency
+local vericode = require "vericode"
+vericode.loadKey("mykey.key.pub")
+
 -- rednet protocol filters
 local cFilter = "rcCommand"
 local hFilter = "rcDNS"
