@@ -297,7 +297,6 @@ local function connection()
 			"file get ",
 			"file put ",
 		}
-		
 		term.setTextColor(cColor)
 		if currentName then
 			term.write(currentName.."> ")
@@ -306,15 +305,15 @@ local function connection()
 		end
 		term.setTextColor(uColor)
 		local command = read(nil,hCommand,
-		function(text)
-			if text ~= "" then
-				local tbl = sendCommand()
-				for i = 1, #tbl do
-					table.insert(commandList,"turtle "..tbl[i])
+			function(text)
+				if text ~= "" then
+					local tbl = sendCommand()
+					for i = 1, #tbl do
+						table.insert(commandList,"turtle "..tbl[i])
+					end
+					return complete.choice(text,commandList)
 				end
-				return complete.choice(text,commandList)
-			end
-		end)
+			end)
 		local cx,cy = term.getCursorPos()
 		term.setCursorPos(1,1)
 		term.clearLine()
