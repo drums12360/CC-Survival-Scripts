@@ -135,13 +135,11 @@ local function setAlias(...)
 	end
 	if label == nil or label == "nil" then
 		label = nil
-		for k,v in pairs(aliases) do
-			if v == currentID then
-				aliases[k] = nil
-				break
-			end
-		end
-	else
+	end
+	if currentName then
+		aliases[currentName] = nil
+	end
+	if label then
 		aliases[label] = currentID
 	end
 	saveData("/.save", "/aliases", aliases)
@@ -310,6 +308,14 @@ local function connection()
 					local tbl = sendCommand()
 					for i = 1, #tbl do
 						table.insert(commandList,"turtle "..tbl[i])
+					end
+					local list = parse(text)
+					fileStub = list[#list]
+					fList = fs.find(fileStub.."*")
+					if #fList > 0 then
+						for i = 1, #fList do
+							table.insert(commandList, "file put "..fList[i])
+						end
 					end
 					return complete.choice(text,commandList)
 				end
