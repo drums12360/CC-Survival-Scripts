@@ -47,6 +47,25 @@ local function getAlias()
 	return true
 end
 
+-- tranfers files to and from the controller
+local function scp(action, fFile, tFile)
+	if action == "get" then
+		if fs.exists(fFile) then
+			local file = fs.open(fFile, "r")
+			local msg = file.readAll()
+			file.close()
+			rednet.send(controllerID, {file = msg}, cFilter)
+			return true, "Sent File "..fFile
+		end
+		return false, "File not found"
+	elseif action == "put" then
+		local file = fs.open(tFile, "w")
+		file.write(fFile)
+		file.close()
+		return true, "Saved file to "..tFile
+	end
+end
+
 -- makes sure that we are talking to a verified controller
 local function checkController()
 	local tbl = {rednet.lookup(hFilter)}
@@ -103,6 +122,7 @@ local converter = {
 	["inspectDown"] = turtle.inspectDown,
 	["getAlias"] = getAlias,
 	["setAlias"] = setAlias,
+	["file"] = scp,
 }
 
 -- starts session with controller
@@ -116,22 +136,24 @@ local function connect()
 	while true do
 		local id,command = rednet.receive(cFilter)
 		if controllerID == id then
-			print(command[1])
+			print(textutils.serialise(command))
 			if command[1] == "disconnect" then
 				disconnect()
 				return
 			elseif converter[command[1]] then
+				currentStatus = reply.running
 				local output
 				if command.argNum > 0 then
 					output = {converter[command[1]](unpack(command.args))}
 				else
 					output = {converter[command[1]]()}
 				end
-				if output then
+				if #output ~= 0 then
 					rednet.send(controllerID, {output = output, status = "done"}, cFilter)
 				else
 					rednet.send(controllerID, "error",  cFilter)
 				end
+				currentStatus = reply.ready
 			end
 		else
 			rednet.send(id,reply.busy)

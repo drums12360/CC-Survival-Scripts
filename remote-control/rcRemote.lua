@@ -12,11 +12,12 @@ else
 end
 
 -- color pallet
+local isColor = term.isColor()
 local bColor = colors.black
-local pColor = colors.white
-local cColor = colors.white
+local pColor = colors.lightGray
+local cColor = colors.gray
 local uColor = colors.white
-if term.isColor() then
+if isColor then
 	pColor = colors.blue
 	cColor = colors.green
 	uColor = colors.white
@@ -27,11 +28,11 @@ local cFilter = "rcCommand"
 local hFilter = "rcDNS"
 local sFilter = "rcStatus"
 
+-- important declarations
 local hostID = os.getComputerID()
 local currentID = nil
 local currentStatus = nil
 local currentName = nil
-rednet.host(hFilter,os.getComputerLabel() or tostring(hostID))
 local aliases = {}
 local standardReplys = {
 	ready = "ready",
@@ -39,6 +40,9 @@ local standardReplys = {
 	running = "running",
 	done = "done",
 }
+
+-- add itself to the dns
+rednet.host(hFilter,os.getComputerLabel() or tostring(hostID))
 
 -- save table data to a file
 local function saveData(dir, file, tbl)
@@ -67,11 +71,14 @@ local function loadData(dir, file)
 	return false
 end
 
--- takes a string and splits it at a space and returns it in a table as strings and numbers
+-- takes a string and splits it at a space and returns it in a table as strings numbers and bools
 local function parse(str)
 	local tbl = {}
 	for word in string.gmatch(str, "([^ ]+)") do
 		word = tonumber(word) or word
+		if word == "true" or word == "false" then
+			word = textutils.unserialise(word)
+		end
 		table.insert(tbl,word)
 	end
 	return tbl
@@ -102,6 +109,7 @@ local function help()
 		print("turtle <command>")
 		print("setAlias <name>")
 		print("getAlias")
+		print("file get|put </from/file/path> </to/file/path>")
 	else
 		print("connect <id/name>")
 		print("lUpdate")
@@ -153,6 +161,29 @@ local function getAlias()
 	currentName = msg
 end
 
+-- transfers files to and from the turtle
+local function scp(action, fFile, tFile)
+	if action == "get" then
+		rednet.send(currentID, {"file", args = {"get", fFile, tFile},argNum = 3}, cFilter)
+		local response = waitForResponse(currentID, cFilter)
+		local file = fs.open(tFile, "w")
+		file.write(response.file)
+		file.close()
+		response = waitForResponse(currentID, cFilter)
+		return response.output
+	elseif action == "put" then
+		local file = fs.open(fFile, "r")
+		fFile = file.readAll()
+		file.close()
+		rednet.send(currentID, {"file", args = {"put", fFile, tFile},argNum = 3}, cFilter)
+		local response = waitForResponse(currentID, cFilter)
+		return response.output
+	else
+		term.setTextColor(pColor)
+		print("Invalid Args.")
+	end
+end
+
 -- standard world actions for the connected turtle
 local function sendCommand(com, ...)
 	local args = {...}
@@ -191,15 +222,15 @@ local function sendCommand(com, ...)
 					if com == "forward" then
 						rednet.send(currentID,{"inspect", argNum = 0, args = {}}, cFilter)
 						local extra = waitForResponse(currentID, cFilter)
-						response.output[3] = extra.output[2]
+						response.output[3] = extra.output[2].name
 					elseif com == "up" then
 						rednet.send(currentID,{"inspectUp", argNum = 0, args = {}}, cFilter)
 						local extra = waitForResponse(currentID, cFilter)
-						response.output[3] = extra.output[2]
+						response.output[3] = extra.output[2].name
 					elseif com == "down" then
 						rednet.send(currentID,{"inspectDown", argNum = 0, args = {}}, cFilter)
 						local extra = waitForResponse(currentID, cFilter)
-						response.output[3] = extra.output[2]
+						response.output[3] = extra.output[2].name
 					end
 				end
 				return response.output
@@ -251,6 +282,7 @@ local function connection()
 		["help"] = help,
 		["setAlias"] = setAlias,
 		["turtle"] = sendCommand,
+		["file"] = scp,
 	}
 	while currentID do
 		local commandList = {
@@ -261,6 +293,9 @@ local function connection()
 			"help",
 			"setAlias ",
 			"turtle ",
+			"file ",
+			"file get ",
+			"file put ",
 		}
 		
 		term.setTextColor(cColor)
@@ -309,6 +344,7 @@ local function connection()
 					term.setTextColor(pColor)
 					print(textutils.serialise(output))
 				else
+					term.setTextColor(pColor)
 					print(output)
 				end
 			end
