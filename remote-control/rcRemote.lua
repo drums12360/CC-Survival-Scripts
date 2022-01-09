@@ -127,7 +127,6 @@ local function setAlias(...)
 	else
 		label = args[1]
 	end
-	print(textutils.serialise(args))
 	rednet.send(currentID, {"setAlias", argNum = 1 ,args = {label}}, cFilter)
 	local recipt = waitForResponse(currentID, cFilter)
 	if recipt.status ~= standardReplys.done then
@@ -161,6 +160,9 @@ end
 
 -- transfers files to and from the turtle
 local function scp(action, fFile, tFile)
+	if fFile == shell.getRunningProgram() or tFile == shell.getRunningProgram() then
+		print("Not Allowed to transfer "..shell.getRunningProgram())
+	end
 	if action == "get" then
 		rednet.send(currentID, {"file", args = {"get", fFile, tFile},argNum = 3}, cFilter)
 		local response = waitForResponse(currentID, cFilter)
@@ -182,7 +184,7 @@ local function scp(action, fFile, tFile)
 	end
 end
 
--- standard world actions for the connected turtle
+-- standard actions for the connected turtle
 local function sendCommand(com, ...)
 	local args = {...}
 	local comList = {
@@ -310,9 +312,14 @@ local function connection()
 						table.insert(commandList,"turtle "..tbl[i])
 					end
 					local list = parse(text)
-					fileStub = list[#list]
-					fList = fs.find(fileStub.."*")
+					local fileStub = list[#list]
+					local fList = fs.find(fileStub.."*")
 					if #fList > 0 then
+						for i = 1, #fList do
+							table.insert(commandList, "file put "..fList[i])
+						end
+					else
+						fList = fs.list("*")
 						for i = 1, #fList do
 							table.insert(commandList, "file put "..fList[i])
 						end
