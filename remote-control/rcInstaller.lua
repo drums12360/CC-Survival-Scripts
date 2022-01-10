@@ -12,9 +12,7 @@ local libs = {
 	"ecc.lua"
 }
 
-
-
-function dlscript(script)
+local function dlscript(script)
 	for index, filename in ipairs(libs) do
 		local content = http.get(repUrl..filename).readAll()
 		if not content then
@@ -53,7 +51,7 @@ function dlscript(script)
 	end
 end
 
-function dlloader(uptrue)
+local function dlloader(uptrue)
 	local content = http.get(repUrl..loader).readAll()
 	if not content then
 		term.clear()
@@ -87,7 +85,7 @@ function dlloader(uptrue)
 	end
 end
 
-function endstats()
+local function endstats()
 	if failedLoads > 0 then
 		term.clear()
 		term.setCursorPos(1,1)
@@ -105,7 +103,7 @@ function endstats()
 	end
 end
 
-function download(vers, uptrue)
+local function download(vers, uptrue)
 	if uptrue == "true" then
 		uptrue = true
 	else
