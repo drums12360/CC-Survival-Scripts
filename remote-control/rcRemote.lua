@@ -11,14 +11,29 @@ else
 	error("Modem not found.",0)
 end
 
--- load vericode dependency
-local vericode = require "vericode"
-if not fs.exists("mykey.key") then
-    vericode.generateKeypair("mykey.key")
-    print("Please copy mykey.key.pub to the client computer.")
+-- load ecc dependency
+local ecc = require("ecc")
+if not fs.exists("rckey.key") then
+	local generated = {}
+	generated.private, generated.public = ecc.keypair(os.epoch())
+	generated.shared = ecc.exchange(generated.private,  generated.public)
+	local keys = {
+		privateKeys = {
+			private = generated.private,
+			public = generated.public,
+			shared = generated.shared,
+		},
+		publicKeys = {
+			public = generated.public,
+			shared = generated.shared,
+		},
+	}
+    local file = fs.open("rckey.key", "w")
+	file.write()
+	file.close()
+    print("Please copy rckey.key.pub to the client computer.")
     return
 end
-local key = vericode.loadKey("mykey.key")
 
 -- color pallet
 local isColor = term.isColor()
@@ -105,7 +120,7 @@ local function waitForResponse(id,filter)
 end
 
 -- clears the screen
-local function cmdClear()
+local function clear()
 	term.clear()
 	term.setCursorPos(1,1)
 	print("Status: "..tostring(currentStatus))
@@ -174,17 +189,18 @@ local function scp(action, fFile, tFile)
 	end
 	if action == "get" then
 		rednet.send(currentID, {"file", args = {"get", fFile, tFile},argNum = 3}, cFilter)
-		local response = waitForResponse(currentID, cFilter)
+		local response = vericode.receive(false, cFilter)
 		local file = fs.open(tFile, "w")
-		file.write(response.file)
+		file.write(response)
 		file.close()
 		response = waitForResponse(currentID, cFilter)
 		return response.output
 	elseif action == "put" then
 		local file = fs.open(fFile, "r")
-		fFile = file.readAll()
+		local msg = file.readAll()
 		file.close()
-		rednet.send(currentID, {"file", args = {"put", fFile, tFile},argNum = 3}, cFilter)
+		rednet.send(currentID, {"file", args = {"put", fFile, tFile},argNum = 3}, key, cFilter)
+		vericode.send(currentID, msg, key, cFilter)
 		local response = waitForResponse(currentID, cFilter)
 		return response.output
 	else
@@ -285,7 +301,7 @@ local exit
 local function connection()
 	local hCommand = {}
 	local converter = {
-		["clear"] = cmdClear,
+		["clear"] = clear,
 		["disconnect"] = disconnect,
 		["getAlias"] = getAlias,
 		["help"] = help,
@@ -403,14 +419,14 @@ aliases = loadData("/.save", "/aliases") or {}
 local lUpdate = true
 local ids
 
-cmdClear()
+clear()
 
 -- main loop
 while true do
 	local converter = {
 		["connect"] = connect,
 		["help"] = help,
-		["clear"] = cmdClear,
+		["clear"] = clear,
 	}
 	local commandList = {
 		"clear",

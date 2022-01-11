@@ -8,9 +8,9 @@ else
 	error("Modem not found.",0)
 end
 
--- load varicode dependency
-local vericode = require "vericode"
-vericode.loadKey("mykey.key.pub")
+-- load ecc dependency
+local vericode = require("ecc")
+local key = vericode.loadKey("rckey.key.pub")
 
 -- rednet protocol filters
 local cFilter = "rcCommand"
@@ -58,13 +58,14 @@ local function scp(action, fFile, tFile)
 			local file = fs.open(fFile, "r")
 			local msg = file.readAll()
 			file.close()
-			rednet.send(controllerID, {file = msg}, cFilter)
+			vericode.send(controllerID, msg, key, cFilter)
 			return true, "Sent File "..fFile
 		end
 		return false, "File not found"
 	elseif action == "put" then
+		local output = vericode.receive(false, cFilter, 2)
 		local file = fs.open(tFile, "w")
-		file.write(fFile)
+		file.write(output)
 		file.close()
 		return true, "Saved file to "..tFile
 	end

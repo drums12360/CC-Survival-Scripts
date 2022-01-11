@@ -8,8 +8,7 @@ local turtle = "rcTurtle.lua"
 local remote = "rcRemote.lua"
 local loader = "rcInstaller.lua"
 local libs = {
-	"vericode.lua",
-	"ecc.lua"
+	"ecc.lua",
 }
 
 local function dlscript(script)
