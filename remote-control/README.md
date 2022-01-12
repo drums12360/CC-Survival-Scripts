@@ -17,7 +17,7 @@ Usage: `rcInstaller turtle|remote <true/nil>`
 
 | Command | Description |
 | --- | --- |
-| `file put|get <from/file> <to/file>` | Can only be  while connected to a turtle. Transfers files from/ to host. |
+| `file put\|get <from/file> <to/file>` | Can only be  while connected to a turtle. Transfers files from/ to host. |
 | `lUpdate` | Can't be used if already connected to a turtle. Updates the `rednet.lookup` table. This will take about 2 seconds to complete. |
 | `exit` | Can be used at anytime to exit the script safely. `ctl + t` is ill advised as it might brick the `turtle` from further control. |
 | `clear` | Can be used at anytime to clear the screen. |
