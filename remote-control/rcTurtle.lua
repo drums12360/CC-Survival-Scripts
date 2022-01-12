@@ -8,10 +8,6 @@ else
 	error("Modem not found.",0)
 end
 
--- load ecc dependency
-local vericode = require("ecc")
-local key = vericode.loadKey("rckey.key.pub")
-
 -- rednet protocol filters
 local cFilter = "rcCommand"
 local hFilter = "rcDNS"
@@ -28,6 +24,20 @@ local reply = {
 	ready = "ready",
 	running = "running",
 }
+
+-- load ecc dependency
+local keys = {}
+local ecc = require("ecc")
+do
+	local generated = {}
+	generated.private, generated.public = ecc.keypair(os.epoch())
+	keys = {
+		[turtleID] =  {
+			private = generated.private,
+			public = generated.public,
+		},
+	}
+end
 
 -- sets the label of the turtle
 local function setAlias(name)
@@ -58,12 +68,12 @@ local function scp(action, fFile, tFile)
 			local file = fs.open(fFile, "r")
 			local msg = file.readAll()
 			file.close()
-			vericode.send(controllerID, msg, key, cFilter)
+			rednet.send(controllerID, msg, cFilter)
 			return true, "Sent File "..fFile
 		end
 		return false, "File not found"
 	elseif action == "put" then
-		local output = vericode.receive(false, cFilter, 2)
+		local output = rednet.receive(cFilter,2)
 		local file = fs.open(tFile, "w")
 		file.write(output)
 		file.close()
@@ -169,9 +179,10 @@ end
 -- main loop
 while true do
 	local id,command = rednet.receive(cFilter)
-	print(command)
-	if command == "connect" then
+	print(command[1])
+	if command[1] == "connect" then
 		controllerID = id
+		keys[controllerID].public = command.key
 		parallel.waitForAny(connect, status)
 	end
 end

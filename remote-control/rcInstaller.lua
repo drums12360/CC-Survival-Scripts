@@ -108,6 +108,19 @@ local function download(vers, uptrue)
 	else
 		uptrue = false
 	end
+	if uptrue then
+		local file = fs.open("/.save/installer", "w")
+		file.write(textutils.serialise({vers,uptrue}))
+		file.close()
+	end
+	if shell.getRunningProgram() == "startup/autoupdater.lua" then
+		local file = fs.open("/.save/installer", "r")
+		local info = file.readAll()
+		file.close()
+		info = textutils.unserialise(info)
+		vers = info[1]
+		uptrue = info[2]
+	end
 	if vers == "turtle" then
 		term.clear()
 		term.setCursorPos(1,1)

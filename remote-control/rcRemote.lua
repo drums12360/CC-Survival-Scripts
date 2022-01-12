@@ -11,30 +11,6 @@ else
 	error("Modem not found.",0)
 end
 
--- load ecc dependency
-local ecc = require("ecc")
-if not fs.exists("rckey.key") then
-	local generated = {}
-	generated.private, generated.public = ecc.keypair(os.epoch())
-	generated.shared = ecc.exchange(generated.private,  generated.public)
-	local keys = {
-		privateKeys = {
-			private = generated.private,
-			public = generated.public,
-			shared = generated.shared,
-		},
-		publicKeys = {
-			public = generated.public,
-			shared = generated.shared,
-		},
-	}
-    local file = fs.open("rckey.key", "w")
-	file.write()
-	file.close()
-    print("Please copy rckey.key.pub to the client computer.")
-    return
-end
-
 -- color pallet
 local isColor = term.isColor()
 local bColor = colors.black
@@ -67,6 +43,20 @@ local standardReplys = {
 
 -- add itself to the dns
 rednet.host(hFilter,os.getComputerLabel() or tostring(hostID))
+
+-- load ecc dependency
+local keys = {}
+local ecc = require("ecc")
+do
+	local generated = {}
+	generated.private, generated.public = ecc.keypair(os.epoch())
+	keys = {
+		[hostID] =  {
+			private = generated.private,
+			public = generated.public,
+		},
+	}
+end
 
 -- save table data to a file
 local function saveData(dir, file, tbl)
@@ -189,7 +179,7 @@ local function scp(action, fFile, tFile)
 	end
 	if action == "get" then
 		rednet.send(currentID, {"file", args = {"get", fFile, tFile},argNum = 3}, cFilter)
-		local response = vericode.receive(false, cFilter)
+		local response = waitForResponse(currentID, cFilter)
 		local file = fs.open(tFile, "w")
 		file.write(response)
 		file.close()
@@ -199,8 +189,8 @@ local function scp(action, fFile, tFile)
 		local file = fs.open(fFile, "r")
 		local msg = file.readAll()
 		file.close()
-		rednet.send(currentID, {"file", args = {"put", fFile, tFile},argNum = 3}, key, cFilter)
-		vericode.send(currentID, msg, key, cFilter)
+		rednet.send(currentID, {"file", args = {"put", fFile, tFile},argNum = 3}, cFilter)
+		rednet.send(currentID, msg, cFilter)
 		local response = waitForResponse(currentID, cFilter)
 		return response.output
 	else
@@ -269,6 +259,7 @@ end
 local function disconnect()
 	rednet.send(currentID, {"disconnect", argNum = 0}, cFilter)
 	local response = waitForResponse(currentID, cFilter)
+	keys[currentID] = nil
 	currentID = nil
 end
 
@@ -400,7 +391,7 @@ local function connect(id,func)
 			return
 		end
 	end
-	rednet.send(id, "connect", cFilter)
+	rednet.send(id, {"connect", key = keys[hostID].public}, cFilter)
 	local response = waitForResponse(id, cFilter)
 	if response == standardReplys.done then
 		currentID = id
