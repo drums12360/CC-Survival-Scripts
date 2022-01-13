@@ -26,17 +26,40 @@ local reply = {
 }
 
 -- load ecc dependency
-local keys = {}
+local eccKeys = {}
 local ecc = require("ecc")
 do
 	local generated = {}
 	generated.private, generated.public = ecc.keypair(os.epoch())
-	keys = {
-		[turtleID] =  {
+	eccKeys[turtleID] =  {
 			private = generated.private,
 			public = generated.public,
-		},
-	}
+		}
+end
+
+-- send encrypted and signed messages
+function send(msg, filter)
+	local toSend ={}
+	if type(msg) == "table" then
+		msg = textutils.serialise(msg)
+	end
+	toSend[1] = ecc.encrypt(msg, eccKeys[controllerID].shared)
+	toSend.sig = ecc.sign(eccKeys[turtleID].private, msg[1])
+	return rednet.send(controllerID, toSend, filter)
+end
+
+-- receive decrypt and verify messages
+function receive(filter, timeout)
+	local id, msg = rednet.receive(filter, timeout)
+	if id == controllerID then
+		print(eccKeys[id].public, msg[1], msg.sig)
+		if ecc.verify(eccKeys[id].public, msg[1], msg.sig) then
+			print("test")
+			msg = ecc.decrypt(msg[1], eccKeys[id].shared)
+			msg = textutils.unserialise(msg)
+			return id, msg
+		end
+	end
 end
 
 -- sets the label of the turtle
@@ -68,14 +91,13 @@ local function scp(action, fFile, tFile)
 			local file = fs.open(fFile, "r")
 			local msg = file.readAll()
 			file.close()
-			rednet.send(controllerID, msg, cFilter)
+			send(msg, cFilter)
 			return true, "Sent File "..fFile
 		end
 		return false, "File not found"
 	elseif action == "put" then
-		local output = rednet.receive(cFilter,2)
 		local file = fs.open(tFile, "w")
-		file.write(output)
+		file.write(fFile)
 		file.close()
 		return true, "Saved file to "..tFile
 	end
@@ -112,6 +134,7 @@ end
 -- disconnects from current session
 local function disconnect()
 	rednet.send(controllerID, reply.done, cFilter)
+	eccKeys[controllerID] = nil
 	controllerID = nil
 end
 
@@ -147,9 +170,9 @@ local function connect()
 		controllerID = nil
 		return
 	end
-	rednet.send(controllerID, reply.done, cFilter)
+	send(reply.done, cFilter)
 	while true do
-		local id,command = rednet.receive(cFilter)
+		local id,command = receive(cFilter)
 		if controllerID == id then
 			print(textutils.serialise(command))
 			if command[1] == "disconnect" then
@@ -170,8 +193,6 @@ local function connect()
 				end
 				currentStatus = reply.ready
 			end
-		else
-			rednet.send(id,reply.busy)
 		end
 	end
 end
@@ -180,9 +201,12 @@ end
 while true do
 	local id,command = rednet.receive(cFilter)
 	print(command[1])
-	if command[1] == "connect" then
+	if command[1] == "connect" and command.key then
 		controllerID = id
-		keys[controllerID].public = command.key
+		eccKeys[controllerID] = {}
+		eccKeys[controllerID].public = command.key
+		rednet.send(id, {key = eccKeys[turtleID].public}, cFilter)
+		eccKeys[controllerID].shared = ecc.exchange(eccKeys[turtleID].private, eccKeys[controllerID].public)
 		parallel.waitForAny(connect, status)
 	end
 end
