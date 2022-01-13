@@ -52,12 +52,16 @@ end
 function receive(filter, timeout)
 	local id, msg = rednet.receive(filter, timeout)
 	if id == controllerID then
-		msg[1] = {string.byte(msg[1], 1, -1)}
-		msg.sig = {string.byte(msg.sig, 1, -1)}
-		if ecc.verify(eccKeys[id].public, msg[1], msg.sig) then
-			print("test")
-			msg = ecc.decrypt(msg[1], eccKeys[id].shared)
-			msg = textutils.unserialise(tostring(msg))
+		if msg.sig then
+			msg[1] = {string.byte(msg[1], 1, -1)}
+			msg.sig = {string.byte(msg.sig, 1, -1)}
+			if ecc.verify(eccKeys[id].public, msg[1], msg.sig) then
+				print("test")
+				msg = ecc.decrypt(msg[1], eccKeys[id].shared)
+				msg = textutils.unserialise(tostring(msg))
+				return id, msg
+			end
+		else
 			return id, msg
 		end
 	end
@@ -171,7 +175,7 @@ local function connect()
 		controllerID = nil
 		return
 	end
-	send(reply.done, cFilter)
+	rednet.send(reply.done, cFilter)
 	while true do
 		local id,command = receive(cFilter)
 		if controllerID == id then

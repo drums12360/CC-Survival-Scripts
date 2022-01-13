@@ -71,11 +71,16 @@ end
 function receive(filter, timeout)
 	local id, msg = rednet.receive(filter, timeout)
 	if id == currentID then
-		msg[1] = {string.byte(msg[1], 1, -1)}
-		msg.sig = {string.byte(msg.sig, 1, -1)}
-		if ecc.verify(eccKeys[id].public, msg[1], msg.sig) then
-			msg = ecc.decrypt(msg[1], eccKeys[id].shared)
-			msg = textutils.unserialise(tostring(msg))
+		if msg.sig then
+			msg[1] = {string.byte(msg[1], 1, -1)}
+			msg.sig = {string.byte(msg.sig, 1, -1)}
+			if ecc.verify(eccKeys[id].public, msg[1], msg.sig) then
+				print("test")
+				msg = ecc.decrypt(msg[1], eccKeys[id].shared)
+				msg = textutils.unserialise(tostring(msg))
+				return id, msg
+			end
+		else
 			return id, msg
 		end
 	end
@@ -122,21 +127,12 @@ local function parse(str)
 end
 
 -- waits for a response from specified id
-local function waitForResponse(id,filter,encrypted)
+local function waitForResponse(id,filter)
 	local rID,response
-	if encrypted then
-		for i=1,3 do
-			rID,response = receive(filter,2)
-			if rID == id then
-				return response
-			end
-		end
-	else
-		for i=1,3 do
-			rID,response = rednet.receive(filter,2)
-			if rID == id then
-				return response
-			end
+	for i=1,3 do
+		rID,response = receive(filter,2)
+		if rID == id then
+			return response
 		end
 	end
 end
@@ -173,7 +169,7 @@ local function setAlias(...)
 	else
 		label = args[1]
 	end
-	send({"setAlias", argNum = 1 ,args = {label}}, cFilter)
+	rednet.send(currentID, {"setAlias", argNum = 1 ,args = {label}}, cFilter)
 	local recipt = waitForResponse(currentID, cFilter)
 	if recipt.status ~= standardReplys.done then
 		return
@@ -193,7 +189,7 @@ end
 
 -- gets the label and sets the alias of the connected turtle
 local function getAlias()
-	send({"getAlias", argNum = 0}, cFilter)
+	rednet.send(currentID, {"getAlias", argNum = 0}, cFilter)
 	local msg = waitForResponse(currentID, cFilter)
 	if msg == "nil" then
 		msg = nil
@@ -258,7 +254,7 @@ local function sendCommand(com, ...)
 	else
 		for i = 1, #comList do
 			if com == comList[i] then
-				send({com, argNum = #args, args = args}, cFilter)
+				rednet.send(currentID, {com, argNum = #args, args = args}, cFilter)
 				local response = waitForResponse(currentID, cFilter)
 				if response.status ~= standardReplys.done then
 					term.setTextColor(pColor)
@@ -266,15 +262,15 @@ local function sendCommand(com, ...)
 				end
 				if type(response.output[2]) == "string" then
 					if com == "forward" then
-						send({"inspect", argNum = 0, args = {}}, cFilter)
+						rednet.send(currentID, {"inspect", argNum = 0, args = {}}, cFilter)
 						local extra = waitForResponse(currentID, cFilter)
 						response.output[3] = extra.output[2].name
 					elseif com == "up" then
-						send({"inspectUp", argNum = 0, args = {}}, cFilter)
+						rednet.send(currentID, {"inspectUp", argNum = 0, args = {}}, cFilter)
 						local extra = waitForResponse(currentID, cFilter)
 						response.output[3] = extra.output[2].name
 					elseif com == "down" then
-						send({"inspectDown", argNum = 0, args = {}}, cFilter)
+						rednet.send(currentID, {"inspectDown", argNum = 0, args = {}}, cFilter)
 						local extra = waitForResponse(currentID, cFilter)
 						response.output[3] = extra.output[2].name
 					end
@@ -288,7 +284,7 @@ end
 
 -- disconnects from the connected turtle
 local function disconnect()
-	send({"disconnect", argNum = 0}, cFilter)
+	rednet.send({"disconnect", argNum = 0}, cFilter)
 	local response = waitForResponse(currentID, cFilter)
 	eccKeys[currentID] = nil
 	currentID = nil
@@ -430,7 +426,7 @@ local function connect(id,func)
 	eccKeys[currentID] = {}
 	eccKeys[currentID].public = {string.byte(response.key, 1, -1)}
 	eccKeys[currentID].shared = ecc.exchange(eccKeys[hostID].private, eccKeys[currentID].public)
-	response = waitForResponse(id, cFilter, true)
+	response = waitForResponse(id, cFilter)
 	getAlias()
 	parallel.waitForAny(func, status)
 	if currentID then
