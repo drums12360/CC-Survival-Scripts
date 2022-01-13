@@ -63,7 +63,7 @@ function send(msg, filter)
 		msg = textutils.serialise(msg)
 	end
 	toSend[1] = tostring(ecc.encrypt(msg, eccKeys[currentID].shared))
-	toSend.sig = tostring(ecc.sign(eccKeys[hostID].private, msg))
+	toSend.sig = tostring(ecc.sign(eccKeys[hostID].private, toSend[1]))
 	return rednet.send(currentID, toSend, filter)
 end
 
@@ -75,7 +75,7 @@ function receive(filter, timeout)
 		msg.sig = {string.byte(msg.sig, 1, -1)}
 		if ecc.verify(eccKeys[id].public, msg[1], msg.sig) then
 			msg = ecc.decrypt(msg[1], eccKeys[id].shared)
-			msg = textutils.unserialise(msg)
+			msg = textutils.unserialise(tostring(msg))
 			return id, msg
 		end
 	end

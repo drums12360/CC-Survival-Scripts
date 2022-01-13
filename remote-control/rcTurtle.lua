@@ -44,7 +44,7 @@ function send(msg, filter)
 		msg = textutils.serialise(msg)
 	end
 	toSend[1] = tostring(ecc.encrypt(msg, eccKeys[controllerID].shared))
-	toSend.sig = tostring(ecc.sign(eccKeys[turtleID].private, msg))
+	toSend.sig = tostring(ecc.sign(eccKeys[turtleID].private, toSend[1]))
 	return rednet.send(controllerID, toSend, filter)
 end
 
@@ -57,7 +57,7 @@ function receive(filter, timeout)
 		if ecc.verify(eccKeys[id].public, msg[1], msg.sig) then
 			print("test")
 			msg = ecc.decrypt(msg[1], eccKeys[id].shared)
-			msg = textutils.unserialise(msg)
+			msg = textutils.unserialise(tostring(msg))
 			return id, msg
 		end
 	end
