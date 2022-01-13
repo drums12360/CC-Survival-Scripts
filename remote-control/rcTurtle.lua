@@ -43,8 +43,8 @@ function send(msg, filter)
 	if type(msg) == "table" then
 		msg = textutils.serialise(msg)
 	end
-	toSend[1] = ecc.encrypt(msg, eccKeys[controllerID].shared)
-	toSend.sig = ecc.sign(eccKeys[turtleID].private, msg[1])
+	toSend[1] = tostring(ecc.encrypt(msg, eccKeys[controllerID].shared))
+	toSend.sig = tostring(ecc.sign(eccKeys[turtleID].private, msg))
 	return rednet.send(controllerID, toSend, filter)
 end
 
@@ -52,7 +52,8 @@ end
 function receive(filter, timeout)
 	local id, msg = rednet.receive(filter, timeout)
 	if id == controllerID then
-		print(eccKeys[id].public, msg[1], msg.sig)
+		msg[1] = {string.byte(msg[1], 1, -1)}
+		msg.sig = {string.byte(msg.sig, 1, -1)}
 		if ecc.verify(eccKeys[id].public, msg[1], msg.sig) then
 			print("test")
 			msg = ecc.decrypt(msg[1], eccKeys[id].shared)
@@ -204,8 +205,8 @@ while true do
 	if command[1] == "connect" and command.key then
 		controllerID = id
 		eccKeys[controllerID] = {}
-		eccKeys[controllerID].public = command.key
-		rednet.send(id, {key = eccKeys[turtleID].public}, cFilter)
+		eccKeys[controllerID].public = {string.byte(command.key, 1, -1)}
+		rednet.send(id, {key = tostring(eccKeys[turtleID].public)}, cFilter)
 		eccKeys[controllerID].shared = ecc.exchange(eccKeys[turtleID].private, eccKeys[controllerID].public)
 		parallel.waitForAny(connect, status)
 	end

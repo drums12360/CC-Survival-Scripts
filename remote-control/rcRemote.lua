@@ -62,8 +62,8 @@ function send(msg, filter)
 	if type(msg) == "table" then
 		msg = textutils.serialise(msg)
 	end
-	toSend[1] = ecc.encrypt(msg, eccKeys[currentID].shared)
-	toSend.sig = ecc.sign(eccKeys[hostID].private, msg[1])
+	toSend[1] = tostring(ecc.encrypt(msg, eccKeys[currentID].shared))
+	toSend.sig = tostring(ecc.sign(eccKeys[hostID].private, msg))
 	return rednet.send(currentID, toSend, filter)
 end
 
@@ -71,6 +71,8 @@ end
 function receive(filter, timeout)
 	local id, msg = rednet.receive(filter, timeout)
 	if id == currentID then
+		msg[1] = {string.byte(msg[1], 1, -1)}
+		msg.sig = {string.byte(msg.sig, 1, -1)}
 		if ecc.verify(eccKeys[id].public, msg[1], msg.sig) then
 			msg = ecc.decrypt(msg[1], eccKeys[id].shared)
 			msg = textutils.unserialise(msg)
@@ -418,7 +420,7 @@ local function connect(id,func)
 			return
 		end
 	end
-	rednet.send(id, {"connect", key = eccKeys[hostID].public}, cFilter)
+	rednet.send(id, {"connect", key = tostring(eccKeys[hostID].public)}, cFilter)
 	local cID, response = rednet.receive(cFilter,3)
 	if id == cID then
 		currentID = id
@@ -426,7 +428,7 @@ local function connect(id,func)
 		return
 	end
 	eccKeys[currentID] = {}
-	eccKeys[currentID].public = response.key
+	eccKeys[currentID].public = {string.byte(response.key, 1, -1)}
 	eccKeys[currentID].shared = ecc.exchange(eccKeys[hostID].private, eccKeys[currentID].public)
 	response = waitForResponse(id, cFilter, true)
 	getAlias()
