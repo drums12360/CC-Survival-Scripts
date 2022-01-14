@@ -202,8 +202,15 @@ end
 
 -- transfers files to and from the turtle
 local function scp(action, fFile, tFile)
-	if fFile == shell.getRunningProgram() or tFile == shell.getRunningProgram() then
-		print("Not Allowed to transfer "..shell.getRunningProgram())
+	local fileBlacklist = {
+		shell.getRunningProgram(),
+		fs.getDir(shell.getRunningProgram()).."/ecc.lua", 
+	}
+	for i = 1, #fileBlacklist do
+		if fFile == fileBlacklist[i] or tFile == fileBlacklist[i] then
+			print("Not Allowed to transfer ".. fileBlacklist[i])
+			return
+		end
 	end
 	if action == "get" then
 		send({"file", args = {"get", fFile, tFile},argNum = 3}, cFilter)

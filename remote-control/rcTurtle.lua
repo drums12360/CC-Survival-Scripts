@@ -91,6 +91,15 @@ end
 
 -- tranfers files to and from the controller
 local function scp(action, fFile, tFile)
+	local fileBlacklist = {
+		shell.getRunningProgram(),
+		fs.getDir(shell.getRunningProgram()).."/ecc.lua", 
+	}
+	for i = 1, #fileBlacklist do
+		if fFile == fileBlacklist[i] or tFile == fileBlacklist[i] then
+			return false ,"Not Allowed to transfer ".. fileBlacklist[i]
+		end
+	end
 	if action == "get" then
 		if fs.exists(fFile) then
 			local file = fs.open(fFile, "r")
