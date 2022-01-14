@@ -11,6 +11,23 @@ else
 	error("Modem not found.",0)
 end
 
+-- clears the screen
+local function clear()
+	term.clear()
+	term.setCursorPos(1,1)
+end
+
+clear()
+
+-- gets current screen size
+local tx,ty = term.getSize()
+
+-- init windows for status and cli
+local tWin = term.current()
+local statusWin = window.create(tWin, 1, 1, tx, 1)
+local cliWin = window.create(tWin, 1, 2, tx, ty-1)
+term.redirect(cliWin)
+
 -- color pallet
 local isColor = term.isColor()
 local bColor = colors.black
@@ -42,7 +59,7 @@ local standardReplys = {
 }
 
 -- add itself to the dns
-rednet.host(hFilter,os.getComputerLabel() or tostring(hostID))
+rednet.host(hFilter, os.getComputerLabel() or tostring(hostID))
 
 -- load ecc dependency
 local eccKeys = {}
@@ -57,7 +74,7 @@ do
 end
 
 -- send encrypted and signed messages
-function send(msg, filter)
+local function send(msg, filter)
 	local toSend = {}
 	if type(msg) == "table" then
 		msg = textutils.serialise(msg)
@@ -68,14 +85,13 @@ function send(msg, filter)
 end
 
 -- receive decrypt and verify messages
-function receive(filter, timeout)
+local function receive(filter, timeout)
 	local id, msg = rednet.receive(filter, timeout)
 	if id == currentID then
 		if msg.sig then
 			msg[1] = {string.byte(msg[1], 1, -1)}
 			msg.sig = {string.byte(msg.sig, 1, -1)}
 			if ecc.verify(eccKeys[id].public, msg[1], msg.sig) then
-				print("test")
 				msg = ecc.decrypt(msg[1], eccKeys[id].shared)
 				msg = textutils.unserialise(tostring(msg))
 				return id, msg
@@ -135,13 +151,6 @@ local function waitForResponse(id,filter)
 			return response
 		end
 	end
-end
-
--- clears the screen
-local function clear()
-	term.clear()
-	term.setCursorPos(1,1)
-	print("Status: "..tostring(currentStatus))
 end
 
 -- list of commands available
@@ -291,7 +300,7 @@ end
 
 -- disconnects from the connected turtle
 local function disconnect()
-	rednet.send({"disconnect", argNum = 0}, cFilter)
+	rednet.send(currentID, {"disconnect", argNum = 0}, cFilter)
 	local response = waitForResponse(currentID, cFilter)
 	eccKeys[currentID] = nil
 	currentID = nil
@@ -310,12 +319,31 @@ local function status()
 			end
 			currentStatus = msg.status
 		until id == currentID
+		os.queueEvent("update")
+		sleep(3)
+	end
+end
+
+-- independent update function
+local function statusUpdate()
+	local statusColor = {
+		[standardReplys.ready] = colors.lightGray,
+		[standardReplys.running] = colors.yellow,
+	}
+	while true do
+		os.pullEvent("update")
 		local cx,cy = term.getCursorPos()
+		local cWin = term.current()
+		term.redirect(statusWin)
 		term.setCursorPos(1,1)
 		term.clearLine()
-		term.write("Status: "..currentStatus)
+		local tColor = term.getTextColor()
+		term.write("Status: ")
+		term.setTextColor(statusColor[currentStatus])
+		term.write(currentStatus)
+		term.setTextColor(tColor)
+		term.redirect(cWin)
 		term.setCursorPos(cx,cy)
-		sleep(2)
 	end
 end
 
@@ -375,11 +403,6 @@ local function connection()
 					return complete.choice(text,commandList)
 				end
 			end)
-		local cx,cy = term.getCursorPos()
-		term.setCursorPos(1,1)
-		term.clearLine()
-		term.write("Status: "..currentStatus)
-		term.setCursorPos(cx,cy)
 		if command == "" then
 			command = nil
 		end
@@ -435,7 +458,7 @@ local function connect(id,func)
 	eccKeys[currentID].shared = ecc.exchange(eccKeys[hostID].private, eccKeys[currentID].public)
 	response = waitForResponse(id, cFilter)
 	getAlias()
-	parallel.waitForAny(func, status)
+	parallel.waitForAny(func, status, statusUpdate)
 	if currentID then
 		disconnect()
 	end

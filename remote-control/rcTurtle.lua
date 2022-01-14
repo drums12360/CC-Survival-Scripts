@@ -56,7 +56,6 @@ function receive(filter, timeout)
 			msg[1] = {string.byte(msg[1], 1, -1)}
 			msg.sig = {string.byte(msg.sig, 1, -1)}
 			if ecc.verify(eccKeys[id].public, msg[1], msg.sig) then
-				print("test")
 				msg = ecc.decrypt(msg[1], eccKeys[id].shared)
 				msg = textutils.unserialise(tostring(msg))
 				return id, msg
@@ -93,7 +92,7 @@ end
 local function scp(action, fFile, tFile)
 	local fileBlacklist = {
 		shell.getRunningProgram(),
-		fs.getDir(shell.getRunningProgram()).."/ecc.lua", 
+		fs.getDir(shell.getRunningProgram()).."/ecc.lua",
 	}
 	for i = 1, #fileBlacklist do
 		if fFile == fileBlacklist[i] or tFile == fileBlacklist[i] then
@@ -126,6 +125,19 @@ local function checkController()
 		end
 	end
 	return false
+end
+
+-- checks program against blacklist then runs the program
+local function run(program, ...)
+	local progBlackList = {
+		shell.getRunningProgram(),
+		fs.getDir(shell.getRunningProgram()).."/ecc.lua"
+	}
+	for i = 1, #progBlackList do
+		if program == progBlackList[i] then
+			return false, "Not allow to run "..progBlackList[i]
+		end
+	end
 end
 
 -- provides status updates from the turtle
@@ -175,6 +187,7 @@ local converter = {
 	["getAlias"] = getAlias,
 	["setAlias"] = setAlias,
 	["file"] = scp,
+	["run"] = run,
 }
 
 -- starts session with controller
@@ -184,7 +197,7 @@ local function connect()
 		controllerID = nil
 		return
 	end
-	rednet.send(reply.done, cFilter)
+	rednet.send(controllerID, reply.done, cFilter)
 	while true do
 		local id,command = receive(cFilter)
 		if controllerID == id then
