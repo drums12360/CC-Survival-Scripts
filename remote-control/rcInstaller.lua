@@ -1,7 +1,7 @@
 local tArgs = {...}
 local failedLoads = 0
 
-local repUrl = "https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/remote-control/"
+local repUrl = "https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/"
 
 -- file names
 local turtle = "rcTurtle.lua"
