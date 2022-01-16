@@ -1,6 +1,6 @@
-# Remote Control v0.4.0 Dev
+# Remote Control v0.4.2 
 
-Installer CC:T Command: `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/remote-control/rcInstaller.lua`
+Installer CC:T Command: `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/rcInstaller.lua`
 
 Usage: `rcInstaller turtle|remote <true/nil>`
 
@@ -17,7 +17,8 @@ Usage: `rcInstaller turtle|remote <true/nil>`
 
 | Command | Description |
 | --- | --- |
-| `file put\|get <from/file> <to/file>` | Can only be  while connected to a turtle. Transfers files from/ to host. |
+| `run <program/path> <arg1> <arg2> ...` | Can only be  while connected to a turtle. Runs a file on the turtle if it exists and not blacklisted. |
+| `file put\|get <from/file> <to/file>` | Can only be  while connected to a turtle. Transfers files from/to host. |
 | `lUpdate` | Can't be used if already connected to a turtle. Updates the `rednet.lookup` table. This will take about 2 seconds to complete. |
 | `exit` | Can be used at anytime to exit the script safely. `ctl + t` is ill advised as it might brick the `turtle` from further control. |
 | `clear` | Can be used at anytime to clear the screen. |

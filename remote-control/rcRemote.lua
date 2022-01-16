@@ -60,7 +60,7 @@ local standardReplys = {
 -- add itself to the dns
 rednet.host(hFilter, os.getComputerLabel() or tostring(hostID))
 
--- load ecc dependency
+-- loads ecc dependency
 local eccKeys = {}
 local ecc = require("ecc")
 do
@@ -72,7 +72,7 @@ do
 		}
 end
 
--- send encrypted and signed messages
+-- sends encrypted and signed messages
 local function send(msg, filter)
 	local toSend = {}
 	if type(msg) == "table" then
@@ -83,7 +83,7 @@ local function send(msg, filter)
 	return rednet.send(currentID, toSend, filter)
 end
 
--- receive decrypt and verify messages
+-- receives decrypts and verifys messages
 local function receive(filter, timeout)
 	local id, msg = rednet.receive(filter, timeout)
 	if id == currentID then
@@ -155,6 +155,7 @@ end
 -- list of commands available
 local function help()
 	if currentID then
+		print("run <program/path> <arg1> <arg2> ...")
 		print("disconnect")
 		print("turtle <command>")
 		print("setAlias <name>")
@@ -318,17 +319,28 @@ end
 local function status()
 	while true do
 		repeat
-			rednet.send(currentID, {status = "status"}, sFilter)
-			local id,msg = rednet.receive(sFilter, 2)
-			if not id or not msg then
+			local id,msg = rednet.receive(sFilter, 5)
+			if not id or not msg.status then
 				disconnect()
 				printError("Disconnected")
 				return
 			end
+			rednet.send(currentID, standardReplys.done, sFilter)
 			currentStatus = msg.status
 		until id == currentID
 		os.queueEvent("update")
-		sleep(3)
+		-- repeat
+		-- 	rednet.send(currentID, {status = "status"}, sFilter)
+		-- 	local id,msg = rednet.receive(sFilter, 2)
+		-- 	if not id or not msg then
+		-- 		disconnect()
+		-- 		printError("Disconnected")
+		-- 		return
+		-- 	end
+		-- 	currentStatus = msg.status
+		-- until id == currentID
+		-- os.queueEvent("update")
+		-- sleep(3)
 	end
 end
 
@@ -471,6 +483,7 @@ local function connect(id,func)
 	eccKeys[currentID].public = {string.byte(response.key, 1, -1)}
 	eccKeys[currentID].shared = ecc.exchange(eccKeys[hostID].private, eccKeys[currentID].public)
 	response = waitForResponse(id, cFilter)
+	print(response)
 	getAlias()
 	parallel.waitForAny(func, status, statusUpdate)
 	if currentID then

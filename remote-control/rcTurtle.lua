@@ -25,7 +25,7 @@ local reply = {
 	running = "running",
 }
 
--- load ecc dependency
+-- loads ecc dependency
 local eccKeys = {}
 local ecc = require("ecc")
 do
@@ -117,10 +117,10 @@ local function scp(action, fFile, tFile)
 end
 
 -- makes sure that we are talking to a verified controller
-local function checkController()
+local function checkController(checkID)
 	local tbl = {rednet.lookup(hFilter)}
 	for _,id in pairs(tbl) do
-		if id == controllerID then
+		if id == checkID then
 			return true
 		end
 	end
@@ -151,17 +151,13 @@ end
 -- provides status updates from the turtle
 local function status()
 	while true do
-		local id,msg = rednet.receive(sFilter, 5)
-		if not id or not msg then
+		rednet.send(controllerID, {status = currentStatus}, sFilter)
+		local sID,msg = rednet.receive(sFilter, 2)
+		if not sID or not msg == reply.done then
 			disconnect()
 			return
 		end
-		if msg.status == "status" then
-			rednet.send(controllerID, {status = currentStatus}, sFilter)
-		else
-			disconnect()
-			return
-		end
+		sleep(4)
 	end
 end
 
@@ -191,16 +187,14 @@ local converter = {
 	["run"] = run,
 }
 
+
+local lastCMD, lastID
 -- starts session with controller
 local function connect()
 	currentStatus = reply.ready
-	if not checkController() then
-		controllerID = nil
-		return
-	end
-	rednet.send(controllerID, reply.done, cFilter)
 	while true do
-		local id,command = receive(cFilter)
+		local id,command
+		id,command = receive(cFilter)
 		if controllerID == id then
 			print(textutils.serialise(command))
 			if command[1] == "disconnect" then
@@ -230,11 +224,14 @@ while true do
 	local id,command = rednet.receive(cFilter)
 	print(command[1])
 	if command[1] == "connect" and command.key then
+		if checkController(id) then
 		controllerID = id
 		eccKeys[controllerID] = {}
 		eccKeys[controllerID].public = {string.byte(command.key, 1, -1)}
 		rednet.send(id, {key = tostring(eccKeys[turtleID].public)}, cFilter)
 		eccKeys[controllerID].shared = ecc.exchange(eccKeys[turtleID].private, eccKeys[controllerID].public)
+		rednet.send(controllerID, reply.done, cFilter)
 		parallel.waitForAny(connect, status)
+		end
 	end
 end
