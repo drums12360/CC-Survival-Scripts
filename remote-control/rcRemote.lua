@@ -319,7 +319,7 @@ end
 local function status()
 	while true do
 		repeat
-			local id,msg = rednet.receive(sFilter, 5)
+			local id,msg = rednet.receive(sFilter, 6)
 			if not id or not msg.status then
 				disconnect()
 				printError("Disconnected")
@@ -329,18 +329,6 @@ local function status()
 			currentStatus = msg.status
 		until id == currentID
 		os.queueEvent("update")
-		-- repeat
-		-- 	rednet.send(currentID, {status = "status"}, sFilter)
-		-- 	local id,msg = rednet.receive(sFilter, 2)
-		-- 	if not id or not msg then
-		-- 		disconnect()
-		-- 		printError("Disconnected")
-		-- 		return
-		-- 	end
-		-- 	currentStatus = msg.status
-		-- until id == currentID
-		-- os.queueEvent("update")
-		-- sleep(3)
 	end
 end
 
@@ -482,8 +470,7 @@ local function connect(id,func)
 	eccKeys[currentID] = {}
 	eccKeys[currentID].public = {string.byte(response.key, 1, -1)}
 	eccKeys[currentID].shared = ecc.exchange(eccKeys[hostID].private, eccKeys[currentID].public)
-	response = waitForResponse(id, cFilter)
-	print(response)
+	waitForResponse(id, cFilter)
 	getAlias()
 	parallel.waitForAny(func, status, statusUpdate)
 	if currentID then
