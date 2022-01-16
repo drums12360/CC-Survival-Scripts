@@ -37,7 +37,6 @@ local uColor = colors.white
 if isColor then
 	pColor = colors.blue
 	cColor = colors.green
-	uColor = colors.white
 end
 
 -- set up rednet protocols and rednet lookup
@@ -198,7 +197,7 @@ end
 
 -- gets the label and sets the alias of the connected turtle
 local function getAlias()
-	rednet.send(currentID, {"getAlias", argNum = 0}, cFilter)
+	rednet.send(currentID, {"getAlias", args = {}, argNum = 0}, cFilter)
 	local msg = waitForResponse(currentID, cFilter)
 	if msg == "nil" then
 		msg = nil
@@ -298,6 +297,15 @@ local function sendCommand(com, ...)
 	end
 end
 
+local function run(...)
+	local args = {...}
+	for i = 1, #args do
+		args[i] = tostring(args[i])
+	end
+	send({"run", args = args, argNum = #args}, cFilter)
+
+end
+
 -- disconnects from the connected turtle
 local function disconnect()
 	rednet.send(currentID, {"disconnect", argNum = 0}, cFilter)
@@ -309,25 +317,35 @@ end
 -- will keep the session alive
 local function status()
 	while currentID do
+		local id, msg
 		repeat
-			rednet.send(currentID, {status = "status"}, sFilter)
-			local id,msg = rednet.receive(sFilter, 2)
-			if not id or not msg then
+			id, msg = rednet.receive(sFilter)
+			if id == nil then
 				disconnect()
-				printError("Disconnected")
-				return
 			end
-			currentStatus = msg.status
 		until id == currentID
+		rednet.send(currentID, standardReplys.done, sFilter)
+		currentStatus = msg.status
 		os.queueEvent("update")
-		sleep(3)
+		-- if currentID then
+		-- 	rednet.send(currentID, "status", sFilter)
+		-- 	repeat
+		-- 		local id,msg = rednet.receive(sFilter, 2)
+		-- 		if not id or not msg then
+		-- 			disconnect()
+		-- 			printError("Disconnected")
+		-- 			return
+		-- 		end
+		-- 		currentStatus = msg
+		-- 	until id == currentID
+		-- end
 	end
 end
 
 -- independent update function
 local function statusUpdate()
 	local statusColor = {
-		[standardReplys.ready] = colors.lightGray,
+		[standardReplys.ready] = colors.green,
 		[standardReplys.running] = colors.yellow,
 	}
 	while true do
@@ -337,11 +355,15 @@ local function statusUpdate()
 		term.redirect(statusWin)
 		term.setCursorPos(1,1)
 		term.clearLine()
-		local tColor = term.getTextColor()
 		term.write("Status: ")
-		term.setTextColor(statusColor[currentStatus])
-		term.write(currentStatus)
-		term.setTextColor(tColor)
+		if isColor then
+			local tColor = term.getTextColor()
+			term.setTextColor(statusColor[currentStatus])
+			term.write(currentStatus)
+			term.setTextColor(tColor)
+		else
+			term.write(currentStatus)
+		end
 		term.redirect(cWin)
 		term.setCursorPos(cx,cy)
 	end
@@ -359,6 +381,7 @@ local function connection()
 		["setAlias"] = setAlias,
 		["turtle"] = sendCommand,
 		["file"] = scp,
+		["run"] = run,
 	}
 	while currentID do
 		local commandList = {
@@ -372,6 +395,7 @@ local function connection()
 			"file ",
 			"file get ",
 			"file put ",
+			"run ",
 		}
 		term.setTextColor(cColor)
 		if currentName then

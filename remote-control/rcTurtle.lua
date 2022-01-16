@@ -78,12 +78,13 @@ end
 
 -- gets the label of the turtle
 local function getAlias()
-	local name = nil
+	local name
 	if not alias then
 		name = "nil"
 	else
 		name = alias
 	end
+	print("Sent "..name)
 	rednet.send(controllerID, name, cFilter)
 	return true
 end
@@ -135,26 +136,10 @@ local function run(program, ...)
 	}
 	for i = 1, #progBlackList do
 		if program == progBlackList[i] then
-			return false, "Not allow to run "..progBlackList[i]
+			return false, "Not allowed to run "..progBlackList[i]
 		end
 	end
-end
-
--- provides status updates from the turtle
-local function status()
-	while true do
-		local id,msg = rednet.receive(sFilter, 5)
-		if not id or not msg then
-			controllerID = nil
-			return
-		end
-		if msg.status == "status" then
-			rednet.send(controllerID, {status = currentStatus}, sFilter)
-		else
-			controllerID = nil
-			return
-		end
-	end
+	return shell.execute(program, ...)
 end
 
 -- disconnects from current session
@@ -162,6 +147,36 @@ local function disconnect()
 	rednet.send(controllerID, reply.done, cFilter)
 	eccKeys[controllerID] = nil
 	controllerID = nil
+end
+
+-- provides status updates from the turtle
+local function status()
+	while true do
+		rednet.send(controllerID, {status = currentStatus}, sFilter)
+		repeat
+			local sID, msg = rednet.receive(sFilter,2)
+			if not sID then
+				disconnect()
+				return
+			end
+		until sID == controllerID
+		local timer = os.startTimer(4)
+		repeat
+			local event, id = os.pullEvent()
+			print(event)
+		until event == "timer" and id == timer or event == "update"
+		-- local id,msg = rednet.receive(sFilter, 5)
+		-- if not id or not msg then
+		-- 	controllerID = nil
+		-- 	return
+		-- end
+		-- if msg[1] == "status" then
+		-- 	rednet.send(controllerID, currentStatus, sFilter)
+		-- else
+		-- 	controllerID = nil
+		-- 	return
+		-- end
+	end
 end
 
 -- all the commands allowed to run
@@ -207,6 +222,7 @@ local function connect()
 				return
 			elseif converter[command[1]] then
 				currentStatus = reply.running
+				os.queueEvent("update")
 				local output
 				if command.argNum > 0 then
 					output = {converter[command[1]](unpack(command.args))}
@@ -219,6 +235,7 @@ local function connect()
 					rednet.send(controllerID, "error",  cFilter)
 				end
 				currentStatus = reply.ready
+				os.queueEvent("update")
 			end
 		end
 	end
