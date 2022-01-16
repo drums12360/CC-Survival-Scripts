@@ -197,7 +197,7 @@ end
 
 -- gets the label and sets the alias of the connected turtle
 local function getAlias()
-	rednet.send(currentID, {"getAlias", args = {}, argNum = 0}, cFilter)
+	rednet.send(currentID, {"getAlias", argNum = 0}, cFilter)
 	local msg = waitForResponse(currentID, cFilter)
 	if msg == "nil" then
 		msg = nil
@@ -316,29 +316,19 @@ end
 
 -- will keep the session alive
 local function status()
-	while currentID do
-		local id, msg
+	while true do
 		repeat
-			id, msg = rednet.receive(sFilter)
-			if id == nil then
+			rednet.send(currentID, {status = "status"}, sFilter)
+			local id,msg = rednet.receive(sFilter, 2)
+			if not id or not msg then
 				disconnect()
+				printError("Disconnected")
+				return
 			end
+			currentStatus = msg.status
 		until id == currentID
-		rednet.send(currentID, standardReplys.done, sFilter)
-		currentStatus = msg.status
 		os.queueEvent("update")
-		-- if currentID then
-		-- 	rednet.send(currentID, "status", sFilter)
-		-- 	repeat
-		-- 		local id,msg = rednet.receive(sFilter, 2)
-		-- 		if not id or not msg then
-		-- 			disconnect()
-		-- 			printError("Disconnected")
-		-- 			return
-		-- 		end
-		-- 		currentStatus = msg
-		-- 	until id == currentID
-		-- end
+		sleep(3)
 	end
 end
 

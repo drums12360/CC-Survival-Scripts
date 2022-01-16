@@ -78,13 +78,12 @@ end
 
 -- gets the label of the turtle
 local function getAlias()
-	local name
+	local name = nil
 	if not alias then
 		name = "nil"
 	else
 		name = alias
 	end
-	print("Sent "..name)
 	rednet.send(controllerID, name, cFilter)
 	return true
 end
@@ -152,30 +151,17 @@ end
 -- provides status updates from the turtle
 local function status()
 	while true do
-		rednet.send(controllerID, {status = currentStatus}, sFilter)
-		repeat
-			local sID, msg = rednet.receive(sFilter,2)
-			if not sID then
-				disconnect()
-				return
-			end
-		until sID == controllerID
-		local timer = os.startTimer(4)
-		repeat
-			local event, id = os.pullEvent()
-			print(event)
-		until event == "timer" and id == timer or event == "update"
-		-- local id,msg = rednet.receive(sFilter, 5)
-		-- if not id or not msg then
-		-- 	controllerID = nil
-		-- 	return
-		-- end
-		-- if msg[1] == "status" then
-		-- 	rednet.send(controllerID, currentStatus, sFilter)
-		-- else
-		-- 	controllerID = nil
-		-- 	return
-		-- end
+		local id,msg = rednet.receive(sFilter, 5)
+		if not id or not msg then
+			disconnect()
+			return
+		end
+		if msg.status == "status" then
+			rednet.send(controllerID, {status = currentStatus}, sFilter)
+		else
+			disconnect()
+			return
+		end
 	end
 end
 
@@ -222,7 +208,6 @@ local function connect()
 				return
 			elseif converter[command[1]] then
 				currentStatus = reply.running
-				os.queueEvent("update")
 				local output
 				if command.argNum > 0 then
 					output = {converter[command[1]](unpack(command.args))}
@@ -235,7 +220,6 @@ local function connect()
 					rednet.send(controllerID, "error",  cFilter)
 				end
 				currentStatus = reply.ready
-				os.queueEvent("update")
 			end
 		end
 	end
