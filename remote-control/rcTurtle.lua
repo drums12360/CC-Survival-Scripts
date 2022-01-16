@@ -150,14 +150,15 @@ end
 
 -- provides status updates from the turtle
 local function status()
+	sleep(1)
 	while true do
 		rednet.send(controllerID, {status = currentStatus}, sFilter)
-		local sID,msg = rednet.receive(sFilter, 2)
+		local sID,msg = rednet.receive(sFilter, 3)
 		if not sID or not msg == reply.done then
 			disconnect()
 			return
 		end
-		sleep(4)
+		sleep(3)
 	end
 end
 

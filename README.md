@@ -9,7 +9,7 @@ Downloader CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Su
 
 Refuel CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/standalone/refuelSA.lua`
 
-## Remote Control v0.4.2
+## Remote Control v0.4.3
 
 Installer CC:T Command: `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/rcInstaller.lua`
 
