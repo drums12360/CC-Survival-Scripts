@@ -1,6 +1,6 @@
-# Remote Control v0.4.3
+# Remote Control v0.4.3 Dev
 
-Installer CC:T Command: `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/rcInstaller.lua`
+Installer CC:T Command: `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/dev/remote-control/rcInstaller.lua`
 
 Usage: `rcInstaller turtle|remote <true/nil>`
 
