@@ -9,11 +9,11 @@ Downloader CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Su
 
 Refuel CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/standalone/refuelSA.lua`
 
-## Remote Control v0.3.3
+## Remote Control v0.4.2
 
-Remote CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/rcRemote.lua`
+Installer CC:T Command: `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/rcInstaller.lua`
 
-Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Survival-Scripts/main/remote-control/rcTurtle.lua`
+Usage: `rcInstaller turtle|remote <true/nil>`
 
 ### Features
 
@@ -21,6 +21,8 @@ Turtle CC:T Command `wget https://raw.githubusercontent.com/drums12360/CC-Surviv
 - History and Auto Complete
 - Works with ender modems if desired
 - Keep Alive and Status Updates
+- Protection from random RCE
+- Auth for File Transfers and Running remote scripts
 
 ### Files
 
@@ -28,8 +30,10 @@ File names are subject to change
 
 | File | Description |
 | --- | --- |
-| rcRemote.lua | As the file name implies it controls rcTurtle via the rednet api |
-| rcTurtle.lua | Controlled by rcRemote via the rednet api |
+| rcRemote.lua | As the file name implies it controls rcTurtle via the rednet api. |
+| rcTurtle.lua | Controlled by rcRemote via the rednet api. |
+| rcInstaller.lua | Installs the RC script you choose and its dependencies and whether to auto update the script on reboot. |
+| ecc.lua | Elliptic Curve Cryptography api thx to @MCJack123 |
 
 ## Libraries with description 
 
@@ -41,6 +45,7 @@ File names are subject to change
 | digLib.lua | stack and vein mine |
 | moveLib.lua | Basic movement helper funtions |
 | init.lua = library | Uses all the files in library folder |
+| argOptParser.lua | @LDDestroier 's argParser2.lua. Takes program args `-o`, `-o optArg` or  `--opt`, `--opt optArg` and does something useful with it |
 
 ## Scripts with dependencies 
 

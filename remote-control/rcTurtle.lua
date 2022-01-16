@@ -1,8 +1,5 @@
 --[[
 this program is controlled by rcRemote.lua
-
-todo:
-status update corroutine start on connect and end on disconect
 ]]
 -- finds a modem or errors
 if peripheral.find("modem") then
@@ -28,17 +25,45 @@ local reply = {
 	running = "running",
 }
 
--- parse strings with spaces to a table with strings numbers and bools
-local function parse(str)
-	local tbl = {}
-	for word in string.gmatch(str, "([^ ]+)") do
-		word = tonumber(word) or word
-		if word == "true" or word == "false" then
-			word = textutils.unserialise(word)
-		end
-		table.insert(tbl,word)
+-- loads ecc dependency
+local eccKeys = {}
+local ecc = require("ecc")
+do
+	local generated = {}
+	generated.private, generated.public = ecc.keypair(os.epoch())
+	eccKeys[turtleID] =  {
+			private = generated.private,
+			public = generated.public,
+		}
+end
+
+-- send encrypted and signed messages
+function send(msg, filter)
+	local toSend ={}
+	if type(msg) == "table" then
+		msg = textutils.serialise(msg)
 	end
-	return tbl
+	toSend[1] = tostring(ecc.encrypt(msg, eccKeys[controllerID].shared))
+	toSend.sig = tostring(ecc.sign(eccKeys[turtleID].private, toSend[1]))
+	return rednet.send(controllerID, toSend, filter)
+end
+
+-- receive decrypt and verify messages
+function receive(filter, timeout)
+	local id, msg = rednet.receive(filter, timeout)
+	if id == controllerID then
+		if msg.sig then
+			msg[1] = {string.byte(msg[1], 1, -1)}
+			msg.sig = {string.byte(msg.sig, 1, -1)}
+			if ecc.verify(eccKeys[id].public, msg[1], msg.sig) then
+				msg = ecc.decrypt(msg[1], eccKeys[id].shared)
+				msg = textutils.unserialise(tostring(msg))
+				return id, msg
+			end
+		else
+			return id, msg
+		end
+	end
 end
 
 -- sets the label of the turtle
@@ -63,41 +88,80 @@ local function getAlias()
 	return true
 end
 
+-- tranfers files to and from the controller
+local function scp(action, fFile, tFile)
+	local fileBlacklist = {
+		shell.getRunningProgram(),
+		fs.getDir(shell.getRunningProgram()).."/ecc.lua",
+	}
+	for i = 1, #fileBlacklist do
+		if fFile == fileBlacklist[i] or tFile == fileBlacklist[i] then
+			return false ,"Not Allowed to transfer ".. fileBlacklist[i]
+		end
+	end
+	if action == "get" then
+		if fs.exists(fFile) then
+			local file = fs.open(fFile, "r")
+			local msg = file.readAll()
+			file.close()
+			send(msg, cFilter)
+			return true, "Sent File "..fFile
+		end
+		return false, "File not found"
+	elseif action == "put" then
+		local file = fs.open(tFile, "w")
+		file.write(fFile)
+		file.close()
+		return true, "Saved file to "..tFile
+	end
+end
+
 -- makes sure that we are talking to a verified controller
-local function checkController()
+local function checkController(checkID)
 	local tbl = {rednet.lookup(hFilter)}
 	for _,id in pairs(tbl) do
-		if id == controllerID then
+		if id == checkID then
 			return true
 		end
 	end
 	return false
 end
 
--- provides status updates from the turtle
-local function status()
-	while true do
-		local id,msg = rednet.receive(sFilter, 5)
-		if not id or not msg then
-			controllerID = nil
-			return
-		end
-		msg = parse(msg)
-		if msg[1] == "status" then
-			rednet.send(controllerID, currentStatus, sFilter)
-		else
-			controllerID = nil
-			return
+-- checks program against blacklist then runs the program
+local function run(program, ...)
+	local progBlackList = {
+		shell.getRunningProgram(),
+		fs.getDir(shell.getRunningProgram()).."/ecc.lua"
+	}
+	for i = 1, #progBlackList do
+		if program == progBlackList[i] then
+			return false, "Not allowed to run "..progBlackList[i]
 		end
 	end
+	return shell.execute(program, ...)
 end
 
 -- disconnects from current session
 local function disconnect()
 	rednet.send(controllerID, reply.done, cFilter)
+	eccKeys[controllerID] = nil
 	controllerID = nil
 end
 
+-- provides status updates from the turtle
+local function status()
+	while true do
+		rednet.send(controllerID, {status = currentStatus}, sFilter)
+		local sID,msg = rednet.receive(sFilter, 2)
+		if not sID or not msg == reply.done then
+			disconnect()
+			return
+		end
+		sleep(4)
+	end
+end
+
+-- all the commands allowed to run
 local converter = {
 	["forward"] = turtle.forward,
 	["back"] = turtle.back,
@@ -111,41 +175,46 @@ local converter = {
 	["place"] = turtle.place,
 	["placeUp"] = turtle.placeUp,
 	["placeDown"] = turtle.placeDown,
+	["select"] = turtle.select,
+	["getItemDetail"] = turtle.getItemDetail,
+	["getSelectedSlot"] = turtle.getSelectedSlot,
+	["inspect"] = turtle.inspect,
+	["inspectUp"] = turtle.inspectUp,
+	["inspectDown"] = turtle.inspectDown,
 	["getAlias"] = getAlias,
 	["setAlias"] = setAlias,
+	["file"] = scp,
+	["run"] = run,
 }
 
+
+local lastCMD, lastID
 -- starts session with controller
 local function connect()
 	currentStatus = reply.ready
-	if not checkController() then
-		controllerID = nil
-		return
-	end
-	rednet.send(controllerID, reply.done, cFilter)
 	while true do
-		local id,command = rednet.receive(cFilter)
+		local id,command
+		id,command = receive(cFilter)
 		if controllerID == id then
-			print(command)
-			command = parse(command)
+			print(textutils.serialise(command))
 			if command[1] == "disconnect" then
 				disconnect()
 				return
 			elseif converter[command[1]] then
-				local success,err
-				if #command > 1 then
-					success,err = converter[command[1]](command[2])
+				currentStatus = reply.running
+				local output
+				if command.argNum > 0 then
+					output = {converter[command[1]](unpack(command.args))}
 				else
-					success,err = converter[command[1]]()
+					output = {converter[command[1]]()}
 				end
-				if success then
-					rednet.send(controllerID, "done" , cFilter)
+				if #output ~= 0 then
+					rednet.send(controllerID, {output = output, status = "done"}, cFilter)
 				else
-					rednet.send(controllerID, err,  cFilter)
+					rednet.send(controllerID, "error",  cFilter)
 				end
+				currentStatus = reply.ready
 			end
-		else
-			rednet.send(id,reply.busy)
 		end
 	end
 end
@@ -153,9 +222,16 @@ end
 -- main loop
 while true do
 	local id,command = rednet.receive(cFilter)
-	print(command)
-	if command == "connect" then
+	print(command[1])
+	if command[1] == "connect" and command.key then
+		if checkController(id) then
 		controllerID = id
+		eccKeys[controllerID] = {}
+		eccKeys[controllerID].public = {string.byte(command.key, 1, -1)}
+		rednet.send(id, {key = tostring(eccKeys[turtleID].public)}, cFilter)
+		eccKeys[controllerID].shared = ecc.exchange(eccKeys[turtleID].private, eccKeys[controllerID].public)
+		rednet.send(controllerID, reply.done, cFilter)
 		parallel.waitForAny(connect, status)
+		end
 	end
 end
