@@ -189,7 +189,6 @@ local converter = {
 }
 
 
-local lastCMD, lastID
 -- starts session with controller
 local function connect()
 	currentStatus = reply.ready
@@ -203,6 +202,7 @@ local function connect()
 				return
 			elseif converter[command[1]] then
 				currentStatus = reply.running
+				os.queueEvent("update")
 				local output
 				if command.argNum > 0 then
 					output = {converter[command[1]](unpack(command.args))}
@@ -215,6 +215,7 @@ local function connect()
 					rednet.send(controllerID, "error",  cFilter)
 				end
 				currentStatus = reply.ready
+				os.queueEvent("update")
 			end
 		end
 	end
@@ -232,7 +233,12 @@ while true do
 		rednet.send(id, {key = tostring(eccKeys[turtleID].public)}, cFilter)
 		eccKeys[controllerID].shared = ecc.exchange(eccKeys[turtleID].private, eccKeys[controllerID].public)
 		rednet.send(controllerID, reply.done, cFilter)
-		parallel.waitForAny(connect, status)
+		parallel.waitForAny(connect, status, function()
+			while true do
+				os.pullEvent("update")
+				rednet.send(controllerID, {status = currentStatus}, sFilter)
+			end
+		end)
 		end
 	end
 end
