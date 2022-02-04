@@ -304,7 +304,6 @@ local function run(...)
 		args[i] = tostring(args[i])
 	end
 	send({"run", args = args, argNum = #args}, cFilter)
-
 end
 
 -- disconnects from the connected turtle
