@@ -65,7 +65,7 @@ File names are subject to change
 | mineCuboidSA.lua | Mines a cuboid of minimum `3 x 3 x 1` the width needs to be an odd `#` and the side is `left` or `right` | `mineCuboidSA <w> <h> <d> <side>` cube size and which side you placed the turtle |
 | mineStaircaseSA.lua | Mines a one block wide staircase `up` or `down` | `mineStaircaseSA <step_amount> <direction>` |
 | mineTunnelSA.lua | Overhauled tunnel script which places torches and deposits stuff in a chest | `mineTunnelSA <distance>` Torches in slot 16 if wanted, turtle facing chest if deposit is wanted |
-| mineVertSA.lua | Digs in a straight line down untill finds ore then vein mines it, block off hole while mining | `mineVertSA <depth>` |
+| mineVertSA.lua | Digs in a straight line down until it finds ore then vein mines it, blocks off hole while mining | `mineVertSA <depth>` |
 | stripMineSA.lua | Digs in a straight line untill it finds ore then vein mines it | `stripMineSA <depth>` |
 | stripTunnelSA.lua | Classical two block heigh stripmine without torches and vein mine on the lower block | `stripTunnelSA <Shaft_Amount> <Shaft_Width> <Shaft_Distance>` How far in, how long each shaft is and the distance between them, recommended `3`.|
 | refuelSA.lua | Custom refuel script which lets you manually refuel for x amount of time | `refuelSA <time_inSeconds> <replace_original>` If no time is given, default is 120 seconds. If you want to replace the default script write `replace` |
