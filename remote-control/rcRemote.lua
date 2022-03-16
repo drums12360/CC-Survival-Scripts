@@ -104,8 +104,7 @@ end
 -- save table data to a file
 local function saveData(dir, file, tbl)
 	if type(tbl) ~= "table" then
-		print("Wrong data type.")
-		return
+		error("Wrong data type.",2)
 	end
 	if not fs.exists(dir) then
 		fs.makeDir(dir)
