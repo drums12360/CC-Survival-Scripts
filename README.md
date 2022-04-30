@@ -33,7 +33,7 @@ File names are subject to change
 | rcRemote.lua | As the file name implies it controls rcTurtle via the rednet api. |
 | rcTurtle.lua | Controlled by rcRemote via the rednet api. |
 | rcInstaller.lua | Installs the RC script you choose and its dependencies and whether to auto update the script on reboot. |
-| ecc.lua | Elliptic Curve Cryptography api thx to @MCJack123 |
+| ecc.lua | Elliptic Curve Cryptography api |
 
 ## Libraries with description 
 

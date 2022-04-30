@@ -31,7 +31,7 @@ local ecc = require("ecc")
 do
 	local generated = {}
 	generated.private, generated.public = ecc.keypair(os.epoch())
-	eccKeys[turtleID] =  {
+	eccKeys[turtleID] = {
 			private = generated.private,
 			public = generated.public,
 		}
@@ -39,7 +39,7 @@ end
 
 -- send encrypted and signed messages
 function send(msg, filter)
-	local toSend ={}
+	local toSend = {}
 	if type(msg) == "table" then
 		msg = textutils.serialise(msg)
 	end
@@ -47,6 +47,8 @@ function send(msg, filter)
 	toSend.sig = tostring(ecc.sign(eccKeys[turtleID].private, toSend[1]))
 	return rednet.send(controllerID, toSend, filter)
 end
+
+
 
 -- receive decrypt and verify messages
 function receive(filter, timeout)
@@ -187,7 +189,6 @@ local converter = {
 	["file"] = scp,
 	["run"] = run,
 }
-
 
 -- starts session with controller
 local function connect()

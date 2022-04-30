@@ -37,7 +37,7 @@ local oreList = {
 	"minecraft:diamond_ore",
 	"minecraft:emerald_ore",
 	"minecraft:copper_ore",
-	"minecraft:llibs_ore",
+	"minecraft:lapis_ore",
 	"minecraft:redstone_ore",
 	"minecraft:deepslate_iron_ore",
 	"minecraft:deepslate_coal_ore",
@@ -45,7 +45,7 @@ local oreList = {
 	"minecraft:deepslate_diamond_ore",
 	"minecraft:deepslate_emerald_ore",
 	"minecraft:deepslate_copper_ore",
-	"minecraft:deepslate_llibs_ore",
+	"minecraft:deepslate_lapis_ore",
 	"minecraft:deepslate_redstone_ore",
 	"minecraft:nether_gold_ore",
 	"minecraft:nether_quartz_ore",
@@ -675,7 +675,7 @@ end
 if type(tonumber(tArgs[1])) ~= "number" then
 	term.clear()
 	term.setCursorPos(1,1)
-	error("Define mine lenght! (Example: '10') [10 blocks long]")
+	error("Define mine length! (Example: '10') [10 blocks long]")
 end
 
 local start = lib.copyTable(lib.coords)
