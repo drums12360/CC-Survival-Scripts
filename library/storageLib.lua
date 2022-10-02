@@ -1,5 +1,5 @@
-local data = require("library/dataAPI")
-local move = require("library/moveAPI")
+local data = require("library/dataLib")
+local move = require("library/moveLib")
 
 local storage = {}
 
@@ -26,6 +26,14 @@ function storage.avoidChest()
 	else
 		chest[1] = false
 		data.saveData("/.save", "/chest", chest)
+	end
+end
+
+function storage.invCheck()
+	if data.loadData("/.save", "/chest")[1] == true then
+		storage.emptyInv()
+	elseif data.loadData("/.save", "/chest")[1] == false then
+		storage.waitforemptyInv()
 	end
 end
 

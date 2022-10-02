@@ -516,6 +516,14 @@ function lib.avoidChest()
 	end
 end
 
+function lib.invCheck()
+	if lib.loadData("/.save", "/chest")[1] == true then
+		lib.emptyInv()
+	elseif lib.loadData("/.save", "/chest")[1] == false then
+		lib.waitforemptyInv()
+	end
+end
+
 function lib.emptyInv()
 	local start = lib.loadData("/.save", "/start_pos")
 	if turtle.getItemCount(15) > 0 then
@@ -671,12 +679,14 @@ function mineSquence(Shaft_Amount, Shaft_Width, Shaft_Distance)
 			lib.forward()
 			lib.checkForOre()
 			lib.dig("up")
+			lib.invCheck()
 		end
 		lib.turnLeft()
 		for j=1, Shaft_Width do
 			lib.forward()
 			lib.checkForOre()
 			lib.dig("up")
+			lib.invCheck()
 		end
 		lib.turnAround()
 		lib.forward(Shaft_Width)
@@ -684,15 +694,12 @@ function mineSquence(Shaft_Amount, Shaft_Width, Shaft_Distance)
 			lib.forward()
 			lib.checkForOre()
 			lib.dig("up")
+			lib.invCheck()
 		end
 		lib.turnAround()
 		lib.forward(Shaft_Width)
 		lib.turnRight()
-		if lib.loadData("/.save", "/chest")[1] == true then
-			lib.emptyInv()
-		elseif lib.loadData("/.save", "/chest")[1] == false then
-			lib.waitforemptyInv()
-		end
+		lib.invCheck()
 	end
 end
 
